@@ -249,6 +249,34 @@ function DatasetGuide() {
             </TiltCard>
           </motion.div>
 
+          {/* SVM Card */}
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1.3 }}
+            style={{ width: '100%' }}
+          >
+            <TiltCard>
+              <div className="source-card">
+                <div className="source-content" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <div className="source-header">
+                    <span className="source-id">04</span>
+                    <div className="source-title-group">
+                      <span className="source-agency" style={{ color: '#10b981' }}>SUPPORT VECTOR MACHINE // CLASSIFICATION</span>
+                      <h3 className="source-name">Support Vector Machine (SVM)</h3>
+                    </div>
+                  </div>
+                  <p className="source-desc">
+                    Utilizes optimal separating hyperplanes and kernel transformations (RBF) to categorize shoreline segments into erosion vulnerability levels, serving as a highly stable structural classifier.
+                  </p>
+                  <div className="source-footer" style={{ marginTop: 'auto' }}>
+                    <span className="source-meta" style={{ color: '#10b981', fontWeight: 'bold' }}>KERNEL MACHINE / CLASS BOUNDARIES</span>
+                  </div>
+                </div>
+              </div>
+            </TiltCard>
+          </motion.div>
+
           {/* EPR & Tidal Correction Card */}
           <motion.div 
             initial={{ y: 50, opacity: 0 }}
@@ -260,7 +288,7 @@ function DatasetGuide() {
               <div className="source-card">
                 <div className="source-content" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   <div className="source-header">
-                    <span className="source-id">04</span>
+                    <span className="source-id">05</span>
                     <div className="source-title-group">
                       <span className="source-agency" style={{ color: '#eab308' }}>GEOSPATIAL GIS // RATE ANALYSIS</span>
                       <h3 className="source-name">EPR & Tidal Correction</h3>
@@ -288,7 +316,7 @@ function DatasetGuide() {
               <div className="source-card">
                 <div className="source-content" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   <div className="source-header">
-                    <span className="source-id">05</span>
+                    <span className="source-id">06</span>
                     <div className="source-title-group">
                       <span className="source-agency" style={{ color: '#ec4899' }}>FORECASTING // LINEAR PROJECTION</span>
                       <h3 className="source-name">Linear Extrapolation</h3>
