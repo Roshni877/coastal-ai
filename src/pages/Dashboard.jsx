@@ -389,7 +389,7 @@ export default function Dashboard() {
                                     <span>AI MODEL ACCURACY</span>
                                     <Activity size={15} className="text-indigo" />
                                 </div>
-                                <div className="card-value">85.0%</div>
+                                <div className="card-value">85.48%</div>
                                 <div className="card-footer">DeepLabV3+ validation accuracy</div>
                             </motion.div>
                             

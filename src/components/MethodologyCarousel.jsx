@@ -9,7 +9,7 @@ const steps = [
   { id: "02", title: "WATER INDEXING", desc: "Calculating NDWI / MNDWI spectral indices to isolate water boundaries from coastal land." },
   { id: "03", title: "DEEP LEARNING", desc: "Training DeepLabV3+ neural network models to segment land and water pixels automatically." },
   { id: "04", title: "VECTOR EXTRACTION", desc: "Generating high-precision sub-pixel vector lines representing the coastal edge." },
-  { id: "05", title: "RATE ANALYSIS", desc: "Running localized transect calculations to achieve 85% shoreline prediction accuracy." },
+  { id: "05", title: "RATE ANALYSIS", desc: "Running localized transect calculations to achieve 85.48% shoreline prediction accuracy." },
 ];
 
 function Card({ step, index, activeIndex, onSelect, isDark }) {

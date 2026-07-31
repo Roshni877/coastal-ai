@@ -186,7 +186,7 @@ function DatasetGuide() {
                     Fine-tuned state-of-the-art semantic segmentation model utilizing a ResNet backbone to perform high-resolution pixel-level land vs. water boundary classification. This is our primary model for automated shoreline extraction.
                   </p>
                   <div className="source-footer" style={{ marginTop: 'auto' }}>
-                    <span className="source-meta" style={{ color: '#ff2a6d', fontWeight: 'bold' }}>VALIDATION ACCURACY: 85.0%</span>
+                    <span className="source-meta" style={{ color: '#ff2a6d', fontWeight: 'bold' }}>VALIDATION ACCURACY: 85.48%</span>
                   </div>
                 </div>
               </div>

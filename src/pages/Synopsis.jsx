@@ -131,7 +131,7 @@ function Synopsis() {
             fontFamily: "'Brush Script MT', cursive, 'Comic Sans MS', fantasy",
             letterSpacing: '3px',
             filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.3))'
-          }}>Using Deep Learning and Remote Sensing (85.0% Accuracy)</h2>
+          }}>Using Deep Learning and Remote Sensing (85.48% Accuracy)</h2>
         </section>
 
         <div className="synopsis-content">
