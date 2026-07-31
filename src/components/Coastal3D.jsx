@@ -32,20 +32,17 @@ const vertexShader = `
 const fragmentShader = `
   varying vec2 vUv;
   varying float vElevation;
-  uniform sampler2D uTexture;
   uniform float uOpacity;
   uniform vec2 uMouse;
 
   void main() {
-    // Warp UVs based on mouse and elevation for a "refraction" look
-    vec2 distortedUv = vUv + (uMouse * 0.02) + (vElevation * 0.03);
-    vec4 texColor = texture2D(uTexture, distortedUv);
+    // Natural ocean color grading without texture dependencies
+    vec3 lightColor = vec3(0.05, 0.75, 0.95);
+    vec3 deepColor = vec3(0.01, 0.12, 0.28);
+    vec3 waveTinges = vec3(0.3, 0.9, 1.0);
     
-    // Natural ocean color grading
-    vec3 lightColor = vec3(0.1, 0.7, 0.9);
-    vec3 deepColor = vec3(0.0, 0.2, 0.4);
-    vec3 finalColor = mix(deepColor, texColor.rgb, vElevation + 0.6);
-    finalColor = mix(finalColor, lightColor, vElevation * 0.5);
+    vec3 finalColor = mix(deepColor, lightColor, vElevation + 0.4);
+    finalColor = mix(finalColor, waveTinges, clamp(vElevation * 0.7, 0.0, 1.0));
     
     gl_FragColor = vec4(finalColor, uOpacity);
   }
@@ -53,19 +50,15 @@ const fragmentShader = `
 
 function Waves({ isDark }) {
   const meshRef = useRef();
-  const texture = useTexture("https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&q=80&w=512");
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(4, 4);
 
-  // Stable uniforms object
+  // Stable uniforms object without texture dependencies
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uMouse: { value: new THREE.Vector2(0, 0) },
-    uTexture: { value: texture },
     uOpacity: { value: 0.85 }
-  }), [texture]);
+  }), []);
 
-  // Update opacity when theme changes without recreating uniforms
+  // Update opacity when theme changes
   React.useEffect(() => {
     uniforms.uOpacity.value = isDark ? 0.6 : 0.85;
   }, [isDark, uniforms]);
@@ -73,14 +66,13 @@ function Waves({ isDark }) {
   useFrame((state) => {
     if (meshRef.current) {
       uniforms.uTime.value = state.clock.getElapsedTime();
-      // Ensure mouse value is always updated from the state
       uniforms.uMouse.value.lerp(state.mouse, 0.15);
     }
   });
 
   return (
     <mesh ref={meshRef} rotation={[-Math.PI / 2.3, 0, 0]} position={[0, -1.5, 0]}>
-      <planeGeometry args={[60, 60, 128, 128]} />
+      <planeGeometry args={[60, 60, 64, 64]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}

@@ -1,14 +1,10 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, useTexture, Sky, Float } from "@react-three/drei";
+import { PerspectiveCamera, Sky, Float } from "@react-three/drei";
 import * as THREE from "three";
 
-function SandFloor() {
+function SandFloor({ isDark }) {
   const meshRef = useRef();
-  // Using a realistic sand texture
-  const texture = useTexture("https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&w=512");
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(5, 5);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -17,12 +13,11 @@ function SandFloor() {
 
   return (
     <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-      <planeGeometry args={[100, 100, 100, 100]} />
+      <planeGeometry args={[100, 100, 32, 32]} />
       <meshStandardMaterial 
-        map={texture} 
-        roughness={1} 
+        color={isDark ? "#0f172a" : "#fde68a"} 
+        roughness={0.9} 
         metalness={0.1}
-        bumpScale={0.05}
       />
     </mesh>
   );
@@ -100,7 +95,7 @@ function Beach3D() {
         />
         <ambientLight intensity={isDark ? 0.4 : 1} />
         <directionalLight position={[10, 10, 5]} intensity={isDark ? 0.5 : 2} />
-        <SandFloor />
+        <SandFloor isDark={isDark} />
         <FloatingShells />
         <fog attach="fog" args={[isDark ? "#020a13" : "#fef3c7", 10, 50]} />
       </Canvas>
