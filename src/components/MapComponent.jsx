@@ -42,22 +42,22 @@ export default function MapComponent({
 
     // 1. Fetch GeoJSON files once
     useEffect(() => {
-        fetch('./transects.geojson')
+        fetch('/transects.geojson')
             .then(res => res.json())
             .then(data => setTransectsData(data))
             .catch(e => console.error("Error loading transects:", e));
 
-        fetch('./shoreline_2020.geojson')
+        fetch('/shoreline_2020.geojson')
             .then(res => res.json())
             .then(data => setS2020Data(data))
             .catch(e => console.error("Error loading 2020 shoreline:", e));
 
-        fetch('./shoreline_2024.geojson')
+        fetch('/shoreline_2024.geojson')
             .then(res => res.json())
             .then(data => setS2024Data(data))
             .catch(e => console.error("Error loading 2024 shoreline:", e));
 
-        fetch('./shoreline_predicted.geojson')
+        fetch('/shoreline_predicted.geojson')
             .then(res => res.json())
             .then(data => setSpredData(data))
             .catch(e => console.error("Error loading predicted shoreline:", e));

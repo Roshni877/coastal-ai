@@ -41,7 +41,7 @@ export default function Dashboard() {
 
     // Load CSV dataset once on initialization
     useEffect(() => {
-        fetch('./coastal_environmental_dataset.csv')
+        fetch('/coastal_environmental_dataset.csv')
             .then(res => {
                 if (!res.ok) throw new Error("Dataset file not found");
                 return res.text();
