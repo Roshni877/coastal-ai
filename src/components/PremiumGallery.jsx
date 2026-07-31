@@ -76,63 +76,51 @@ const images = [
   },
   {
     id: 17,
-    src: "/env_ml_confusion_matrix_rf.png?v=3",
-    alt: "Random Forest Confusion Matrix",
-    title: "Random Forest Confusion Matrix"
-  },
-  {
-    id: 18,
     src: "/env_ml_confusion_matrix_xgb.png?v=3",
     alt: "XGBoost Confusion Matrix",
     title: "XGBoost Confusion Matrix"
   },
   {
-    id: 19,
+    id: 18,
     src: "/env_ml_confusion_matrix_svm.png?v=3",
     alt: "SVM Confusion Matrix",
     title: "SVM Confusion Matrix"
   },
   {
-    id: 20,
+    id: 19,
     src: "/confusion-matrix.jpg?v=3",
     alt: "Random Forest Confusion Matrix",
     title: "Random Forest Confusion Matrix"
   },
   {
+    id: 20,
+    src: "/env_ml_confusion_matrix_deeplab.png?v=3",
+    alt: "DeepLabV3+ Segmentation Confusion Matrix",
+    title: "DeepLabV3+ Segmentation Confusion Matrix"
+  },
+  {
     id: 21,
-    src: "/model-metrics.jpg?v=3",
-    alt: "Random Forest Performance Metrics",
-    title: "Random Forest Performance Metrics"
-  },
-  {
-    id: 22,
-    src: "/env_ml_report_rf.png?v=3",
-    alt: "Random Forest Classification Report",
-    title: "Random Forest Classification Report"
-  },
-  {
-    id: 23,
     src: "/env_ml_report_xgb.png?v=3",
     alt: "XGBoost Classification Report",
     title: "XGBoost Classification Report"
   },
   {
-    id: 24,
+    id: 22,
     src: "/env_ml_report_svm.png?v=3",
     alt: "SVM Classification Report",
     title: "SVM Classification Report"
   },
   {
-    id: 25,
+    id: 23,
+    src: "/model-metrics.jpg?v=3",
+    alt: "Random Forest Performance Metrics",
+    title: "Random Forest Performance Metrics"
+  },
+  {
+    id: 24,
     src: "/env_ml_report_deeplab.png?v=3",
     alt: "DeepLabV3+ Pixel Classification Report",
     title: "DeepLabV3+ Pixel Classification Report"
-  },
-  {
-    id: 26,
-    src: "/env_ml_confusion_matrix_deeplab.png?v=3",
-    alt: "DeepLabV3+ Segmentation Confusion Matrix",
-    title: "DeepLabV3+ Segmentation Confusion Matrix"
   }
 ];
 
