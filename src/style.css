@@ -918,3 +918,25 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
+/* Fix for any text elements inside Leaflet turning white on hover */
+.leaflet-container a.leaflet-popup-close-button {
+    color: var(--text-secondary, #8c9cb8) !important;
+}
+.leaflet-container a.leaflet-popup-close-button:hover {
+    color: var(--accent-rose, #ff2a6d) !important;
+}
+.leaflet-popup-content-wrapper * {
+    color: inherit !important;
+}
+.leaflet-popup-content-wrapper *:hover {
+    color: inherit !important;
+}
+
+/* Light Theme overrides for checkbox labels on hover */
+[data-theme='light'] .layer-control label:hover {
+    color: var(--text-primary, #0f172a) !important;
+    background-color: rgba(15, 23, 42, 0.08) !important;
+    border-color: rgba(15, 23, 42, 0.15) !important;
+}
+
+

@@ -176,55 +176,29 @@ export default function MapComponent({
         <div className="map-wrapper-relative" style={{ position: 'relative', width: '100%', height: '100%' }}>
             <div ref={mapContainerRef} className="leaflet-map-element" style={{ width: '100%', height: '100%' }} />
             
-            {/* Map Legend Box */}
-            <div className="map-legend" style={{
-                position: 'absolute',
-                bottom: '20px',
-                left: '20px',
-                zIndex: 1000,
-                backgroundColor: isDark ? 'rgba(15, 23, 42, 0.88)' : 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(8px)',
-                border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(15, 23, 42, 0.08)',
-                padding: '12px',
-                borderRadius: '8px',
-                color: isDark ? '#f2f5fa' : '#0f172a',
-                fontFamily: "'Inter', sans-serif",
-                fontSize: '0.75rem',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                pointerEvents: 'auto'
-            }}>
-                <div style={{ fontWeight: 'bold', borderBottom: '1px solid rgba(128,128,128,0.2)', paddingBottom: '4px', marginBottom: '2px', fontSize: '0.8rem', letterSpacing: '0.5px' }}>MAP LEGEND</div>
+            {/* Map Legend Overlay */}
+            <div className="map-legend-overlay" style={{ bottom: '45px', left: '14px' }}>
+                <h4>Map Legend</h4>
                 
-                {showTransects && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '16px', height: '3px', backgroundColor: isDark ? '#00f0ff' : '#0891b2', borderRadius: '1.5px' }}></div>
-                        <span>Measurement Transects</span>
-                    </div>
-                )}
+                <div className="legend-item">
+                    <span className="legend-color line-cyan"></span>
+                    <span>Measurement Transects (Cyan)</span>
+                </div>
                 
-                {showS2020 && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '16px', height: '3px', backgroundColor: '#ffc107', borderRadius: '1.5px' }}></div>
-                        <span>2020 Shoreline (Baseline)</span>
-                    </div>
-                )}
+                <div className="legend-item">
+                    <span className="legend-color line-yellow"></span>
+                    <span>2020 Shoreline Baseline (Orange)</span>
+                </div>
                 
-                {showS2024 && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '16px', height: '3px', backgroundColor: isDark ? '#00ff87' : '#059669', borderRadius: '1.5px' }}></div>
-                        <span>2024 Shoreline (Ground Truth)</span>
-                    </div>
-                )}
+                <div className="legend-item">
+                    <span className="legend-color line-green"></span>
+                    <span>2024 Shoreline Ground Truth (Green)</span>
+                </div>
                 
-                {showSpred && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '16px', height: '3px', borderTop: '2.5px dashed #ff007f' }}></div>
-                        <span>Predicted Shoreline (Dynamic)</span>
-                    </div>
-                )}
+                <div className="legend-item">
+                    <span className="legend-color line-magenta"></span>
+                    <span>Predicted Shoreline (Dynamic Pink)</span>
+                </div>
             </div>
         </div>
     );
