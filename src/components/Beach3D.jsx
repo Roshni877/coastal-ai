@@ -6,7 +6,7 @@ import * as THREE from "three";
 function SandFloor() {
   const meshRef = useRef();
   // Using a realistic sand texture
-  const texture = useTexture("https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&w=2000");
+  const texture = useTexture("https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&w=512");
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(5, 5);
 
@@ -50,8 +50,21 @@ function FloatingShells() {
 
 function Beach3D() {
   const [isDark, setIsDark] = React.useState(document.documentElement.getAttribute("data-theme") === "dark");
+  const [webglSupported, setWebglSupported] = React.useState(true);
 
   React.useEffect(() => {
+    // Check if WebGL is supported on initialization
+    try {
+      const canvas = document.createElement("canvas");
+      const supported = !!(
+        window.WebGLRenderingContext &&
+        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+      );
+      setWebglSupported(supported);
+    } catch (e) {
+      setWebglSupported(false);
+    }
+
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.getAttribute("data-theme") === "dark");
     });
@@ -59,9 +72,25 @@ function Beach3D() {
     return () => observer.disconnect();
   }, []);
 
+  if (!webglSupported) {
+    return (
+      <div className="beach-3d-container" style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        background: isDark 
+          ? 'linear-gradient(180deg, #020a13 0%, #07162c 100%)' 
+          : 'linear-gradient(180deg, #fef3c7 0%, #fde68a 100%)',
+        zIndex: -1 
+      }} />
+    );
+  }
+
   return (
     <div className="beach-3d-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
-      <Canvas dpr={[1, 2]}>
+      <Canvas dpr={[1, 1.5]}>
         <PerspectiveCamera makeDefault position={[0, 5, 15]} fov={50} />
         <Sky 
           distance={450000} 
