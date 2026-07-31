@@ -171,12 +171,12 @@ const Loader = () => {
 
       <motion.div
         className="earth-layer"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: (phase === "earth" || phase === "falling") ? 1 : 0, scale: (phase === "earth" || phase === "falling") ? 1 : 0.8 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: (phase === "earth" || phase === "falling") ? 1 : 0 }}
         transition={{ duration: 2, ease: "easeOut" }}
         style={{ position: 'absolute', inset: 0, zIndex: 10 }}
       >
-        <EarthGlobe onExplore={handleEarthClick} />
+        <EarthGlobe onExplore={handleEarthClick} phase={phase} />
       </motion.div>
 
       {/* 5. Click to Explore Button */}

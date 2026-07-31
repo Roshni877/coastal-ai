@@ -254,7 +254,22 @@ const Earth = ({ onExplore }) => {
   );
 };
 
-const EarthGlobe = ({ onExplore }) => {
+const ScalingScene = ({ phase, children }) => {
+  const groupRef = useRef();
+
+  useFrame(() => {
+    if (groupRef.current) {
+      const targetScale = (phase === "earth" || phase === "falling") ? 1.0 : 0.8;
+      groupRef.current.scale.x = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.05);
+      groupRef.current.scale.y = THREE.MathUtils.lerp(groupRef.current.scale.y, targetScale, 0.05);
+      groupRef.current.scale.z = THREE.MathUtils.lerp(groupRef.current.scale.z, targetScale, 0.05);
+    }
+  });
+
+  return <group ref={groupRef} scale={[0.8, 0.8, 0.8]}>{children}</group>;
+};
+
+const EarthGlobe = ({ onExplore, phase }) => {
   return (
     <div className="earth-globe-wrapper" style={{ width: '100vw', height: '100vh', cursor: 'default', position: 'fixed', top: 0, left: 0 }}>
       <Canvas camera={{ position: [8, 3.5, 6], fov: 45 }} style={{ width: '100%', height: '100%', background: '#000' }}>
@@ -265,9 +280,11 @@ const EarthGlobe = ({ onExplore }) => {
         <Stars radius={300} depth={60} count={12000} factor={7} saturation={0} fade speed={0.8} />
 
         <Suspense fallback={null}>
-          <Float speed={1} rotationIntensity={0.2} floatIntensity={0.3}>
-            <Earth onExplore={onExplore} />
-          </Float>
+          <ScalingScene phase={phase}>
+            <Float speed={1} rotationIntensity={0.2} floatIntensity={0.3}>
+              <Earth onExplore={onExplore} />
+            </Float>
+          </ScalingScene>
         </Suspense>
 
         <OrbitControls makeDefault enableZoom={true} enablePan={false} rotateSpeed={0.3} minDistance={5} maxDistance={25} />
