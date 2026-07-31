@@ -76,18 +76,30 @@ const images = [
   },
   {
     id: 17,
-    src: "/env_ml_confusion_matrix.png",
-    alt: "Environmental ML Risk Confusion Matrix",
-    title: "Environmental ML Risk Confusion Matrix"
+    src: "/env_ml_confusion_matrix_rf.png",
+    alt: "Random Forest Confusion Matrix",
+    title: "Random Forest Confusion Matrix"
   },
   {
     id: 18,
+    src: "/env_ml_confusion_matrix_xgb.png",
+    alt: "XGBoost Confusion Matrix",
+    title: "XGBoost Confusion Matrix"
+  },
+  {
+    id: 19,
+    src: "/env_ml_confusion_matrix_svm.png",
+    alt: "SVM Confusion Matrix",
+    title: "SVM Confusion Matrix"
+  },
+  {
+    id: 20,
     src: "/confusion-matrix.jpg",
     alt: "DeepLabV3+ Segmentation Confusion Matrix",
     title: "DeepLabV3+ Segmentation Confusion Matrix"
   },
   {
-    id: 19,
+    id: 21,
     src: "/model-metrics.jpg",
     alt: "DeepLabV3+ Performance Metrics",
     title: "DeepLabV3+ Performance Metrics"

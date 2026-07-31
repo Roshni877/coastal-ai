@@ -306,7 +306,7 @@ function Synopsis() {
                         <div style={{ background: 'var(--bg-color)', padding: '12px 15px', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
                           <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 'bold', textTransform: 'uppercase' }}>Step 6: Environmental ML Modeling (env_ml_analysis.py)</span>
                           <p style={{ fontSize: '0.85rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)' }}>
-                            Gathers environmental data (such as wave sizes and monsoonal winds) and teaches an XGBoost algorithm to classify which beaches are at high risk (severe erosion) vs. stable or growing.
+                            Gathers geomorphic and environmental parameters (such as wave height, tide range, and monsoon exposure index) and trains multi-model machine learning classifiers—including **XGBoost**, **Random Forest**, and **Support Vector Machine (SVM)**—to accurately classify beach points into severe, moderate, stable, or accretion risk categories.
                           </p>
                         </div>
 
@@ -496,10 +496,26 @@ function Synopsis() {
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12: ENVIRONMENTAL ML RISK CONFUSION MATRIX</span>
-                            <img src="/env_ml_confusion_matrix.png" alt="ML Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12: MACHINE LEARNING RISK CONFUSION MATRICES (RF, XGBOOST, SVM)</span>
+                            
+                            {/* Three sub-images grid */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', margin: '5px 0' }}>
+                              <div style={{ textAlign: 'center' }}>
+                                <img src="/env_ml_confusion_matrix_rf.png" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--card-border)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
+                                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>RANDOM FOREST</span>
+                              </div>
+                              <div style={{ textAlign: 'center' }}>
+                                <img src="/env_ml_confusion_matrix_xgb.png" alt="XGBoost Confusion Matrix" style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--card-border)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
+                                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>XGBOOST</span>
+                              </div>
+                              <div style={{ textAlign: 'center' }}>
+                                <img src="/env_ml_confusion_matrix_svm.png" alt="SVM Confusion Matrix" style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--card-border)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
+                                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>SVM</span>
+                              </div>
+                            </div>
+
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Analysis & Explanation:</strong> This confusion matrix measures how well our XGBoost classifier predicts whether a beach is at severe, moderate, or stable risk of erosion. It demonstrates that the model is highly accurate at identifying high-risk areas, allowing planners to trust its predictions when designing coastal defense structures.
+                              <strong>Analysis & Explanation:</strong> These confusion matrices evaluate our three primary machine learning models (Random Forest, XGBoost, and Support Vector Machine - SVM) in predicting erosion risk level (Severe, Moderate, Stable, Accretion). Across all models, the high diagonal counts confirm strong classification reliability. XGBoost and RF achieve peak performance by capturing non-linear feature crossings, while SVM serves as a highly robust linear-boundary baseline.
                             </p>
                           </div>
                         </div>
