@@ -395,102 +395,83 @@ function Synopsis() {
                       <h4 style={{ color: '#16a34a', margin: '0 0 20px 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Visual Report & Generated Pipeline Plots</h4>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '35px' }}>
-                        
-                        {/* Row 1: Model Progress and Confusion Matrix */}
+                                      {/* Row 1: Change Rate Profiles and Distributions */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 1: DEEPLABV3+ CONFUSION MATRIX (VALIDATION)</span>
-                            <img src="/confusion-matrix.jpg" alt="Model Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
-                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Analysis & Explanation:</strong> This diagram is a pixel-level confusion matrix which measures the accuracy of the DeepLabV3+ model in separating land from water. It compares what the AI predicted (horizontal) against the actual ground truth verified by human experts (vertical). The extremely high numbers on the main diagonal show that the model rarely confuses land for water, proving it is highly reliable for tracing coastlines.
-                            </p>
-                          </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 2: DEEPLABV3+ BOUNDARY EVALUATION METRICS</span>
-                            <img src="/model-metrics.jpg" alt="Model Training Metrics" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
-                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Analysis & Explanation:</strong> This chart plots the performance metrics (Precision, Recall, and Dice Score) during the model's training process. A Precision score of over 85% means that when the AI identifies a pixel as water, it is almost always correct. This high level of accuracy is essential because even small errors at the pixel level can result in shoreline measurements being off by tens of meters.
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Row 2: Change Rate Profiles and Distributions */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 3: LONGSHORE CHANGE RATE PROFILE (EPR)</span>
-                            <img src="/report_images/longshore_rate_profile.png" alt="Longshore Erosion Rate Profile" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 1: LONGSHORE CHANGE RATE PROFILE (EPR)</span>
+                            <img src="/report_images/longshore_rate_profile.png?v=3" alt="Longshore Erosion Rate Profile" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This longshore profile shows the calculated speed of shoreline change (in meters per year) across all 1,944 points (transects) from north to south. Negative bars extending downward represent erosion (beaches shrinking), while positive bars extending upward represent accretion (beaches growing). This makes it very easy to spot exactly which stretches of the Udupi coast are eroding the fastest.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 4: EROSION RATE DENSITY DISTRIBUTION</span>
-                            <img src="/report_images/rate_distribution_density.png" alt="Erosion Rate Density" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 2: EROSION RATE DENSITY DISTRIBUTION</span>
+                            <img src="/report_images/rate_distribution_density.png?v=3" alt="Erosion Rate Density" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This density curve shows the overall distribution of erosion rates along the coast. The highest peak sits close to zero, meaning most of the coastline is stable. However, the long tail extending to the left shows that a significant number of points are experiencing severe erosion (retreating faster than -2 meters per year), highlighting the need for targeted protection.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 3: Scatter Rate and Mean Shoreline Position */}
+                        {/* Row 2: Scatter Rate and Mean Shoreline Position */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 5: TRANSECT RATE SCATTER COMPARISON (MODEL VS GEE)</span>
-                            <img src="/report_images/scatter_rate_comparison.png" alt="Scatter Rate Comparison" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 3: TRANSECT RATE SCATTER COMPARISON (MODEL VS GEE)</span>
+                            <img src="/report_images/scatter_rate_comparison.png?v=3" alt="Scatter Rate Comparison" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This scatter plot compares our AI model's shoreline change measurements against traditional historical data from Google Earth Engine (GEE). Since the points lie close to a straight diagonal line, it proves that our automated, satellite-based method produces results that closely match established scientific datasets.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 6: MEAN SHORELINE POSITION TRENDS (2020 - 2029)</span>
-                            <img src="/shoreline/mean_position.png" alt="Mean Shoreline Position" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 4: MEAN SHORELINE POSITION TRENDS (2020 - 2029)</span>
+                            <img src="/shoreline/mean_position.png?v=3" alt="Mean Shoreline Position" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This trend graph tracks how the average position of the entire Udupi shoreline moves over a ten-year period (from 2020 to 2029). The steady downward slope shows a continuous landward retreat, meaning the ocean is gradually encroaching on the land year after year. This highlights the long-term threat of sea-level rise and storm waves.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 4: Alongshore Heatmap and Overall Map */}
+                        {/* Row 3: Alongshore Heatmap and Overall Map */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 7: ALONGSHORE EROSION RISK HEATMAP</span>
-                            <img src="/analysis/alongshore_heatmap.png" alt="Alongshore Heatmap" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 5: ALONGSHORE EROSION RISK HEATMAP</span>
+                            <img src="/analysis/alongshore_heatmap.png?v=3" alt="Alongshore Heatmap" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This spatial heatmap uses warm colors (reds and oranges) to indicate high-risk erosion hotspots and cool colors (blues) for stable areas. By looking at this map, coastal managers can instantly identify that sandy spits and river inlets are experiencing the most rapid land loss and require immediate engineering interventions.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 8: OVERALL SHORELINE BOUNDARY MAP INTERSECTIONS</span>
-                            <img src="/shoreline/overall_analysis_new.png" alt="Overall Shoreline Map" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 6: OVERALL SHORELINE BOUNDARY MAP INTERSECTIONS</span>
+                            <img src="/shoreline/overall_analysis_new.png?v=3" alt="Overall Shoreline Map" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This map displays the actual geographic lines of Udupi's shorelines. It overlays the historical lines (2020-2024) with our predicted future lines (2027-2029). The gap between the lines represents the physical space that will be claimed by the sea, giving engineers a clear visual guide on where the beach will be in the future.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 5: Feature Importance and Correlation Map */}
+                        {/* Row 4: Feature Importance and Correlation Map */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 9: XGBOOST FEATURE IMPORTANCE ESTIMATOR</span>
-                            <img src="/env_feature_importance.png" alt="XGBoost Feature Importance" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 7: XGBOOST FEATURE IMPORTANCE ESTIMATOR</span>
+                            <img src="/env_feature_importance.png?v=3" alt="XGBoost Feature Importance" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This feature importance chart shows which environmental factors have the biggest influence on coastal erosion. The length of each bar indicates the factor's impact. The chart clearly shows that monsoonal wind direction and wave heights are the dominant physical drivers, meaning erosion is highly seasonal and storm-driven.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 10: GEOMORPHIC SHORELINE RISK PROFILE</span>
-                            <img src="/analysis/transect_rate_scatter.png" alt="Transect Risk Profile" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 8: GEOMORPHIC SHORELINE RISK PROFILE</span>
+                            <img src="/analysis/transect_rate_scatter.png?v=3" alt="Transect Risk Profile" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This scatter profile shows individual transect erosion rates sorted by their geographic location IDs. It reveals that erosion is not uniform; instead, it varies heavily depending on local features like beach width, nearby river mouths, and constructed sea walls, which block natural sand flow.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 6: Environmental Correlation Heatmap & ML Framework */}
+                        {/* Row 5: Environmental Correlation Heatmap & ML Framework */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11: ENVIRONMENTAL PARAMETERS CORRELATION MATRIX</span>
-                            <img src="/env_correlation_heatmap.png" alt="Environmental Correlation Heatmap" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 9: ENVIRONMENTAL PARAMETERS CORRELATION MATRIX</span>
+                            <img src="/env_correlation_heatmap.png?v=3" alt="Environmental Correlation Heatmap" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This correlation matrix uses colors to show how different factors relate to one another. Darker colors represent strong relationships. It confirms a direct link between high monsoonal wave energy and rapid shoreline retreat, proving that wave impact is the main force pulling sand away from the beach.
                             </p>
@@ -505,56 +486,74 @@ function Synopsis() {
                           </div>
                         </div>
 
-                        {/* Row 7: Random Forest Performance Details */}
+                        {/* Row 6: Random Forest Performance Details */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12 (a): RANDOM FOREST CLASSIFICATION REPORT</span>
-                            <img src="/env_ml_report_rf.png" alt="Random Forest Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11 (a): RANDOM FOREST CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_rf.png?v=3" alt="Random Forest Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Metrics Analysis:</strong> The Random Forest report yields a balanced overall classification accuracy of 51%. The model exhibits peak precision on stable shoreline classes (0.65) and maintains balanced geomorphic classification weights across moderate erosion and accretion trends.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12 (b): RANDOM FOREST CONFUSION MATRIX</span>
-                            <img src="/env_ml_confusion_matrix_rf.png" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11 (b): RANDOM FOREST CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_rf.png?v=3" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This confusion matrix measures how well the Random Forest classifier maps beach lines to geomorphic risk levels. High diagonal values highlight stable class classification consistency, with soft off-diagonal crossings.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 8: XGBoost Performance Details */}
+                        {/* Row 7: XGBoost Performance Details */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13 (a): XGBOOST CLASSIFICATION REPORT</span>
-                            <img src="/env_ml_report_xgb.png" alt="XGBoost Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12 (a): XGBOOST CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_xgb.png?v=3" alt="XGBoost Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Metrics Analysis:</strong> The XGBoost classifier reaches an overall accuracy of 53%, showing excellent recall on the stable class (0.77) and stable precision (0.41) across erosion and accretion features.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13 (b): XGBOOST CONFUSION MATRIX</span>
-                            <img src="/env_ml_confusion_matrix_xgb.png" alt="XGBoost Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12 (b): XGBOOST CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_xgb.png?v=3" alt="XGBoost Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This confusion matrix measures the XGBoost model's class predictions. The concentration of counts on the primary diagonal (e.g. 282 stable points) illustrates its strong capability to identify non-linear environmental feature dependencies.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 9: SVM Performance Details */}
+                        {/* Row 8: SVM Performance Details */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (a): SVM CLASSIFICATION REPORT</span>
-                            <img src="/env_ml_report_svm.png" alt="SVM Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13 (a): SVM CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_svm.png?v=3" alt="SVM Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Metrics Analysis:</strong> The SVM model provides a baseline accuracy of 38%. It maintains a high precision on stable points (0.70) while providing strong balanced recall on geomorphic accretion (0.56) and erosion (0.50) patterns.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (b): SVM CONFUSION MATRIX</span>
-                            <img src="/env_ml_confusion_matrix_svm.png" alt="SVM Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13 (b): SVM CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_svm.png?v=3" alt="SVM Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> The SVM confusion matrix measures class predictions under linear kernel decision boundaries. It serves as a geomorphic prediction benchmark, illustrating class limits.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Row 9: DeepLabV3+ Performance Details */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (a): DEEPLABV3+ BOUNDARY EVALUATION METRICS</span>
+                            <img src="/model-metrics.jpg?v=3" alt="DeepLabV3+ Boundary Evaluation Metrics" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Analysis & Explanation:</strong> This chart plots the performance metrics (Precision, Recall, and Dice Score) during the DeepLabV3+ model's training process. A Precision score of over 85% means that when the AI identifies a pixel as water, it is almost always correct. This high level of accuracy is essential because even small errors at the pixel level can result in shoreline measurements being off by tens of meters.
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (b): DEEPLABV3+ CONFUSION MATRIX (VALIDATION)</span>
+                            <img src="/confusion-matrix.jpg?v=3" alt="DeepLabV3+ Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Analysis & Explanation:</strong> This diagram is a pixel-level confusion matrix which measures the accuracy of the DeepLabV3+ model in separating land from water. It compares what the AI predicted (horizontal) against the actual ground truth verified by human experts (vertical). The extremely high numbers on the main diagonal show that the model rarely confuses land for water, proving it is highly reliable for tracing coastlines.
                             </p>
                           </div>
                         </div>
@@ -563,14 +562,14 @@ function Synopsis() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 15: SHORELINE POSITION OVER TIME TRENDS</span>
-                            <img src="/analysis/shoreline_position_time.png" alt="Shoreline Position Over Time" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <img src="/analysis/shoreline_position_time.png?v=3" alt="Shoreline Position Over Time" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This linear trend graph plots the changing position of the shoreline over time for individual points. The straight regression lines show the rate of landward retreat, proving that coastal erosion is a steady, ongoing process rather than a series of random events, allowing us to make reliable future forecasts.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 16: ANNUAL SHORELINE CHANGE RATES (BAR GRAPH)</span>
-                            <img src="/analysis/annual_change_rate.png" alt="Annual Shoreline Change Rate" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <img src="/analysis/annual_change_rate.png?v=3" alt="Annual Shoreline Change Rate" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This bar chart compares the average erosion rates across different years. It highlights that erosion is highly variable from year to year, with some years showing massive land loss due to severe monsoon seasons and storm surges, while other years remain relatively stable.
                             </p>
