@@ -169,7 +169,21 @@ function Card({ step, index, activeIndex, onSelect, isDark }) {
 function MethodologyCarousel() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [webglSupported, setWebglSupported] = useState(true);
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement("canvas");
+      const supported = !!(
+        window.WebGLRenderingContext &&
+        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+      );
+      setWebglSupported(supported);
+    } catch (e) {
+      setWebglSupported(false);
+    }
+  }, []);
 
   const handleNext = () => {
     setActiveIndex((prev) => (prev === null ? 0 : (prev + 1) % steps.length));
@@ -193,9 +207,9 @@ function MethodologyCarousel() {
           <h2>THE COASTAL METHOD</h2>
           <p>CLICK TO EXPLORE OUR PROCESS</p>
         </motion.div>
-      ) : (
+      ) : webglSupported ? (
         <div className="carousel-canvas-container">
-          <Canvas dpr={[1, 2]}>
+          <Canvas dpr={[1, 1.5]}>
             <PerspectiveCamera makeDefault position={[0, 0, 12]} />
             <ambientLight intensity={1.5} />
             <pointLight position={[10, 10, 10]} />
@@ -224,6 +238,27 @@ function MethodologyCarousel() {
             <button className="nav-btn close" onClick={() => { setIsOpen(false); setActiveIndex(null); }}>CLOSE</button>
             <button className="nav-btn next" onClick={handleNext}>NEXT →</button>
           </div>
+        </div>
+      ) : (
+        <div className="carousel-canvas-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px', overflowY: 'auto', height: '100%', maxHeight: '560px' }}>
+          {steps.map((step) => (
+            <div 
+              key={step.id} 
+              style={{
+                background: isDark ? 'rgba(30, 41, 59, 0.85)' : 'rgba(240, 253, 244, 0.85)',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                padding: '20px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }}
+            >
+              <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>Step {step.id}</div>
+              <h3 style={{ fontSize: '1.2rem', margin: '5px 0 10px 0', color: isDark ? '#fff' : '#000', fontWeight: 'bold' }}>{step.title}</h3>
+              <p style={{ fontSize: '0.85rem', fontStyle: 'italic', margin: 0, color: isDark ? '#e2e8f0' : '#475569' }}>{step.desc}</p>
+            </div>
+          ))}
+          <button className="nav-btn close" style={{ alignSelf: 'center', marginTop: '10px', width: '100px' }} onClick={() => setIsOpen(false)}>CLOSE</button>
         </div>
       )}
     </div>
