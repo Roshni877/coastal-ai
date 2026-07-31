@@ -188,9 +188,11 @@ const Loader = () => {
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             exit={{ opacity: 0, scale: 0.5, rotate: 20 }}
             transition={{ delay: 1, duration: 0.8, ease: "backOut" }}
+            onClick={handleEarthClick}
+            style={{ cursor: 'pointer' }}
           >
-            <button className="explore-btn" style={{ cursor: 'default' }}>
-              CLICK TO EXPLORE THE<br />HIGHLIGHTED AREA ON THE<br />INDIA'S WESTERN COASTLINE
+            <button className="explore-btn">
+              CLICK THE HIGHLIGHTED AREA<br />ON THE INDIA'S WESTERN<br />COASTLINE TO EXPLORE<br />COASTAL AI
             </button>
             <span className="explore-hint">START</span>
           </motion.div>
