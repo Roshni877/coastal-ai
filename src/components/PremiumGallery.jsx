@@ -103,6 +103,24 @@ const images = [
     src: "/model-metrics.jpg",
     alt: "DeepLabV3+ Performance Metrics",
     title: "DeepLabV3+ Performance Metrics"
+  },
+  {
+    id: 22,
+    src: "/env_ml_report_rf.png",
+    alt: "Random Forest Classification Report",
+    title: "Random Forest Classification Report"
+  },
+  {
+    id: 23,
+    src: "/env_ml_report_xgb.png",
+    alt: "XGBoost Classification Report",
+    title: "XGBoost Classification Report"
+  },
+  {
+    id: 24,
+    src: "/env_ml_report_svm.png",
+    alt: "SVM Classification Report",
+    title: "SVM Classification Report"
   }
 ];
 

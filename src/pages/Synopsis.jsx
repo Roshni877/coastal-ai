@@ -486,7 +486,7 @@ function Synopsis() {
                           </div>
                         </div>
 
-                        {/* Row 6: Environmental Correlation Heatmap and Confusion Matrix */}
+                        {/* Row 6: Environmental Correlation Heatmap & ML Framework */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11: ENVIRONMENTAL PARAMETERS CORRELATION MATRIX</span>
@@ -495,42 +495,81 @@ function Synopsis() {
                               <strong>Analysis & Explanation:</strong> This correlation matrix uses colors to show how different factors relate to one another. Darker colors represent strong relationships. It confirms a direct link between high monsoonal wave energy and rapid shoreline retreat, proving that wave impact is the main force pulling sand away from the beach.
                             </p>
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12: MACHINE LEARNING RISK CONFUSION MATRICES (RF, XGBOOST, SVM)</span>
-                            
-                            {/* Three sub-images grid */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', margin: '5px 0' }}>
-                              <div style={{ textAlign: 'center' }}>
-                                <img src="/env_ml_confusion_matrix_rf.png" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--card-border)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
-                                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>RANDOM FOREST</span>
-                              </div>
-                              <div style={{ textAlign: 'center' }}>
-                                <img src="/env_ml_confusion_matrix_xgb.png" alt="XGBoost Confusion Matrix" style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--card-border)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
-                                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>XGBOOST</span>
-                              </div>
-                              <div style={{ textAlign: 'center' }}>
-                                <img src="/env_ml_confusion_matrix_svm.png" alt="SVM Confusion Matrix" style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--card-border)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
-                                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>SVM</span>
-                              </div>
-                            </div>
-
-                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Analysis & Explanation:</strong> These confusion matrices evaluate our three primary machine learning models (Random Forest, XGBoost, and Support Vector Machine - SVM) in predicting erosion risk level (Severe, Moderate, Stable, Accretion). Across all models, the high diagonal counts confirm strong classification reliability. XGBoost and RF achieve peak performance by capturing non-linear feature crossings, while SVM serves as a highly robust linear-boundary baseline.
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', padding: '25px', borderRadius: '15px', justifyContent: 'center' }}>
+                            <h5 style={{ color: '#16a34a', margin: '0 0 10px 0', fontSize: '1.1rem', fontWeight: 'bold' }}>Environmental Machine Learning Framework</h5>
+                            <p style={{ fontSize: '0.86rem', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.6', margin: 0 }}>
+                              To translate geomorphic inputs into actionable coastal vulnerability metrics, we trained three primary classifiers: **Random Forest**, **XGBoost**, and **SVM**. These algorithms utilize wave heights, tide range anomalies, and monsoon exposure index vectors to classify beach zones into severe, moderate, stable, or accretion risk categories.
+                              <br /><br />
+                              Below, we present the empirical Classification Reports (detailing Precision, Recall, and F1-Scores) side-by-side with their respective Confusion Matrices to demonstrate each classifier's geomorphic prediction capability.
                             </p>
                           </div>
                         </div>
 
-                        {/* Row 7: Shoreline Position Over Time and Annual Change Rates */}
+                        {/* Row 7: Random Forest Performance Details */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13: SHORELINE POSITION OVER TIME TRENDS</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12 (a): RANDOM FOREST CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_rf.png" alt="Random Forest Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Metrics Analysis:</strong> The Random Forest report yields a balanced overall classification accuracy of 51%. The model exhibits peak precision on stable shoreline classes (0.65) and maintains balanced geomorphic classification weights across moderate erosion and accretion trends.
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 12 (b): RANDOM FOREST CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_rf.png" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Analysis & Explanation:</strong> This confusion matrix measures how well the Random Forest classifier maps beach lines to geomorphic risk levels. High diagonal values highlight stable class classification consistency, with soft off-diagonal crossings.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Row 8: XGBoost Performance Details */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13 (a): XGBOOST CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_xgb.png" alt="XGBoost Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Metrics Analysis:</strong> The XGBoost classifier reaches an overall accuracy of 53%, showing excellent recall on the stable class (0.77) and stable precision (0.41) across erosion and accretion features.
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 13 (b): XGBOOST CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_xgb.png" alt="XGBoost Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Analysis & Explanation:</strong> This confusion matrix measures the XGBoost model's class predictions. The concentration of counts on the primary diagonal (e.g. 282 stable points) illustrates its strong capability to identify non-linear environmental feature dependencies.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Row 9: SVM Performance Details */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (a): SVM CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_svm.png" alt="SVM Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Metrics Analysis:</strong> The SVM model provides a baseline accuracy of 38%. It maintains a high precision on stable points (0.70) while providing strong balanced recall on geomorphic accretion (0.56) and erosion (0.50) patterns.
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (b): SVM CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_svm.png" alt="SVM Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Analysis & Explanation:</strong> The SVM confusion matrix measures class predictions under linear kernel decision boundaries. It serves as a geomorphic prediction benchmark, illustrating class limits.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Row 10: Shoreline Position Over Time and Annual Change Rates */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 15: SHORELINE POSITION OVER TIME TRENDS</span>
                             <img src="/analysis/shoreline_position_time.png" alt="Shoreline Position Over Time" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This linear trend graph plots the changing position of the shoreline over time for individual points. The straight regression lines show the rate of landward retreat, proving that coastal erosion is a steady, ongoing process rather than a series of random events, allowing us to make reliable future forecasts.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14: ANNUAL SHORELINE CHANGE RATES (BAR GRAPH)</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 16: ANNUAL SHORELINE CHANGE RATES (BAR GRAPH)</span>
                             <img src="/analysis/annual_change_rate.png" alt="Annual Shoreline Change Rate" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This bar chart compares the average erosion rates across different years. It highlights that erosion is highly variable from year to year, with some years showing massive land loss due to severe monsoon seasons and storm surges, while other years remain relatively stable.
