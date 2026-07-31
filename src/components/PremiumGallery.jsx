@@ -95,14 +95,14 @@ const images = [
   {
     id: 20,
     src: "/confusion-matrix.jpg?v=3",
-    alt: "DeepLabV3+ Segmentation Confusion Matrix",
-    title: "DeepLabV3+ Segmentation Confusion Matrix"
+    alt: "Random Forest Confusion Matrix",
+    title: "Random Forest Confusion Matrix"
   },
   {
     id: 21,
     src: "/model-metrics.jpg?v=3",
-    alt: "DeepLabV3+ Performance Metrics",
-    title: "DeepLabV3+ Performance Metrics"
+    alt: "Random Forest Performance Metrics",
+    title: "Random Forest Performance Metrics"
   },
   {
     id: 22,
@@ -121,6 +121,18 @@ const images = [
     src: "/env_ml_report_svm.png?v=3",
     alt: "SVM Classification Report",
     title: "SVM Classification Report"
+  },
+  {
+    id: 25,
+    src: "/env_ml_report_deeplab.png?v=3",
+    alt: "DeepLabV3+ Pixel Classification Report",
+    title: "DeepLabV3+ Pixel Classification Report"
+  },
+  {
+    id: 26,
+    src: "/env_ml_confusion_matrix_deeplab.png?v=3",
+    alt: "DeepLabV3+ Segmentation Confusion Matrix",
+    title: "DeepLabV3+ Segmentation Confusion Matrix"
   }
 ];
 

@@ -489,15 +489,15 @@ function Synopsis() {
                         {/* Row 6: Random Forest Performance Details */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11 (a): RANDOM FOREST CLASSIFICATION REPORT</span>
-                            <img src="/env_ml_report_rf.png?v=3" alt="Random Forest Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11 (a): RANDOM FOREST VALIDATION METRICS</span>
+                            <img src="/model-metrics.jpg?v=3" alt="Random Forest Validation Metrics" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Metrics Analysis:</strong> The Random Forest report yields a balanced overall classification accuracy of 51%. The model exhibits peak precision on stable shoreline classes (0.65) and maintains balanced geomorphic classification weights across moderate erosion and accretion trends.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 11 (b): RANDOM FOREST CONFUSION MATRIX</span>
-                            <img src="/env_ml_confusion_matrix_rf.png?v=3" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <img src="/confusion-matrix.jpg?v=3" alt="Random Forest Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
                               <strong>Analysis & Explanation:</strong> This confusion matrix measures how well the Random Forest classifier maps beach lines to geomorphic risk levels. High diagonal values highlight stable class classification consistency, with soft off-diagonal crossings.
                             </p>
@@ -543,17 +543,17 @@ function Synopsis() {
                         {/* Row 9: DeepLabV3+ Performance Details */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (a): DEEPLABV3+ BOUNDARY EVALUATION METRICS</span>
-                            <img src="/model-metrics.jpg?v=3" alt="DeepLabV3+ Boundary Evaluation Metrics" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (a): DEEPLABV3+ CLASSIFICATION REPORT</span>
+                            <img src="/env_ml_report_deeplab.png?v=3" alt="DeepLabV3+ Classification Report" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Analysis & Explanation:</strong> This chart plots the performance metrics (Precision, Recall, and Dice Score) during the DeepLabV3+ model's training process. A Precision score of over 85% means that when the AI identifies a pixel as water, it is almost always correct. This high level of accuracy is essential because even small errors at the pixel level can result in shoreline measurements being off by tens of meters.
+                              <strong>Analysis & Explanation:</strong> This chart plots the pixel-level classification performance metrics (Precision, Recall, and F1-Scores) for land/water segmentation during the DeepLabV3+ model's validation phase.
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (b): DEEPLABV3+ CONFUSION MATRIX (VALIDATION)</span>
-                            <img src="/confusion-matrix.jpg?v=3" alt="DeepLabV3+ Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 14 (b): DEEPLABV3+ SEGMENTATION CONFUSION MATRIX</span>
+                            <img src="/env_ml_confusion_matrix_deeplab.png?v=3" alt="DeepLabV3+ Segmentation Confusion Matrix" style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--card-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Analysis & Explanation:</strong> This diagram is a pixel-level confusion matrix which measures the accuracy of the DeepLabV3+ model in separating land from water. It compares what the AI predicted (horizontal) against the actual ground truth verified by human experts (vertical). The extremely high numbers on the main diagonal show that the model rarely confuses land for water, proving it is highly reliable for tracing coastlines.
+                              <strong>Analysis & Explanation:</strong> This diagram is a pixel-level confusion matrix which measures the accuracy of the DeepLabV3+ model in separating land from water. The high numbers on the main diagonal show that the model rarely confuses land for water, proving it is highly reliable for tracing coastlines.
                             </p>
                           </div>
                         </div>
