@@ -149,13 +149,13 @@ function Visualization() {
                           className="ml-image-btn"
                           onClick={() =>
                             setSelectedMlImage({
-                              src: "/confusion-matrix.jpg",
+                              src: "/env_ml_confusion_matrix_deeplab.png?v=3",
                               alt: "Confusion Matrix - DeepLabV3+ Final Model",
                               title: "DEEPLABV3+ CONFUSION MATRIX"
                             })
                           }
                         >
-                          <img src="/confusion-matrix.jpg" alt="Confusion Matrix - DeepLabV3+ Final Model" className="ml-image" />
+                          <img src="/env_ml_confusion_matrix_deeplab.png?v=3" alt="Confusion Matrix - DeepLabV3+ Final Model" className="ml-image" />
                         </button>
                         <div className="ml-card-info">
                           <span className="tech-meta">VISUALIZATION 01</span>
@@ -174,18 +174,18 @@ function Visualization() {
                           className="ml-image-btn"
                           onClick={() =>
                             setSelectedMlImage({
-                              src: "/model-metrics.jpg",
+                              src: "/env_ml_report_deeplab.png?v=3",
                               alt: "DeepLabV3+ Validation Performance Metrics",
                               title: "PERFORMANCE METRICS"
                             })
                           }
                         >
-                          <img src="/model-metrics.jpg" alt="DeepLabV3+ Validation Performance Metrics" className="ml-image" />
+                          <img src="/env_ml_report_deeplab.png?v=3" alt="DeepLabV3+ Validation Performance Metrics" className="ml-image" />
                         </button>
                         <div className="ml-card-info">
                           <span className="tech-meta">VISUALIZATION 02</span>
                           <h4>PERFORMANCE METRICS</h4>
-                          <p>DEEPLABV3+ ACCURACY METRICS REPORTING AN OUTSTANDING 85.0% VALIDATION ACCURACY BENCHMARK.</p>
+                          <p>DEEPLABV3+ ACCURACY METRICS REPORTING AN OUTSTANDING 85.48% VALIDATION ACCURACY BENCHMARK.</p>
                         </div>
                       </div>
                     </div>
