@@ -1,3 +1,5 @@
+Command to run :  npm run dev --prefix dashboard-react
+
 # Coastal Erosion Detection, Analysis, and Forecasting using Remote Sensing and ML
 
 An end-to-end, multi-sensor remote sensing and machine learning pipeline to detect, analyze, and forecast shoreline change patterns along the Udupi district coastline in Karnataka, India.
