@@ -71,8 +71,8 @@ function Card({ step, index, activeIndex, onSelect, isDark }) {
           <div 
             className={`postcard-invitation ${isActive ? 'postcard-active' : ''}`} 
             style={{ 
-              color: isDark ? '#ffffff' : '#000000', 
-              opacity: isActive ? 1 : 0.6,
+              color: isDark ? '#ffffff' : '#0f172a', 
+              opacity: isActive ? 1 : 0.88,
               width: '195px',
               height: '255px',
               padding: '16px',
@@ -81,40 +81,48 @@ function Card({ step, index, activeIndex, onSelect, isDark }) {
               alignItems: 'center',
               justifyContent: 'space-between',
               textAlign: 'center',
-              fontFamily: "'Georgia', 'Times New Roman', serif",
-              background: 'linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%)',
-              borderRadius: '4px',
-              boxShadow: 'inset 0 0 30px rgba(34, 197, 94, 0.08)',
-              border: '1px solid rgba(34, 197, 94, 0.25)'
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+              background: isDark 
+                ? 'linear-gradient(180deg, #1e293b 0%, #0f172a 100%)' 
+                : 'linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%)',
+              borderRadius: '8px',
+              boxShadow: isDark
+                ? '0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.05)'
+                : '0 10px 25px rgba(34, 197, 94, 0.15), inset 0 0 20px rgba(34, 197, 94, 0.08)',
+              border: isDark 
+                ? '1.5px solid rgba(74, 222, 128, 0.4)' 
+                : '1.5px solid rgba(34, 197, 94, 0.4)'
             }}
           >
             {/* Postcard Header */}
             <div style={{ width: '100%', textAlign: 'center' }}>
               <div style={{
-                fontSize: '0.65rem',
+                fontSize: '0.7rem',
                 letterSpacing: '3px',
-                color: '#22c55e',
+                color: isDark ? '#4ade80' : '#15803d',
                 textTransform: 'uppercase',
                 marginBottom: '10px',
-                fontWeight: '500'
+                fontWeight: '700'
               }}>— Step {step.id} —</div>
               
               <h3 style={{
-                fontSize: '1.15rem',
-                fontWeight: '700',
-                letterSpacing: '2px',
+                fontSize: '1.1rem',
+                fontWeight: '800',
+                letterSpacing: '1.5px',
                 margin: '0',
-                lineHeight: '1.2',
+                lineHeight: '1.25',
                 textTransform: 'uppercase',
-                color: isDark ? '#ffffff' : '#000000'
+                color: isDark ? '#ffffff' : '#0f172a'
               }}>{step.title}</h3>
               
               <div style={{
                 width: '40px',
                 height: '2px',
-                background: 'linear-gradient(90deg, transparent, #22c55e, transparent)',
+                background: isDark
+                  ? 'linear-gradient(90deg, transparent, #4ade80, transparent)'
+                  : 'linear-gradient(90deg, transparent, #15803d, transparent)',
                 margin: '12px auto',
-                opacity: isActive ? 1 : 0.5
+                opacity: isActive ? 1 : 0.7
               }} />
             </div>
 
@@ -127,12 +135,12 @@ function Card({ step, index, activeIndex, onSelect, isDark }) {
               width: '100%'
             }}>
               <p style={{
-                fontSize: '0.78rem',
-                lineHeight: '1.5',
-                fontStyle: 'italic',
-                color: isDark ? '#e0e0e0' : '#000000',
+                fontSize: '0.8rem',
+                lineHeight: '1.55',
+                fontWeight: '600',
+                color: isDark ? '#f8fafc' : '#1e293b',
                 margin: '0',
-                padding: '0 8px'
+                padding: '0 4px'
               }}>
                 {step.desc}
               </p>
@@ -150,13 +158,14 @@ function Card({ step, index, activeIndex, onSelect, isDark }) {
               <div style={{
                 width: '24px',
                 height: '1px',
-                background: '#22c55e',
-                opacity: 0.5
+                background: isDark ? '#4ade80' : '#15803d',
+                opacity: 0.6
               }} />
               <span style={{
-                fontSize: '0.6rem',
+                fontSize: '0.65rem',
                 letterSpacing: '1.5px',
-                color: '#22c55e'
+                fontWeight: '700',
+                color: isDark ? '#4ade80' : '#15803d'
               }}>COASTAL</span>
             </div>
           </div>

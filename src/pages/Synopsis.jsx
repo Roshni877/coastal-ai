@@ -121,17 +121,6 @@ function Synopsis() {
             WebkitTextStroke: '2px rgba(22, 163, 74, 0.3)',
             filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.4))'
           }}>REPORT</h1>
-          <h2 className="hero-subtitle" style={{
-            fontSize: '1.8rem',
-            fontWeight: '700',
-            color: '#16a34a',
-            textAlign: 'center',
-            marginTop: '5px',
-            marginBottom: '5px',
-            fontFamily: "'Brush Script MT', cursive, 'Comic Sans MS', fantasy",
-            letterSpacing: '3px',
-            filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.3))'
-          }}>Using Deep Learning and Remote Sensing (85.48% Accuracy)</h2>
         </section>
 
         <div className="synopsis-content">
