@@ -45,14 +45,6 @@ npm.cmd start
 
 ---
 
-### 3. Run Static HTML Web-GIS Server
-```bash
-python -m http.server 8000 --directory dashboard
-```
-> **Local URL:** `http://localhost:8000`
-
----
-
 ## 🤖 Machine Learning Evaluation & Confusion Matrix
 
 To run the complete **Machine Learning pipeline** (XGBoost classifier, Confusion Matrix, Feature Importance, Risk Quantification, and Plots) in a single command:

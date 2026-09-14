@@ -312,16 +312,6 @@ Then open your browser at: **http://localhost:5173**
 
 ---
 
-#### Option C: Lightweight Static HTML Web-GIS Dashboard
-**Folder:** `dashboard/`
-
-```bash
-python -m http.server 8000 --directory dashboard
-```
-Then open your browser at: **http://localhost:8000**
-
----
-
 ## Complete Pipeline at a Glance
 
 ```
