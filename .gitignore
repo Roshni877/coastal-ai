@@ -1,0 +1,29 @@
+# Node dependencies
+node_modules/
+.npm
+.eslintcache
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# Build outputs
+build/
+dist/
+.vercel/
+
+# Heavy temporary training data
+training_dataset/
+temp_data/
+*.pth
+*.tif
+*.tiff
+
+# System files
+.DS_Store
+Thumbs.db
