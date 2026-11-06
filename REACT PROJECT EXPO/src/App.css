@@ -163,6 +163,39 @@ body {
   opacity: 1;
 }
 
+.nav-links a[href="/comparison"] {
+  padding: 8px 11px;
+  border: 1px solid rgba(22, 116, 71, 0.26);
+  border-radius: 5px;
+  color: #167447;
+  background: rgba(22, 116, 71, 0.08);
+  opacity: 1;
+}
+
+.nav-links a[href="/comparison"].active {
+  color: #fff;
+  border-color: #167447;
+  background: #167447;
+}
+
+.comparison-home-cta::before {
+  background: #167447;
+}
+
+.comparison-home-cta:hover {
+  border-color: #167447;
+  box-shadow: 0 15px 30px rgba(22, 116, 71, 0.22);
+}
+
+.comparison-home-cta .btn-icon-hover {
+  color: #fff;
+}
+
+.demo-home-cta {
+  padding-inline: 28px;
+  font-size: 0.8rem;
+}
+
 /* HERO SECTION */
 .hero-container {
   position: absolute;

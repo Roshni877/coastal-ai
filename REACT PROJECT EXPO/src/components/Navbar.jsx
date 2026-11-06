@@ -16,6 +16,7 @@ function Navbar() {
 
         <div className="nav-links">
           <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/comparison">Comparison</NavLink>
           <NavLink to="/methodology">Methodology</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
           <NavLink to="/visualization">Visualization and Results</NavLink>

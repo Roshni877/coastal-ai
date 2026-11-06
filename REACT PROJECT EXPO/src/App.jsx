@@ -11,6 +11,7 @@ import Team from "./pages/Team";
 import DatasetGuide from "./pages/DatasetGuide";
 import Synopsis from "./pages/Synopsis";
 import Dashboard from "./pages/Dashboard";
+import Comparison from "./pages/Comparison";
 import SmoothScroll from "./components/SmoothScroll";
 import Cursor from "./components/Cursor";
 import Loader from "./components/Loader";
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/methodology" element={<Methodology />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/comparison" element={<Comparison />} />
                 <Route path="/visualization" element={<Visualization />} />
                 <Route path="/model" element={<Model />} />
                 <Route path="/team" element={<Team />} />

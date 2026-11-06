@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { FiArrowRight, FiSun, FiMap, FiX, FiPlay } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import { NavLink } from "react-router-dom";
 import MagneticButton from "../components/MagneticButton";
 import Coastal3D from "../components/Coastal3D";
 
@@ -52,12 +53,24 @@ function Home() {
 
         <div ref={buttonsRef} className="btn-group">
           <MagneticButton>
+            <NavLink to="/comparison" className="btn-premium-explore comparison-home-cta">
+              <div className="btn-text-wrapper">
+                <span className="btn-text-normal">Historical Comparison</span>
+                <span className="btn-text-hover">View Interval Results</span>
+              </div>
+              <div className="btn-icon-wrapper">
+                <FiArrowRight className="btn-icon-normal" />
+                <FiArrowRight className="btn-icon-hover" />
+              </div>
+            </NavLink>
+          </MagneticButton>
+          <MagneticButton>
             <button
-              className="btn-premium-explore"
+              className="btn-premium-explore demo-home-cta"
               onClick={() => setVideoOpen(true)}
             >
               <div className="btn-text-wrapper">
-                <span className="btn-text-normal">Explore Project</span>
+                <span className="btn-text-normal">Watch Project Demo</span>
                 <span className="btn-text-hover">Watch Demo</span>
               </div>
               <div className="btn-icon-wrapper">
