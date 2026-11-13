@@ -108,7 +108,7 @@ function Visualization() {
                 </motion.div>
               </section>
 
-              {/* � ADVANCED ANALYTICS SECTION (Google Colab Outputs) */}
+              {/* 📊 ADVANCED ANALYTICS SECTION (Google Colab Outputs) */}
               <section className="analytics-section">
                 <div className="analytics-header">
                   <h2 className="section-subtitle" style={{ color: 'var(--amber)', textShadow: '0 0 30px rgba(255, 214, 10, 0.35)' }}>DETAILED ANALYSIS</h2>
