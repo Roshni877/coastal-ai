@@ -78,7 +78,7 @@ function AncientBox({ onOpen }) {
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    meshRef.current.position.x = 0; // Moved to middle
+    meshRef.current.position.x = -12; // Farther left
     meshRef.current.position.y = -5.5 + Math.sin(time) * 0.1; // Lower on distant sand
     meshRef.current.position.z = -15; // Deeper into the background
   });
@@ -168,7 +168,7 @@ function Treasure3D({ onOpen }) {
           
           {/* Dramatic Light from Cave Entrance */}
           <SpotLight 
-            position={[0, 10, -15]} 
+            position={[-12, 10, -15]} 
             angle={0.4} 
             penumbra={1} 
             intensity={15} 
