@@ -5,56 +5,56 @@ import { FiChevronLeft, FiChevronRight, FiCamera } from "react-icons/fi";
 const filmImages = [
   {
     id: 1,
-    step: "FINAL RESULT 01 // AI VALIDATION",
+    step: "FINAL RESULT 01",
     src: "/env_ml_confusion_matrix_deeplab.png?v=3",
     alt: "DeepLabV3+ Final Validation Result (85.48% Accuracy)",
     description: "Deep learning pixel segmentation confusion matrix validating 85.48% accuracy and 92.17% Dice coefficient across coastal land/water boundaries."
   },
   {
     id: 2,
-    step: "FINAL RESULT 02 // OVERALL SHORELINE BOUNDARY",
+    step: "FINAL RESULT 02",
     src: "/shoreline/overall_analysis_new.png",
     alt: "Overall Shoreline Analysis Map & Boundary Envelopes",
     description: "Final multi-year spatial overlay integrating empirical shoreline boundaries (2020–2024) with forward projections across Udupi's 97.2 km coast."
   },
   {
     id: 3,
-    step: "FINAL RESULT 03 // ALONGSHORE RISK HEATMAP",
+    step: "FINAL RESULT 03",
     src: "/analysis/alongshore_heatmap.png",
     alt: "Alongshore Spatial Erosion & Accretion Heatmap",
     description: "Two-dimensional space-time raster mapping alongshore transect IDs against years to pinpoint severe erosion hotspots near river mouths."
   },
   {
     id: 4,
-    step: "FINAL RESULT 04 // LONGSHORE RATE PROFILE",
+    step: "FINAL RESULT 04",
     src: "/report_images/longshore_rate_profile.png",
     alt: "Longshore Erosion Rate Envelope Profile (EPR)",
     description: "Calculated shoreline migration rates in m/year across all 1,944 shore-normal transects from northern Kundapura to southern Mulki."
   },
   {
     id: 5,
-    step: "FINAL RESULT 05 // DECADAL NET MOVEMENT",
+    step: "FINAL RESULT 05",
     src: "/forecast/average_net_shoreline_movement_2020_2029.jpg",
     alt: "Average Net Shoreline Movement (2020–2029)",
     description: "Complete decadal trajectory tracing average net cross-shore displacement from historical baseline (2020) through the 2029 forecast horizon."
   },
   {
     id: 6,
-    step: "FINAL RESULT 06 // FORECASTED LAND LOSS",
+    step: "FINAL RESULT 06",
     src: "/forecast/forecasted_cumulative_land_loss_2024_2029.jpg",
     alt: "Forecasted Cumulative Coastal Land Loss (2024–2029)",
     description: "Forward machine learning prediction forecasting +7.88 hectares of cumulative coastal land loss by 2029 across Udupi's vulnerable beaches."
   },
   {
     id: 7,
-    step: "FINAL RESULT 07 // VULNERABILITY EXTENT",
+    step: "FINAL RESULT 07",
     src: "/forecast/vulnerability_quantification.jpg",
     alt: "Coastal Vulnerability Length Quantification (km)",
     description: "Categorical risk classification quantifying 7.65 km of Severe erosion, 5.76 km of Moderate erosion, and 83.79 km of Stable shoreline."
   },
   {
     id: 8,
-    step: "FINAL RESULT 08 // MASTER 3-PANEL FORECAST",
+    step: "FINAL RESULT 08",
     src: "/forecast/final_graph_3panel.jpg",
     alt: "Publication-Grade 3-Panel Decadal Evolution Forecast",
     description: "Comprehensive 3-panel publication synthesis combining coastal vulnerability risk classification, cumulative land loss, and decadal net movement."
