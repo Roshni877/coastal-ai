@@ -455,9 +455,9 @@ function PremiumGallery() {
         <div className="gallery-header" style={{ flexWrap: 'wrap', gap: '20px', alignItems: 'center' }}>
           <div>
             <span className="tech-meta">CHRONOLOGICAL PIPELINE // COMPLETE ARCHIVE</span>
-            <h2 className="gallery-title" style={{ margin: '5px 0' }}>CHRONOLOGICAL COASTAL VAULT</h2>
+            <h2 className="gallery-title" style={{ margin: '5px 0' }}>COASTAL ARCHIVE VAULT</h2>
             <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-              Ordered 01 → 33 from raw sensor ingestion to 2025–2029 machine learning future predictions.
+              All 33 research images ordered sequentially from raw sensor ingestion to 2025–2029 future machine learning predictions.
             </p>
           </div>
           <motion.button 

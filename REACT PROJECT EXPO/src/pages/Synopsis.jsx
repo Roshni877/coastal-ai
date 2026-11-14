@@ -583,7 +583,7 @@ function Synopsis() {
                           </div>
                         </div>
 
-                        {/* Row 12: Coastal Vulnerability Length and 3-Panel Master Figure */}
+                        {/* Row 12: Coastal Vulnerability Length and Dual-Panel Integrated Forecast */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 19: COASTAL VULNERABILITY RISK EXTENT (KM)</span>
@@ -593,12 +593,21 @@ function Synopsis() {
                             </p>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 20: MASTER 3-PANEL DECADAL EVOLUTION FORECAST</span>
-                            <img src="/forecast/final_graph_3panel.jpg" alt="Master 3-Panel Decadal Forecast" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)' }} />
+                            <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 20: DUAL-PANEL INTEGRATED COASTAL ASSESSMENT</span>
+                            <img src="/forecast/final_graph.jpg" alt="Dual-Panel Integrated Forecast" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)' }} />
                             <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
-                              <strong>Comprehensive Synthesis:</strong> Integrated publication visual combining coastal vulnerability risk classification (Panel 1), forecasted cumulative land loss (Panel 2), and average net shoreline movement (Panel 3).
+                              <strong>Dual-Panel Synthesis:</strong> High-resolution publication synthesis correlating spatial vulnerability length (km) with the 2024–2029 forecasted land loss curve.
                             </p>
                           </div>
+                        </div>
+
+                        {/* Row 13: Master 3-Panel Comprehensive Decadal Evolution Forecast */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.3)', padding: '20px', borderRadius: '16px' }}>
+                          <span style={{ fontSize: '0.8rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 21: MASTER 3-PANEL DECADAL COASTAL EVOLUTION FORECAST</span>
+                          <img src="/forecast/final_graph_3panel.jpg" alt="Master 3-Panel Decadal Forecast" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 12px 32px rgba(139, 92, 246, 0.2)' }} />
+                          <p style={{ fontSize: '0.85rem', margin: '8px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.6' }}>
+                            <strong>Comprehensive Publication Synthesis:</strong> Complete 3-panel integrated visual combining coastal vulnerability risk classification (Panel 1: 7.65 km severe), forecasted cumulative land loss (Panel 2: +7.88 ha by 2029), and average net shoreline movement (Panel 3: continuous secular retreat across 1,944 transects).
+                          </p>
                         </div>
                         
                       </div>

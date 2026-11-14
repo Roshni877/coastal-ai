@@ -1,7 +1,6 @@
 import React, { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageReveal from "../components/PageReveal";
-import TiltCard from "../components/TiltCard";
 import PremiumGallery from "../components/PremiumGallery";
 import PostcardFilmStrip from "../components/PostcardFilmStrip";
 import Treasure3D from "../components/Treasure3D";
@@ -10,11 +9,7 @@ import {
   FiBarChart2, 
   FiTrendingUp, 
   FiDatabase, 
-  FiMaximize2, 
-  FiLayers, 
-  FiCompass, 
-  FiActivity,
-  FiChevronRight
+  FiMaximize2
 } from "react-icons/fi";
 
 // --- CHRONOLOGICAL DATA DEFINITIONS ---
@@ -555,7 +550,7 @@ function Visualization() {
                   ))}
                 </div>
 
-                {/* Step 3: Interactive Postcard Film Strip */}
+                {/* Step 3: Interactive Postcard Film Strip (With Final Results) */}
                 <div className="analytics-intro-card" style={{ marginTop: '70px', marginBottom: '20px' }}>
                   <PostcardFilmStrip />
                 </div>

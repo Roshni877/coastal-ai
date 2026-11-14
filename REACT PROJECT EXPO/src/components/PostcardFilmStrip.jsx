@@ -5,45 +5,59 @@ import { FiChevronLeft, FiChevronRight, FiCamera } from "react-icons/fi";
 const filmImages = [
   {
     id: 1,
-    step: "01. HISTORICAL POSITION",
-    src: "/analysis/shoreline_position_time.png",
-    alt: "Shoreline Position Over Time (2020-2024)",
-    description: "Time series linear regression tracking empirical cross-shore position changes across monitoring transects."
+    step: "FINAL RESULT 01 // AI VALIDATION",
+    src: "/env_ml_confusion_matrix_deeplab.png?v=3",
+    alt: "DeepLabV3+ Final Validation Result (85.48% Accuracy)",
+    description: "Deep learning pixel segmentation confusion matrix validating 85.48% accuracy and 92.17% Dice coefficient across coastal land/water boundaries."
   },
   {
     id: 2,
-    step: "02. TRANSECT SCATTER",
-    src: "/analysis/transect_rate_scatter.png",
-    alt: "Transect-by-Transect Shoreline Change Rate",
-    description: "Spatial scatter plot of End Point Rates (EPR) along all 1,944 transects on the Udupi coastline."
+    step: "FINAL RESULT 02 // OVERALL SHORELINE BOUNDARY",
+    src: "/shoreline/overall_analysis_new.png",
+    alt: "Overall Shoreline Analysis Map & Boundary Envelopes",
+    description: "Final multi-year spatial overlay integrating empirical shoreline boundaries (2020–2024) with forward projections across Udupi's 97.2 km coast."
   },
   {
     id: 3,
-    step: "03. ANNUAL CHANGE DISTRIBUTION",
-    src: "/analysis/annual_change_rate.png",
-    alt: "Annual Shoreline Change Rate Histogram",
-    description: "Distribution histogram of annual shoreline retreat and accretion rates highlighting monsoonal storm impacts."
+    step: "FINAL RESULT 03 // ALONGSHORE RISK HEATMAP",
+    src: "/analysis/alongshore_heatmap.png",
+    alt: "Alongshore Spatial Erosion & Accretion Heatmap",
+    description: "Two-dimensional space-time raster mapping alongshore transect IDs against years to pinpoint severe erosion hotspots near river mouths."
   },
   {
     id: 4,
-    step: "04. ALONGSHORE HEATMAP",
-    src: "/analysis/alongshore_heatmap.png",
-    alt: "Alongshore Heatmap of Erosion/Accretion",
-    description: "Two-dimensional space-time raster visualizing alongshore erosion intensity across the corridor."
+    step: "FINAL RESULT 04 // LONGSHORE RATE PROFILE",
+    src: "/report_images/longshore_rate_profile.png",
+    alt: "Longshore Erosion Rate Envelope Profile (EPR)",
+    description: "Calculated shoreline migration rates in m/year across all 1,944 shore-normal transects from northern Kundapura to southern Mulki."
   },
   {
     id: 5,
-    step: "05. NET MOVEMENT (2020-2029)",
+    step: "FINAL RESULT 05 // DECADAL NET MOVEMENT",
     src: "/forecast/average_net_shoreline_movement_2020_2029.jpg",
-    alt: "Average Net Shoreline Movement (2020-2029)",
-    description: "Decadal trajectory of average net shoreline movement linking empirical history to 2029 forecast."
+    alt: "Average Net Shoreline Movement (2020–2029)",
+    description: "Complete decadal trajectory tracing average net cross-shore displacement from historical baseline (2020) through the 2029 forecast horizon."
   },
   {
     id: 6,
-    step: "06. FUTURE LAND LOSS (2024-2029)",
+    step: "FINAL RESULT 06 // FORECASTED LAND LOSS",
     src: "/forecast/forecasted_cumulative_land_loss_2024_2029.jpg",
-    alt: "Forecasted Cumulative Land Loss (2024-2029)",
-    description: "Forward machine learning prediction forecasting +7.88 hectares of cumulative coastal land loss by 2029."
+    alt: "Forecasted Cumulative Coastal Land Loss (2024–2029)",
+    description: "Forward machine learning prediction forecasting +7.88 hectares of cumulative coastal land loss by 2029 across Udupi's vulnerable beaches."
+  },
+  {
+    id: 7,
+    step: "FINAL RESULT 07 // VULNERABILITY EXTENT",
+    src: "/forecast/vulnerability_quantification.jpg",
+    alt: "Coastal Vulnerability Length Quantification (km)",
+    description: "Categorical risk classification quantifying 7.65 km of Severe erosion, 5.76 km of Moderate erosion, and 83.79 km of Stable shoreline."
+  },
+  {
+    id: 8,
+    step: "FINAL RESULT 08 // MASTER 3-PANEL FORECAST",
+    src: "/forecast/final_graph_3panel.jpg",
+    alt: "Publication-Grade 3-Panel Decadal Evolution Forecast",
+    description: "Comprehensive 3-panel publication synthesis combining coastal vulnerability risk classification, cumulative land loss, and decadal net movement."
   }
 ];
 
@@ -225,6 +239,9 @@ function PostcardFilmStrip() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
+                <div style={{ color: 'var(--amber)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '6px' }}>
+                  {selectedImage.step}
+                </div>
                 <h3>{selectedImage.alt}</h3>
                 <p>{selectedImage.description}</p>
                 <div className="lightbox-controls-hint">
