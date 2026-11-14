@@ -10,36 +10,36 @@ function BeachShoreEnvironment() {
       {/* Shallow Coastal Water Surface with Ocean Reflections */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.6, 0]}>
         <planeGeometry args={[90, 90]} />
-        <meshStandardMaterial 
-          color="#0369a1" 
-          roughness={0.15} 
-          metalness={0.7} 
-          transparent 
-          opacity={0.35} 
+        <meshStandardMaterial
+          color="#0369a1"
+          roughness={0.15}
+          metalness={0.7}
+          transparent
+          opacity={0.35}
         />
       </mesh>
 
       {/* Gentle Shoreline Water Ripples / Sea Foam Ring under the Chest */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.58, -5.2]}>
         <ringGeometry args={[1.5, 3.4, 32]} />
-        <meshStandardMaterial 
-          color="#bae6fd" 
-          roughness={0.2} 
-          metalness={0.1} 
-          transparent 
-          opacity={0.4} 
+        <meshStandardMaterial
+          color="#bae6fd"
+          roughness={0.2}
+          metalness={0.1}
+          transparent
+          opacity={0.4}
         />
       </mesh>
 
       {/* Wet Coastal Beach Sand Beneath the Shallow Shoreline */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.8, 0]} receiveShadow>
         <planeGeometry args={[90, 90]} />
-        <meshStandardMaterial 
-          color="#0f172a" 
-          roughness={0.85} 
-          metalness={0.1} 
-          transparent 
-          opacity={0.65} 
+        <meshStandardMaterial
+          color="#0f172a"
+          roughness={0.85}
+          metalness={0.1}
+          transparent
+          opacity={0.65}
         />
       </mesh>
     </group>
@@ -172,12 +172,12 @@ function AncientBox({ onOpen }) {
       {/* ============================================================== */}
       <group>
         {/* Main Polished Wood Body */}
-        <mesh 
-          castShadow 
-          receiveShadow 
+        <mesh
+          castShadow
+          receiveShadow
           material={woodMaterial}
           onClick={onOpen}
-          onPointerOver={() => setHovered(true)} 
+          onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
         >
           <boxGeometry args={[4.9, 2.5, 3.1]} />
@@ -444,7 +444,7 @@ function Treasure3D({ onOpen }) {
 
 
       <Canvas shadows dpr={[1, 2]} style={{ zIndex: 1, position: 'relative' }}>
-        <Suspense fallback={<Html center><div className="loading-text" style={{color: '#f59e0b'}}>Loading shoreline...</div></Html>}>
+        <Suspense fallback={<Html center><div className="loading-text" style={{ color: '#f59e0b' }}>Loading shoreline...</div></Html>}>
           <PerspectiveCamera makeDefault position={[0, 0.8, 13]} fov={45} />
 
           <ambientLight intensity={0.55} />
