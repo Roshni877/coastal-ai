@@ -8,8 +8,8 @@ function BeachShoreEnvironment() {
   return (
     <group>
       {/* Shallow Coastal Water Surface with Ocean Reflections */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.3, 0]}>
-        <planeGeometry args={[80, 80]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.6, 0]}>
+        <planeGeometry args={[90, 90]} />
         <meshStandardMaterial 
           color="#0369a1" 
           roughness={0.15} 
@@ -20,7 +20,7 @@ function BeachShoreEnvironment() {
       </mesh>
 
       {/* Gentle Shoreline Water Ripples / Sea Foam Ring under the Chest */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.28, -1.8]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.58, -5.2]}>
         <ringGeometry args={[1.5, 3.4, 32]} />
         <meshStandardMaterial 
           color="#bae6fd" 
@@ -32,8 +32,8 @@ function BeachShoreEnvironment() {
       </mesh>
 
       {/* Wet Coastal Beach Sand Beneath the Shallow Shoreline */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.5, 0]} receiveShadow>
-        <planeGeometry args={[80, 80]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.8, 0]} receiveShadow>
+        <planeGeometry args={[90, 90]} />
         <meshStandardMaterial 
           color="#0f172a" 
           roughness={0.85} 
@@ -95,11 +95,11 @@ function AncientBox({ onOpen }) {
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    meshRef.current.position.x = 0; // Centered in the middle of the beach
-    meshRef.current.position.y = -2.4 + Math.sin(time * 1.5) * 0.08; // Resting naturally on the beach water with gentle tide bob
-    meshRef.current.position.z = -1.8; // Set comfortably back to reveal the ocean scenery behind
-    meshRef.current.rotation.z = Math.sin(time * 0.8) * 0.02; // Subtle natural water sway
-    meshRef.current.rotation.y = Math.sin(time * 0.5) * 0.03; // Gentle natural drift
+    meshRef.current.position.x = 0; // In the middle itself
+    meshRef.current.position.y = -3.1 + Math.sin(time * 1.4) * 0.05; // Resting right at the beach waterline
+    meshRef.current.position.z = -5.2; // Placed still further back into the beach
+    meshRef.current.rotation.z = Math.sin(time * 0.8) * 0.02; // Gentle shoreline water sway
+    meshRef.current.rotation.y = Math.sin(time * 0.5) * 0.02;
   });
 
   // Premium Realistic Materials
@@ -166,7 +166,7 @@ function AncientBox({ onOpen }) {
   }), []);
 
   return (
-    <group ref={meshRef} scale={0.55}>
+    <group ref={meshRef} scale={0.48}>
       {/* ============================================================== */}
       {/* 1. CHEST BASE (Dark Polished Hardwood Timber & Golden Bands)   */}
       {/* ============================================================== */}
@@ -314,6 +314,15 @@ function AncientBox({ onOpen }) {
           rotation={[0, 0, -Math.PI / 2]}
           material={woodMaterial}
           castShadow
+          onClick={onOpen}
+          onPointerOver={() => {
+            setHovered(true);
+            document.body.style.cursor = "pointer";
+          }}
+          onPointerOut={() => {
+            setHovered(false);
+            document.body.style.cursor = "auto";
+          }}
         >
           <cylinderGeometry args={[1.56, 1.56, 4.96, 32, 1, false, -Math.PI / 2, Math.PI]} />
         </mesh>
@@ -369,8 +378,8 @@ function AncientBox({ onOpen }) {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            padding: '12px 24px',
-            fontSize: '12px',
+            padding: '12px 26px',
+            fontSize: '13.5px',
             fontFamily: "'Outfit', 'Cinzel', Georgia, serif",
             fontWeight: '800',
             letterSpacing: '1.5px',
@@ -442,17 +451,17 @@ function Treasure3D({ onOpen }) {
 
           {/* Natural Coastal Light beaming down onto the Chest & Beach */}
           <SpotLight 
-            position={[0, 14, 5]} 
+            position={[0, 15, -1]} 
             angle={0.55} 
             penumbra={0.85} 
-            intensity={22} 
+            intensity={24} 
             color="#7dd3fc" 
             castShadow 
             attenuation={5}
           />
 
           {/* Warm Coastal Keylight on the Chest */}
-          <pointLight position={[0, 0.5, 4.5]} intensity={2.6} color="#fed7aa" distance={10} />
+          <pointLight position={[0, -1.0, -1.5]} intensity={3.0} color="#fed7aa" distance={10} />
 
           <AncientBox onOpen={onOpen} />
           <BeachShoreEnvironment />
