@@ -63,18 +63,42 @@ function Home() {
             textTransform: 'uppercase',
             letterSpacing: '-2px',
             lineHeight: 0.92,
-            background: isDark
-              ? 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 45%, #34d399 100%)'
-              : 'linear-gradient(135deg, #0369a1 0%, #0284c7 40%, #0d9488 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            filter: isDark
-              ? 'drop-shadow(0 0 35px rgba(14, 165, 233, 0.65)) drop-shadow(0 4px 22px rgba(0, 0, 0, 0.9))'
-              : 'drop-shadow(0 4px 18px rgba(2, 132, 199, 0.35)) drop-shadow(0 1px 3px rgba(15, 23, 42, 0.25))',
             transition: 'all 0.4s ease',
           }}
         >
-          COASTAL AI
+          <span
+            className="word-coastal"
+            style={{
+              background: isDark
+                ? 'linear-gradient(135deg, #ff5252 0%, #ef4444 50%, #dc2626 100%)'
+                : 'linear-gradient(135deg, #ef4444 0%, #dc2626 55%, #991b1b 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: isDark
+                ? 'drop-shadow(0 0 28px rgba(239, 68, 68, 0.65)) drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9))'
+                : 'drop-shadow(0 4px 14px rgba(220, 38, 38, 0.35))',
+              marginRight: '0.3em',
+              display: 'inline-block'
+            }}
+          >
+            COASTAL
+          </span>
+          <span
+            className="word-ai"
+            style={{
+              background: isDark
+                ? 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)'
+                : 'linear-gradient(135deg, #16a34a 0%, #15803d 55%, #14532d 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: isDark
+                ? 'drop-shadow(0 0 28px rgba(34, 197, 94, 0.65)) drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9))'
+                : 'drop-shadow(0 4px 14px rgba(22, 163, 74, 0.35))',
+              display: 'inline-block'
+            }}
+          >
+            AI
+          </span>
         </h1>
 
         <p ref={descRef} className="description">
