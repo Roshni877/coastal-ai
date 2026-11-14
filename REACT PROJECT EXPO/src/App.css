@@ -1647,6 +1647,22 @@ body {
   text-transform: uppercase;
 }
 
+.pirate-chest-plaque {
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.8px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  -webkit-font-smoothing: antialiased;
+}
+
+.pirate-chest-plaque:hover {
+  filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.9));
+}
+
 .dashboard-controls-top {
   padding: 20px 0;
   display: flex;
