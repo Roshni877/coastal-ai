@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
@@ -9,6 +9,17 @@ import Treasure3D from "../components/Treasure3D";
 function Visualization() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [selectedMlImage, setSelectedMlImage] = useState(null);
+  const [isDark, setIsDark] = useState(
+    typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.getAttribute("data-theme") === "dark");
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
 
   return (
@@ -26,9 +37,63 @@ function Visualization() {
               className="treasure-entry-section"
             >
               <section className="section-header-centered">
-                <span className="tech-tag" style={{ color: 'var(--amber)' }}>UNCOVER THE DATA</span>
-                <h1 className="hero-title-large">VISUAL</h1>
-                <h1 className="hero-title-large outline-text">ARCHIVE</h1>
+                <span 
+                  className="tech-tag" 
+                  style={{ 
+                    color: '#f59e0b', 
+                    fontWeight: 800, 
+                    letterSpacing: '4px',
+                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.9), 0 0 15px rgba(245, 158, 11, 0.6)',
+                    marginBottom: '12px',
+                    display: 'inline-block'
+                  }}
+                >
+                  UNCOVER THE DATA
+                </span>
+                <h1 
+                  className="hero-title-large"
+                  style={{
+                    fontSize: 'clamp(3.5rem, 8.5vw, 7.5rem)',
+                    fontWeight: 900,
+                    textAlign: 'center',
+                    lineHeight: 0.88,
+                    letterSpacing: '-2px',
+                    textTransform: 'uppercase',
+                    margin: 0,
+                    color: '#ffffff',
+                    textShadow: isDark
+                      ? '0 4px 28px rgba(0, 0, 0, 0.98), 0 0 40px rgba(14, 165, 233, 0.6)'
+                      : '0 4px 25px rgba(0, 0, 0, 0.95), 0 0 35px rgba(14, 165, 233, 0.5)',
+                    transition: 'all 0.4s ease'
+                  }}
+                >
+                  VISUAL
+                </h1>
+                <h1 
+                  className="hero-title-large outline-text"
+                  style={{
+                    fontSize: 'clamp(3.5rem, 8.5vw, 7.5rem)',
+                    fontWeight: 900,
+                    textAlign: 'center',
+                    lineHeight: 0.88,
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
+                    margin: 0,
+                    color: isDark ? '#7dd3fc' : '#38bdf8',
+                    background: isDark
+                      ? 'linear-gradient(180deg, #a5f3fc 0%, #38bdf8 50%, #0ea5e9 100%)'
+                      : 'linear-gradient(180deg, #67e8f9 0%, #38bdf8 45%, #0284c7 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    WebkitTextStroke: isDark ? '2px rgba(255, 255, 255, 0.95)' : '2px #ffffff',
+                    filter: isDark
+                      ? 'drop-shadow(0 4px 25px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.9))'
+                      : 'drop-shadow(0 4px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 35px rgba(56, 189, 248, 0.85))',
+                    transition: 'all 0.4s ease'
+                  }}
+                >
+                  ARCHIVE
+                </h1>
               </section>
 
               <Suspense fallback={<div className="loading-text">Loading shoreline...</div>}>

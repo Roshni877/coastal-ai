@@ -15,6 +15,17 @@ function Home() {
   const buttonsRef = useRef();
   const containerRef = useRef();
   const [videoOpen, setVideoOpen] = useState(false);
+  const [isDark, setIsDark] = useState(
+    typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.getAttribute("data-theme") === "dark");
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const tl = gsap.timeline();
@@ -44,7 +55,27 @@ function Home() {
           </div>
         </div>
 
-        <h1 ref={titleRef} className="main-title">COASTAL AI</h1>
+        <h1 
+          ref={titleRef} 
+          className="main-title"
+          style={{
+            fontWeight: 900,
+            textTransform: 'uppercase',
+            letterSpacing: '-2px',
+            lineHeight: 0.92,
+            background: isDark
+              ? 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 45%, #34d399 100%)'
+              : 'linear-gradient(135deg, #0369a1 0%, #0284c7 40%, #0d9488 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            filter: isDark
+              ? 'drop-shadow(0 0 35px rgba(14, 165, 233, 0.65)) drop-shadow(0 4px 22px rgba(0, 0, 0, 0.9))'
+              : 'drop-shadow(0 4px 18px rgba(2, 132, 199, 0.35)) drop-shadow(0 1px 3px rgba(15, 23, 42, 0.25))',
+            transition: 'all 0.4s ease',
+          }}
+        >
+          COASTAL AI
+        </h1>
 
         <p ref={descRef} className="description">
           Harnessing Intelligence to Protect Our Oceans.

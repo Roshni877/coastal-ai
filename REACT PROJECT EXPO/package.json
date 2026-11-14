@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node -e \"const fs = require('fs'); if (fs.existsSync('dist/index.html')) fs.copyFileSync('dist/index.html', 'dist/404.html');\"",
     "lint": "oxlint",
     "preview": "vite preview"
   },
