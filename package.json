@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build": "npm --prefix \"REACT PROJECT EXPO\" install && npm --prefix \"REACT PROJECT EXPO\" run build && node -e \"const fs = require('fs'); fs.cpSync('REACT PROJECT EXPO/dist', 'dist', {recursive: true});\"",
+    "build": "npm --prefix \"REACT PROJECT EXPO\" install && npm --prefix \"REACT PROJECT EXPO\" run build && node -e \"const fs = require('fs'); fs.cpSync('REACT PROJECT EXPO/dist', 'dist', {recursive: true}); fs.copyFileSync('dist/index.html', 'dist/404.html');\"",
     "start": "npm --prefix \"REACT PROJECT EXPO\" run dev"
   }
 }
