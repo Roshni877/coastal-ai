@@ -183,7 +183,7 @@ function PremiumGallery() {
   }, [selectedImage]);
 
   return (
-    <div className="premium-gallery-wrapper">
+    <div className={`premium-gallery-wrapper ${!isGatewayOpen ? "gateway-closed" : "gateway-opened"}`}>
       {/* 🚪 GATEWAY DOORS */}
       <motion.div 
         className="gateway-door gateway-left"
@@ -217,9 +217,20 @@ function PremiumGallery() {
             exit={{ opacity: 0, scale: 1.5 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
-            <button className="btn-gateway" onClick={() => setIsGatewayOpen(true)}>
+            <button className="btn-gateway" onClick={() => setIsGatewayOpen(true)} title="Unlock Coastal Archive">
               <FiLock className="gateway-icon" />
             </button>
+            <span style={{
+              marginTop: '16px',
+              color: '#ffdf00',
+              fontSize: '0.85rem',
+              fontWeight: '800',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              textShadow: '0 2px 10px rgba(0,0,0,0.9)'
+            }}>
+              CLICK TO UNLOCK VAULT
+            </span>
           </motion.div>
         )}
       </AnimatePresence>
