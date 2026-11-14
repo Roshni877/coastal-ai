@@ -34,18 +34,6 @@ function Visualization() {
               <Suspense fallback={<div className="loading-text">Diving into the sea...</div>}>
                 <Treasure3D onOpen={() => setIsUnlocked(true)} />
               </Suspense>
-
-              {/* Centered unlock button: prominent & easy to tap on mobile and desktop */}
-              <div className="treasure-center-action">
-                <button
-                  type="button"
-                  className="unlock-btn archive-quick-unlock-btn"
-                  onClick={() => setIsUnlocked(true)}
-                  aria-label="Unlock Visual Archive"
-                >
-                  <span className="sparkle-icon">✨</span> UNLOCK VISUAL ARCHIVE <span className="sparkle-icon">✨</span>
-                </button>
-              </div>
             </motion.div>
           ) : (
             <motion.div
