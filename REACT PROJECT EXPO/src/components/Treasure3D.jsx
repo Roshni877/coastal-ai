@@ -9,7 +9,7 @@ function CaveWalls() {
     <group>
       {/* Cave Ceiling/Walls Enclosure - Dark Rocky Color */}
       <mesh scale={[1, 1, 1]} position={[0, 0, 0]}>
-        <sphereGeometry args={[25, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <sphereGeometry args={[28, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial 
           side={THREE.BackSide} 
           roughness={0.9} 
@@ -17,9 +17,9 @@ function CaveWalls() {
           color="#0f172a"
         />
       </mesh>
-      {/* Cave Floor - Dark Sand/Rock */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, 0]} receiveShadow>
-        <planeGeometry args={[60, 60]} />
+      {/* Cave Floor - Dark Sand/Rock lowered so chest floats cleanly above it */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -6.5, 0]} receiveShadow>
+        <planeGeometry args={[80, 80]} />
         <meshStandardMaterial 
           roughness={1} 
           color="#020617"
@@ -78,9 +78,9 @@ function AncientBox({ onOpen }) {
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    meshRef.current.position.x = -12; // Original side position
-    meshRef.current.position.y = -5.2 + Math.sin(time) * 0.12; // Floating gracefully in the sea
-    meshRef.current.position.z = -14.5; // Deeper in the background
+    meshRef.current.position.x = 0; // Prominently centered in the middle of the sea
+    meshRef.current.position.y = -1.5 + Math.sin(time * 1.4) * 0.12; // Floating gracefully in the center
+    meshRef.current.position.z = 1.0; // Prominent, clear, directly in front of the viewer
   });
 
   // Premium Realistic Materials
@@ -147,13 +147,20 @@ function AncientBox({ onOpen }) {
   }), []);
 
   return (
-    <group ref={meshRef} scale={0.76}>
+    <group ref={meshRef} scale={0.88}>
       {/* ============================================================== */}
       {/* 1. CHEST BASE (Dark Polished Hardwood Timber & Golden Bands)   */}
       {/* ============================================================== */}
       <group>
         {/* Main Polished Wood Body */}
-        <mesh castShadow receiveShadow material={woodMaterial}>
+        <mesh 
+          castShadow 
+          receiveShadow 
+          material={woodMaterial}
+          onClick={onOpen}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
+        >
           <boxGeometry args={[4.9, 2.5, 3.1]} />
         </mesh>
 
@@ -330,7 +337,7 @@ function AncientBox({ onOpen }) {
       {/* ============================================================== */}
       {/* 5. FRONT EMBOSSED PIRATE GOLD PLAQUE (Readable, Centered Text) */}
       {/* ============================================================== */}
-      <Html position={[0, -0.22, 1.72]} center transform>
+      <Html position={[0, -0.22, 1.74]} center transform>
         <motion.button 
           className="unlock-btn pro-archive-btn pirate-chest-plaque"
           whileHover={{ scale: 1.08 }}
@@ -342,40 +349,40 @@ function AncientBox({ onOpen }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            padding: '12px 24px',
-            fontSize: '12px',
+            gap: '10px',
+            padding: '14px 30px',
+            fontSize: '14px',
             fontFamily: "'Outfit', 'Cinzel', Georgia, serif",
-            fontWeight: '800',
-            letterSpacing: '1.5px',
+            fontWeight: '900',
+            letterSpacing: '2px',
             color: hovered ? '#ffffff' : '#fef08a',
             background: hovered 
               ? 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #78350f 100%)' 
               : 'linear-gradient(135deg, #2b180d 0%, #170d05 50%, #2b180d 100%)',
-            border: '2px solid #e5a93c',
-            borderRadius: '12px',
+            border: '2.5px solid #e5a93c',
+            borderRadius: '14px',
             boxShadow: hovered 
-              ? '0 0 25px rgba(245, 158, 11, 0.8), inset 0 0 15px rgba(254, 240, 138, 0.5), 0 8px 30px rgba(0, 0, 0, 0.9)'
-              : '0 0 15px rgba(212, 175, 55, 0.4), inset 0 0 10px rgba(212, 175, 55, 0.2), 0 6px 20px rgba(0, 0, 0, 0.8)',
+              ? '0 0 30px rgba(245, 158, 11, 0.9), inset 0 0 18px rgba(254, 240, 138, 0.6), 0 10px 35px rgba(0, 0, 0, 0.95)'
+              : '0 0 20px rgba(212, 175, 55, 0.5), inset 0 0 12px rgba(212, 175, 55, 0.3), 0 8px 25px rgba(0, 0, 0, 0.85)',
             cursor: 'pointer',
             textTransform: 'uppercase',
             whiteSpace: 'nowrap',
             textShadow: hovered 
-              ? '0 0 12px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8)' 
-              : '0 0 10px rgba(245, 158, 11, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9)',
+              ? '0 0 14px rgba(255, 255, 255, 0.95), 0 2px 5px rgba(0, 0, 0, 0.9)' 
+              : '0 0 12px rgba(245, 158, 11, 0.9), 0 2px 4px rgba(0, 0, 0, 0.9)',
             position: 'relative',
             transition: 'all 0.3s ease',
             outline: 'none',
           }}
         >
-          <span style={{ fontSize: '13px', color: '#f59e0b', filter: 'drop-shadow(0 0 4px #fbbf24)' }}>✦</span>
+          <span style={{ fontSize: '15px', color: '#f59e0b', filter: 'drop-shadow(0 0 5px #fbbf24)' }}>✦</span>
           <span>{hovered ? "EXPLORE ARCHIVE" : "UNLOCK THE CAVE"}</span>
-          <span style={{ fontSize: '13px', color: '#f59e0b', filter: 'drop-shadow(0 0 4px #fbbf24)' }}>✦</span>
+          <span style={{ fontSize: '15px', color: '#f59e0b', filter: 'drop-shadow(0 0 5px #fbbf24)' }}>✦</span>
         </motion.button>
       </Html>
 
       {/* Warm Fill Light Highlighting Front Antique Metal & Carvings */}
-      <pointLight position={[0, -0.5, 3.2]} intensity={2.8} color="#fed7aa" distance={7} />
+      <pointLight position={[0, -0.5, 3.2]} intensity={3.2} color="#fed7aa" distance={8} />
     </group>
   );
 }
@@ -410,20 +417,23 @@ function Treasure3D({ onOpen }) {
 
       <Canvas shadows dpr={[1, 2]} style={{ zIndex: 1, position: 'relative' }}>
         <Suspense fallback={<Html center><div className="loading-text" style={{color: '#f59e0b'}}>Diving into the cave...</div></Html>}>
-          <PerspectiveCamera makeDefault position={[0, 2, 18]} fov={50} />
+          <PerspectiveCamera makeDefault position={[0, 1.4, 13.5]} fov={45} />
           
-          <ambientLight intensity={0.35} />
+          <ambientLight intensity={0.45} />
           
-          {/* Dramatic Light from Cave Entrance Shining on the Pirate Chest */}
+          {/* Dramatic Light from Above Shining on the Centered Pirate Chest */}
           <SpotLight 
-            position={[-12, 11, -12]} 
-            angle={0.45} 
-            penumbra={0.9} 
-            intensity={20} 
+            position={[0, 12, 6]} 
+            angle={0.5} 
+            penumbra={0.85} 
+            intensity={24} 
             color="#38bdf8" 
             castShadow 
             attenuation={5}
           />
+
+          {/* Front Golden Keylight */}
+          <pointLight position={[0, 1.5, 6]} intensity={3.5} color="#fed7aa" distance={12} />
 
           <AncientBox onOpen={onOpen} />
           <FishSwarm />

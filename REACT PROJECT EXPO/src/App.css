@@ -1631,6 +1631,7 @@ body {
   margin-bottom: 50px;
   z-index: 5;
   transform: translateY(-100px);
+  pointer-events: none;
 }
 
 .unlock-btn {
