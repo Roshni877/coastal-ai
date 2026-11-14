@@ -564,6 +564,42 @@ function Synopsis() {
                             </p>
                           </div>
                         </div>
+
+                        {/* Row 11: Future Predictions (2025-2029) Net Shoreline Movement and Cumulative Land Loss */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 17: AVERAGE NET SHORELINE MOVEMENT (2020–2029)</span>
+                            <img src="/forecast/average_net_shoreline_movement_2020_2029.jpg" alt="Average Net Shoreline Movement 2020-2029" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Decadal Movement Analysis:</strong> Tracing the complete decadal trajectory of average net shoreline movement across all 1,944 monitoring transects from the 2020 baseline through the 2029 forecast horizon, illustrating continuous secular landward retreat.
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 18: FORECASTED CUMULATIVE LAND LOSS (2024–2029)</span>
+                            <img src="/forecast/forecasted_cumulative_land_loss_2024_2029.jpg" alt="Forecasted Cumulative Land Loss 2024-2029" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Land Loss Progression:</strong> Forward projection displaying cumulative coastal land loss expanding to +7.88 hectares across Udupi by 2029, providing critical planning metrics for civil coastal defense works.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Row 12: Coastal Vulnerability Length and 3-Panel Master Figure */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 19: COASTAL VULNERABILITY RISK EXTENT (KM)</span>
+                            <img src="/forecast/vulnerability_quantification.jpg" alt="Coastal Vulnerability Length Extent" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Vulnerability Classification:</strong> Categorical breakdown quantifying 7.65 km of Severe coastal erosion, 5.76 km of Moderate erosion, and 83.79 km of Stable shoreline along the 97.2 km corridor.
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 'bold', letterSpacing: '0.5px' }}>FIG 20: MASTER 3-PANEL DECADAL EVOLUTION FORECAST</span>
+                            <img src="/forecast/final_graph_3panel.jpg" alt="Master 3-Panel Decadal Forecast" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)' }} />
+                            <p style={{ fontSize: '0.82rem', margin: '5px 0 0 0', opacity: 0.9, color: 'var(--text-main)', lineHeight: '1.5' }}>
+                              <strong>Comprehensive Synthesis:</strong> Integrated publication visual combining coastal vulnerability risk classification (Panel 1), forecasted cumulative land loss (Panel 2), and average net shoreline movement (Panel 3).
+                            </p>
+                          </div>
+                        </div>
                         
                       </div>
                     </div>
