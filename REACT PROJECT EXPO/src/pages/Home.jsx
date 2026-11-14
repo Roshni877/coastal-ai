@@ -69,6 +69,7 @@ function Home() {
           <span
             className="word-coastal"
             style={{
+              color: isDark ? '#ff5252' : '#ef4444',
               background: isDark
                 ? 'linear-gradient(135deg, #ff5252 0%, #ef4444 50%, #dc2626 100%)'
                 : 'linear-gradient(135deg, #ef4444 0%, #dc2626 55%, #991b1b 100%)',
@@ -86,6 +87,7 @@ function Home() {
           <span
             className="word-ai"
             style={{
+              color: isDark ? '#4ade80' : '#16a34a',
               background: isDark
                 ? 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)'
                 : 'linear-gradient(135deg, #16a34a 0%, #15803d 55%, #14532d 100%)',
