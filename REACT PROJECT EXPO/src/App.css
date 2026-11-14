@@ -1631,7 +1631,11 @@ body {
   margin-bottom: 50px;
   z-index: 5;
   transform: translateY(-100px);
-  pointer-events: none;
+  pointer-events: none !important;
+}
+
+.section-header-centered * {
+  pointer-events: none !important;
 }
 
 .unlock-btn {

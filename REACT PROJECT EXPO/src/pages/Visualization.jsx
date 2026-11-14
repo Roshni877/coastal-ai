@@ -31,9 +31,51 @@ function Visualization() {
                 <h1 className="hero-title-large outline-text">ARCHIVE</h1>
               </section>
 
-              <Suspense fallback={<div className="loading-text">Diving into the sea...</div>}>
+              <Suspense fallback={<div className="loading-text">Loading shoreline...</div>}>
                 <Treasure3D onOpen={() => setIsUnlocked(true)} />
               </Suspense>
+
+              {/* Centered accessible button: 100% reliable tap/click across all devices */}
+              <div 
+                className="treasure-unlock-overlay-action"
+                style={{
+                  position: 'absolute',
+                  bottom: '28px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  zIndex: 25,
+                  pointerEvents: 'auto'
+                }}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.06 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsUnlocked(true)}
+                  className="unlock-btn pro-archive-btn pirate-chest-plaque"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '11px 24px',
+                    fontSize: '12px',
+                    fontFamily: "'Outfit', 'Cinzel', Georgia, serif",
+                    fontWeight: '800',
+                    letterSpacing: '1.5px',
+                    color: '#fef08a',
+                    background: 'linear-gradient(135deg, #2b180d 0%, #170d05 50%, #2b180d 100%)',
+                    border: '2px solid #e5a93c',
+                    borderRadius: '12px',
+                    boxShadow: '0 0 20px rgba(212, 175, 55, 0.4), 0 8px 25px rgba(0, 0, 0, 0.9)',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <span style={{ fontSize: '13px', color: '#f59e0b' }}>✦</span>
+                  <span>UNLOCK THE TREASURE</span>
+                  <span style={{ fontSize: '13px', color: '#f59e0b' }}>✦</span>
+                </motion.button>
+              </div>
             </motion.div>
           ) : (
             <motion.div

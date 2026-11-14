@@ -309,9 +309,9 @@ function AncientBox({ onOpen }) {
       {/* Hinge axis placed at top-back rim: y = 1.25, z = -1.55 */}
       <group position={[0, 1.25, -1.55]} rotation={[-Math.PI / 2.7, 0, 0]}>
         {/* Curved Vaulted Lid Wood Body (Half-Cylinder Barrel Arch) */}
-        <mesh 
-          position={[0, 0, 1.55]} 
-          rotation={[0, 0, -Math.PI / 2]} 
+        <mesh
+          position={[0, 0, 1.55]}
+          rotation={[0, 0, -Math.PI / 2]}
           material={woodMaterial}
           castShadow
         >
@@ -328,10 +328,10 @@ function AncientBox({ onOpen }) {
 
         {/* Curved Antique Gold Straps Hugging the Lid Vault */}
         {[-1.6, 0, 1.6].map((xPos, idx) => (
-          <mesh 
+          <mesh
             key={`lid-strap-${idx}`}
-            position={[xPos, 0, 1.55]} 
-            rotation={[0, 0, -Math.PI / 2]} 
+            position={[xPos, 0, 1.55]}
+            rotation={[0, 0, -Math.PI / 2]}
             material={goldMaterial}
             castShadow
           >
@@ -357,12 +357,12 @@ function AncientBox({ onOpen }) {
       {/* 5. FRONT EMBOSSED PIRATE GOLD PLAQUE (Readable, Centered Text) */}
       {/* ============================================================== */}
       <Html position={[0, -0.22, 1.72]} center transform>
-        <motion.button 
+        <motion.button
           className="unlock-btn pro-archive-btn pirate-chest-plaque"
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           onClick={onOpen}
-          onPointerOver={() => setHovered(true)} 
+          onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
           style={{
             display: 'flex',
@@ -375,19 +375,19 @@ function AncientBox({ onOpen }) {
             fontWeight: '800',
             letterSpacing: '1.5px',
             color: hovered ? '#ffffff' : '#fef08a',
-            background: hovered 
-              ? 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #78350f 100%)' 
+            background: hovered
+              ? 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #78350f 100%)'
               : 'linear-gradient(135deg, #2b180d 0%, #170d05 50%, #2b180d 100%)',
             border: '2px solid #e5a93c',
             borderRadius: '12px',
-            boxShadow: hovered 
+            boxShadow: hovered
               ? '0 0 25px rgba(245, 158, 11, 0.8), inset 0 0 15px rgba(254, 240, 138, 0.5), 0 8px 30px rgba(0, 0, 0, 0.9)'
               : '0 0 15px rgba(212, 175, 55, 0.4), inset 0 0 10px rgba(212, 175, 55, 0.2), 0 6px 20px rgba(0, 0, 0, 0.8)',
             cursor: 'pointer',
             textTransform: 'uppercase',
             whiteSpace: 'nowrap',
-            textShadow: hovered 
-              ? '0 0 12px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8)' 
+            textShadow: hovered
+              ? '0 0 12px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8)'
               : '0 0 10px rgba(245, 158, 11, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9)',
             position: 'relative',
             transition: 'all 0.3s ease',
@@ -412,21 +412,21 @@ function Treasure3D({ onOpen }) {
   return (
     <div className="treasure-3d-container cave-experience" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, backgroundColor: '#000' }}>
       {/* 🌊 IMMERSIVE OCEAN GIF BACKGROUND */}
-      <div className="rotating-wave-section" style={{ 
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        height: '100%', 
+      <div className="rotating-wave-section" style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
         zIndex: 0,
         margin: 0,
         padding: 0,
         overflow: 'hidden'
       }}>
-        <img 
-          src="https://i.pinimg.com/originals/d3/d6/06/d3d6061eb47bcbb455807d6a15365273.gif" 
-          alt="Immersive Ocean Waves" 
-          className="premium-bg-gif" 
+        <img
+          src="https://i.pinimg.com/originals/d3/d6/06/d3d6061eb47bcbb455807d6a15365273.gif"
+          alt="Immersive Ocean Waves"
+          className="premium-bg-gif"
         />
 
 
@@ -437,9 +437,9 @@ function Treasure3D({ onOpen }) {
       <Canvas shadows dpr={[1, 2]} style={{ zIndex: 1, position: 'relative' }}>
         <Suspense fallback={<Html center><div className="loading-text" style={{color: '#f59e0b'}}>Loading shoreline...</div></Html>}>
           <PerspectiveCamera makeDefault position={[0, 0.8, 13]} fov={45} />
-          
+
           <ambientLight intensity={0.55} />
-          
+
           {/* Natural Coastal Light beaming down onto the Chest & Beach */}
           <SpotLight 
             position={[0, 14, 5]} 
@@ -457,10 +457,10 @@ function Treasure3D({ onOpen }) {
           <AncientBox onOpen={onOpen} />
           <BeachShoreEnvironment />
           <FishSwarm />
-          
+
           {/* Water Sparkles / Sun Glint */}
           <Sparkles count={100} scale={20} size={2} speed={0.4} opacity={0.6} color="#38bdf8" />
-          
+
           <Environment preset={isDark ? "night" : "city"} />
         </Suspense>
       </Canvas>
