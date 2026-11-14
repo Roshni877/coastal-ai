@@ -78,27 +78,45 @@ function AncientBox({ onOpen }) {
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    meshRef.current.position.x = -12; // Farther left
-    meshRef.current.position.y = -5.5 + Math.sin(time) * 0.1; // Lower on distant sand
-    meshRef.current.position.z = -15; // Deeper into the background
+    meshRef.current.position.x = 0; // Centered directly in the middle for mobile and desktop
+    meshRef.current.position.y = -3.2 + Math.sin(time * 1.5) * 0.15; // Floating gracefully in the sea
+    meshRef.current.position.z = -8; // Optimal distance: clear, centered, and easily tappable
   });
 
   return (
-    <group ref={meshRef} scale={0.6}>
+    <group ref={meshRef} scale={0.8}>
       {/* Ancient Chest Base - Weathered Wood Color */}
-      <mesh castShadow receiveShadow onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+      <mesh 
+        castShadow 
+        receiveShadow 
+        onClick={onOpen}
+        onPointerOver={() => setHovered(true)} 
+        onPointerOut={() => setHovered(false)}
+      >
         <boxGeometry args={[4.5, 2.5, 3]} />
         <meshStandardMaterial color="#2d1b0d" roughness={0.9} metalness={0.2} />
       </mesh>
       
       {/* Open Lid */}
-      <mesh position={[0, 1.5, -1.2]} rotation={[-Math.PI / 2.5, 0, 0]} castShadow>
+      <mesh 
+        position={[0, 1.5, -1.2]} 
+        rotation={[-Math.PI / 2.5, 0, 0]} 
+        castShadow
+        onClick={onOpen}
+        onPointerOver={() => setHovered(true)} 
+        onPointerOut={() => setHovered(false)}
+      >
         <boxGeometry args={[4.7, 0.6, 3.2]} />
         <meshStandardMaterial color="#1a1108" roughness={0.9} metalness={0.2} />
       </mesh>
 
       {/* Glowing Treasure Inside */}
-      <mesh position={[0, 1, 0]}>
+      <mesh 
+        position={[0, 1, 0]}
+        onClick={onOpen}
+        onPointerOver={() => setHovered(true)} 
+        onPointerOut={() => setHovered(false)}
+      >
         <boxGeometry args={[4, 0.8, 2.5]} />
         <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={3} />
       </mesh>
@@ -107,19 +125,21 @@ function AncientBox({ onOpen }) {
         <motion.button 
           className="unlock-btn pro-archive-btn"
           whileHover={{ scale: 1.1, backgroundColor: "#fde68a", color: "#000" }}
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onOpen}
           style={{
-            padding: '8px 16px', // Reduced padding
-            fontSize: '10px', // Smaller font size
+            padding: '12px 26px',
+            fontSize: '11px',
             backgroundColor: '#f59e0b',
-            border: '1px solid #fff', // Thinner border
+            border: '2px solid #fff',
             color: '#fff',
             fontWeight: 'bold',
-            borderRadius: '20px',
+            borderRadius: '25px',
             cursor: 'pointer',
             textTransform: 'uppercase',
-            letterSpacing: '1px'
+            letterSpacing: '1.5px',
+            boxShadow: '0 6px 25px rgba(245, 158, 11, 0.6)',
+            whiteSpace: 'nowrap'
           }}
         >
           {hovered ? "EXPLORE ARCHIVE" : "UNLOCK THE CAVE"}
@@ -127,7 +147,7 @@ function AncientBox({ onOpen }) {
       </Html>
 
 
-      <pointLight position={[0, 2, 0]} intensity={4} color="#fbbf24" />
+      <pointLight position={[0, 2, 0]} intensity={5} color="#fbbf24" />
     </group>
   );
 }
@@ -166,12 +186,12 @@ function Treasure3D({ onOpen }) {
           
           <ambientLight intensity={0.2} />
           
-          {/* Dramatic Light from Cave Entrance */}
+          {/* Dramatic Light from Above Centered Chest */}
           <SpotLight 
-            position={[-12, 10, -15]} 
-            angle={0.4} 
-            penumbra={1} 
-            intensity={15} 
+            position={[0, 12, -4]} 
+            angle={0.6} 
+            penumbra={0.8} 
+            intensity={20} 
             color="#38bdf8" 
             castShadow 
             attenuation={5}
