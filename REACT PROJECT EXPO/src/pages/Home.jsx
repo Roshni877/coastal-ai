@@ -57,50 +57,27 @@ function Home() {
 
         <h1 
           ref={titleRef} 
-          className="main-title"
+          className="main-title outline-text"
           style={{
             fontWeight: 900,
             textTransform: 'uppercase',
-            letterSpacing: '-2px',
+            letterSpacing: '1px',
             lineHeight: 0.92,
+            margin: '10px 0 25px 0',
+            color: isDark ? '#7dd3fc' : '#38bdf8',
+            background: isDark
+              ? 'linear-gradient(180deg, #a5f3fc 0%, #38bdf8 50%, #0ea5e9 100%)'
+              : 'linear-gradient(180deg, #67e8f9 0%, #38bdf8 45%, #0284c7 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            WebkitTextStroke: isDark ? '2px rgba(255, 255, 255, 0.95)' : '2px #ffffff',
+            filter: isDark
+              ? 'drop-shadow(0 4px 25px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.9))'
+              : 'drop-shadow(0 4px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 35px rgba(56, 189, 248, 0.85))',
             transition: 'all 0.4s ease',
           }}
         >
-          <span
-            className="word-coastal"
-            style={{
-              color: isDark ? '#ff5252' : '#ef4444',
-              background: isDark
-                ? 'linear-gradient(135deg, #ff5252 0%, #ef4444 50%, #dc2626 100%)'
-                : 'linear-gradient(135deg, #ef4444 0%, #dc2626 55%, #991b1b 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              filter: isDark
-                ? 'drop-shadow(0 0 28px rgba(239, 68, 68, 0.65)) drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9))'
-                : 'drop-shadow(0 4px 14px rgba(220, 38, 38, 0.35))',
-              marginRight: '0.3em',
-              display: 'inline-block'
-            }}
-          >
-            COASTAL
-          </span>
-          <span
-            className="word-ai"
-            style={{
-              color: isDark ? '#4ade80' : '#16a34a',
-              background: isDark
-                ? 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)'
-                : 'linear-gradient(135deg, #16a34a 0%, #15803d 55%, #14532d 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              filter: isDark
-                ? 'drop-shadow(0 0 28px rgba(34, 197, 94, 0.65)) drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9))'
-                : 'drop-shadow(0 4px 14px rgba(22, 163, 74, 0.35))',
-              display: 'inline-block'
-            }}
-          >
-            AI
-          </span>
+          COASTAL AI
         </h1>
 
         <p ref={descRef} className="description">

@@ -296,44 +296,24 @@ body {
   font-weight: 900;
   margin: 10px 0 25px 0;
   text-transform: uppercase;
-  letter-spacing: -2px;
+  letter-spacing: 1px;
   line-height: 0.92;
+  color: #38bdf8;
+  background: linear-gradient(180deg, #67e8f9 0%, #38bdf8 45%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2px #ffffff;
+  filter: drop-shadow(0 4px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 35px rgba(56, 189, 248, 0.85));
   transition: all 0.4s ease;
 }
 
-.main-title .word-coastal {
-  color: #ef4444;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 55%, #991b1b 100%);
+[data-theme='dark'] .main-title {
+  color: #7dd3fc;
+  background: linear-gradient(180deg, #a5f3fc 0%, #38bdf8 50%, #0ea5e9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 14px rgba(220, 38, 38, 0.35));
-  margin-right: 0.3em;
-  display: inline-block;
-}
-
-.main-title .word-ai {
-  color: #16a34a;
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 55%, #14532d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 14px rgba(22, 163, 74, 0.35));
-  display: inline-block;
-}
-
-[data-theme='dark'] .main-title .word-coastal {
-  color: #ff5252;
-  background: linear-gradient(135deg, #ff5252 0%, #ef4444 50%, #dc2626 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px rgba(239, 68, 68, 0.65)) drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9));
-}
-
-[data-theme='dark'] .main-title .word-ai {
-  color: #4ade80;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px rgba(34, 197, 94, 0.65)) drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9));
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.95);
+  filter: drop-shadow(0 4px 25px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.9));
 }
 
 .description {
