@@ -1,0 +1,493 @@
+/* ========================================================
+   COASTAL AI TERMINAL LOADER - COMPUTER MONITOR & ANALYSIS
+   ======================================================== */
+
+.coastal-terminal-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: radial-gradient(circle at center, #071527 0%, #030811 75%, #010409 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', 'Outfit', monospace, sans-serif;
+  color: #e2e8f0;
+  padding: 20px;
+}
+
+/* Ambient Cyber Grid Background */
+.terminal-ambient-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(14, 165, 233, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 165, 233, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.terminal-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(850px, 90vw);
+  height: min(500px, 60vh);
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, rgba(16, 185, 129, 0.08) 45%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Skip Button */
+.terminal-skip-btn {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 20;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #94a3b8;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terminal-skip-btn:hover {
+  background: rgba(14, 165, 233, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+/* ========================================================
+   THE COMPUTER MONITOR FRAME
+   ======================================================== */
+.monitor-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 680px;
+}
+
+.monitor-frame {
+  width: 100%;
+  background: linear-gradient(165deg, #1e293b 0%, #0f172a 40%, #090e17 100%);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 
+    0 25px 60px -10px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 35px rgba(14, 165, 233, 0.25);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Top Bezel Camera & LED */
+.monitor-top-bezel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.monitor-camera-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #020617;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.monitor-status-led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: ledPulse 2s infinite ease-in-out;
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; box-shadow: 0 0 12px #38bdf8; }
+}
+
+/* Screen Display (CRT/HUD) */
+.monitor-screen {
+  position: relative;
+  background: #030a14;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  height: 290px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.85);
+}
+
+/* Scanlines overlay */
+.monitor-screen::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+  background-size: 100% 4px;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+/* Terminal Header */
+.screen-header {
+  height: 32px;
+  background: rgba(15, 23, 42, 0.85);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 9;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.window-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.window-dot.red { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
+.window-dot.yellow { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.5); }
+.window-dot.green { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.5); }
+
+.screen-title {
+  color: #38bdf8;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+}
+
+.screen-badge {
+  color: #4ade80;
+  font-size: 0.65rem;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* ========================================================
+   THE COASTAL ANALYSIS ANIMATION INSIDE SCREEN
+   ======================================================== */
+.screen-viewport {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coastal-svg-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Laser Scanline Sweeper */
+.laser-scan-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #38bdf8, #a7f3d0, #38bdf8);
+  box-shadow: 0 0 18px 4px rgba(56, 189, 248, 0.85);
+  z-index: 6;
+  pointer-events: none;
+  animation: laserScan 4s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+.laser-scan-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), transparent);
+  pointer-events: none;
+  left: -80px;
+}
+
+@keyframes laserScan {
+  0% { left: 5%; }
+  100% { left: 95%; }
+}
+
+/* Radar Sweep Circle in corner */
+.radar-blip {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  z-index: 7;
+  overflow: hidden;
+  background: rgba(3, 10, 20, 0.6);
+}
+
+.radar-sweep-hand {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(56, 189, 248, 0.6) 0deg, transparent 90deg, transparent 360deg);
+  animation: radarSpin 3s linear infinite;
+}
+
+@keyframes radarSpin {
+  100% { transform: rotate(360deg); }
+}
+
+/* HUD Telemetry Labels */
+.hud-telemetry {
+  position: absolute;
+  z-index: 7;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  pointer-events: none;
+  line-height: 1.4;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+.hud-top-left {
+  top: 10px;
+  left: 12px;
+  color: #7dd3fc;
+}
+
+.hud-bottom-left {
+  bottom: 10px;
+  left: 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.hud-audio-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.audio-bar {
+  width: 3px;
+  background: #38bdf8;
+  border-radius: 2px;
+  animation: audioBounce 1.2s ease-in-out infinite alternate;
+}
+
+.audio-bar:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+.audio-bar:nth-child(2) { height: 90%; animation-delay: 0.3s; }
+.audio-bar:nth-child(3) { height: 60%; animation-delay: 0.5s; }
+.audio-bar:nth-child(4) { height: 100%; animation-delay: 0.2s; }
+.audio-bar:nth-child(5) { height: 50%; animation-delay: 0.4s; }
+
+@keyframes audioBounce {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+
+.hud-bottom-right {
+  bottom: 10px;
+  right: 12px;
+  text-align: right;
+  color: #34d399;
+}
+
+/* Active Transect Pulse Points */
+.transect-pulse {
+  animation: transectPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes transectPing {
+  0% { opacity: 0.4; r: 3; }
+  50% { opacity: 1; r: 5; }
+  100% { opacity: 0.4; r: 3; }
+}
+
+/* Monitor Stand */
+.monitor-stand-neck {
+  width: 70px;
+  height: 22px;
+  background: linear-gradient(180deg, #1e293b, #090e17);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.monitor-stand-base {
+  width: 170px;
+  height: 10px;
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  border-radius: 6px 6px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+}
+
+/* ========================================================
+   THE LOADING BAR SECTION BELOW MONITOR
+   ======================================================== */
+.loader-progress-section {
+  width: 100%;
+  max-width: 680px;
+  margin-top: 18px;
+  position: relative;
+  z-index: 10;
+}
+
+.progress-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-status-text {
+  font-size: 0.78rem;
+  letter-spacing: 1.2px;
+  color: #7dd3fc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.status-blinking-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 12px;
+  background: #38bdf8;
+  animation: blinkCursor 0.8s infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.progress-percentage {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #38bdf8;
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+  letter-spacing: 1px;
+}
+
+/* Track & Bar */
+.progress-bar-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  position: relative;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 15px rgba(14, 165, 233, 0.15);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0284c7 0%, #38bdf8 55%, #10b981 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.8), 0 0 35px rgba(16, 185, 129, 0.6);
+  transition: width 0.15s ease-out;
+  position: relative;
+}
+
+.progress-bar-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: progressShimmer 1.8s infinite;
+}
+
+@keyframes progressShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Bottom Telemetry Ticker */
+.progress-telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.68rem;
+  color: #64748b;
+  letter-spacing: 1px;
+}
+
+.telemetry-tag {
+  color: #94a3b8;
+}
+
+.telemetry-highlight {
+  color: #34d399;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .monitor-screen {
+    height: 220px;
+  }
+  .screen-title {
+    font-size: 0.6rem;
+  }
+  .screen-badge {
+    display: none;
+  }
+  .hud-telemetry {
+    font-size: 0.55rem;
+  }
+  .progress-telemetry-row {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+}

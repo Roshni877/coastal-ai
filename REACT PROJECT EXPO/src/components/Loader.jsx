@@ -1,289 +1,368 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, Radio, Cpu, ShieldCheck } from "lucide-react";
+import "./Loader.css";
+
+const statusSteps = [
+  { threshold: 18, text: "CONNECTING TO SENTINEL-2 & LANDSAT-9 FEEDS..." },
+  { threshold: 38, text: "INGESTING MULTISPECTRAL BANDS (NDWI / MNDWI)..." },
+  { threshold: 62, text: "RUNNING DEEPLABV3+ RESNET101 SEGMENTATION..." },
+  { threshold: 82, text: "CALCULATING TRANSECTS & EROSION HAZARD RATES..." },
+  { threshold: 96, text: "SYNTHESIZING PREDICTIVE GEOSPATIAL ARCHIVES..." },
+  { threshold: 100, text: "COASTAL ANALYSIS COMPLETE — INITIALIZING SYSTEM..." }
+];
+
+const transectPoints = [
+  { id: "T-01", x: 90, y: 55, rate: "-1.8m/y", risk: "high" },
+  { id: "T-02", x: 160, y: 75, rate: "-2.4m/y", risk: "severe" },
+  { id: "T-03", x: 230, y: 110, rate: "-0.6m/y", risk: "moderate" },
+  { id: "T-04", x: 310, y: 145, rate: "+0.4m/y", risk: "accretion" },
+  { id: "T-05", x: 390, y: 175, rate: "-1.9m/y", risk: "high" },
+  { id: "T-06", x: 470, y: 210, rate: "-3.1m/y", risk: "severe" },
+  { id: "T-07", x: 550, y: 235, rate: "-0.8m/y", risk: "moderate" },
+];
 
 const Loader = () => {
   const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState(15);
-  const [statusMessage, setStatusMessage] = useState("Initializing Coastal Analysis System...");
+  const [progress, setProgress] = useState(0);
+  const [activeStatus, setActiveStatus] = useState(statusSteps[0].text);
 
+  // Smooth progress increment
   useEffect(() => {
-    let currentProgress = 20;
-    const interval = setInterval(() => {
-      // Check actual browser readyState
-      if (document.readyState === "complete") {
-        currentProgress += Math.floor(Math.random() * 20) + 15;
-      } else {
-        currentProgress += Math.floor(Math.random() * 10) + 5;
-      }
+    const startTime = Date.now();
+    const duration = 3200; // 3.2 seconds total duration
 
-      if (currentProgress >= 40 && currentProgress < 70) {
-        setStatusMessage("Loading Remote Sensing Telemetry & Shoreline GeoJSON...");
-      } else if (currentProgress >= 70 && currentProgress < 95) {
-        setStatusMessage("Calibrating DeepLabV3+ & ResNet-34 Feature Weights...");
-      } else if (currentProgress >= 100) {
-        currentProgress = 100;
-        setStatusMessage("Coastal Intelligence System Ready");
-        clearInterval(interval);
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const rawProgress = Math.min((elapsed / duration) * 100, 100);
+
+      // Ease-out progress simulation
+      const easedProgress = Math.round(
+        rawProgress < 80 
+          ? rawProgress * 1.05 
+          : 80 + (rawProgress - 80) * 0.95
+      );
+      const clamped = Math.min(Math.max(easedProgress, 0), 100);
+      setProgress(clamped);
+
+      // Update status text
+      const matched = statusSteps.find((s) => clamped <= s.threshold) || statusSteps[statusSteps.length - 1];
+      setActiveStatus(matched.text);
+
+      if (rawProgress >= 100) {
+        clearInterval(timer);
         setTimeout(() => {
           setLoading(false);
-        }, 350);
+        }, 500);
       }
-      setProgress(Math.min(currentProgress, 100));
-    }, 120);
+    }, 40);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
   }, []);
+
+  // Quick skip with Esc key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setLoading(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleSkip = () => {
+    setLoading(false);
+  };
 
   if (!loading) return null;
 
   return (
     <AnimatePresence>
-      <motion.div
-        key="scientific-loader"
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.5, ease: "easeInOut" } }}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 999999,
-          backgroundColor: "#030712",
-          backgroundImage: "radial-gradient(ellipse at 50% 30%, rgba(14, 165, 233, 0.12) 0%, rgba(2, 6, 23, 0.98) 75%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-          color: "#f8fafc",
-          padding: "24px",
-          userSelect: "none"
-        }}
-      >
-        {/* Computer Screen Frame / Radar Analysis Canvas */}
-        <div
-          style={{
-            width: "min(520px, 92vw)",
-            background: "#081325",
-            borderRadius: "14px",
-            border: "1px solid rgba(56, 189, 248, 0.25)",
-            boxShadow: "0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(14, 165, 233, 0.15)",
-            overflow: "hidden",
-            position: "relative"
-          }}
+      {loading && (
+        <motion.div
+          key="terminal-loader"
+          className="coastal-terminal-loader"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.03, filter: "blur(12px)" }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
-          {/* Top Window Bar */}
-          <div
-            style={{
-              padding: "10px 16px",
-              background: "rgba(15, 23, 42, 0.9)",
-              borderBottom: "1px solid rgba(56, 189, 248, 0.15)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              fontSize: "0.75rem",
-              letterSpacing: "0.5px",
-              color: "#94a3b8"
-            }}
+          {/* Cyber grid & ambient glow */}
+          <div className="terminal-ambient-grid" />
+          <div className="terminal-ambient-glow" />
+
+          {/* Top Skip Button */}
+          <button 
+            type="button" 
+            className="terminal-skip-btn" 
+            onClick={handleSkip}
+            title="Press Esc to skip"
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 8px #10b981" }} />
-              <span style={{ fontWeight: 600, color: "#38bdf8" }}>COASTAL MONITORING TERMINAL</span>
+            <span>SKIP INTRO [ESC]</span>
+            <span>→</span>
+          </button>
+
+          {/* THE COMPUTER MONITOR */}
+          <div className="monitor-container">
+            <div className="monitor-frame">
+              {/* Bezel top with camera & status LED */}
+              <div className="monitor-top-bezel">
+                <span className="monitor-camera-dot" />
+                <span className="monitor-status-led" />
+              </div>
+
+              {/* The Computer Display / Screen */}
+              <div className="monitor-screen">
+                {/* Header Window Bar */}
+                <div className="screen-header">
+                  <div className="window-dots">
+                    <span className="window-dot red" />
+                    <span className="window-dot yellow" />
+                    <span className="window-dot green" />
+                  </div>
+                  <div className="screen-title">
+                    <span>COASTAL_AI // SATELLITE RADAR ANALYZER</span>
+                  </div>
+                  <div className="screen-badge">
+                    <span>● LIVE INGESTION</span>
+                  </div>
+                </div>
+
+                {/* Animated Coastline Viewport */}
+                <div className="screen-viewport">
+                  {/* Radar Sweeper Widget */}
+                  <div className="radar-blip">
+                    <div className="radar-sweep-hand" />
+                  </div>
+
+                  {/* SVG Coastline & Transect Analysis */}
+                  <svg
+                    className="coastal-svg-canvas"
+                    viewBox="0 0 640 260"
+                    preserveAspectRatio="none"
+                  >
+                    <defs>
+                      <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#031d36" />
+                        <stop offset="50%" stopColor="#062e54" />
+                        <stop offset="100%" stopColor="#0a467c" />
+                      </linearGradient>
+
+                      <linearGradient id="landGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#091b16" />
+                        <stop offset="60%" stopColor="#0f2922" />
+                        <stop offset="100%" stopColor="#13362c" />
+                      </linearGradient>
+
+                      <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#38bdf8" floodOpacity="0.9" />
+                      </filter>
+                    </defs>
+
+                    {/* Ocean Area */}
+                    <rect x="0" y="0" width="640" height="260" fill="url(#oceanGradient)" />
+
+                    {/* Subsurface Bathymetry Depth Lines */}
+                    <path
+                      d="M -10,30 Q 150,70 320,110 T 650,170"
+                      fill="none"
+                      stroke="rgba(56, 189, 248, 0.12)"
+                      strokeWidth="1.5"
+                      strokeDasharray="4 6"
+                    />
+                    <path
+                      d="M -10,60 Q 170,100 350,140 T 650,210"
+                      fill="none"
+                      stroke="rgba(56, 189, 248, 0.18)"
+                      strokeWidth="1.5"
+                      strokeDasharray="6 8"
+                    />
+
+                    {/* Landmass Contour (Simulating Coastal Terrain) */}
+                    <path
+                      d="M -10,260 
+                         L -10,50 
+                         Q 80,65 140,85 
+                         T 280,140 
+                         Q 380,170 460,205 
+                         T 650,255 
+                         L 650,260 Z"
+                      fill="url(#landGradient)"
+                      stroke="rgba(16, 185, 129, 0.4)"
+                      strokeWidth="1"
+                    />
+
+                    {/* Topography Elevation Contour Rings on Land */}
+                    <path
+                      d="M 50,120 Q 120,135 180,160 T 320,220 L 300,260 L 20,260 Z"
+                      fill="none"
+                      stroke="rgba(52, 211, 153, 0.15)"
+                      strokeWidth="1"
+                      strokeDasharray="3 3"
+                    />
+
+                    {/* Primary Detected Shoreline Vector (Glowing Cyan) */}
+                    <path
+                      d="M -10,50 
+                         Q 80,65 140,85 
+                         T 280,140 
+                         Q 380,170 460,205 
+                         T 650,255"
+                      fill="none"
+                      stroke="#38bdf8"
+                      strokeWidth="3.5"
+                      filter="url(#cyanGlow)"
+                    />
+
+                    {/* Baseline Comparison (Historic 2020 Shoreline - Dotted Amber) */}
+                    <path
+                      d="M -10,40 
+                         Q 80,55 140,78 
+                         T 280,128 
+                         Q 380,158 460,195 
+                         T 650,242"
+                      fill="none"
+                      stroke="#f59e0b"
+                      strokeWidth="1.5"
+                      strokeDasharray="5 4"
+                      opacity="0.8"
+                    />
+
+                    {/* Perpendicular Shoreline Transect Beams */}
+                    {transectPoints.map((pt, idx) => (
+                      <g key={pt.id}>
+                        {/* Perpendicular ray line */}
+                        <line
+                          x1={pt.x - 18}
+                          y1={pt.y - 25}
+                          x2={pt.x + 22}
+                          y2={pt.y + 32}
+                          stroke={pt.risk === "severe" ? "#f43f5e" : pt.risk === "accretion" ? "#10b981" : "#38bdf8"}
+                          strokeWidth="1.5"
+                          strokeDasharray="2 2"
+                          opacity="0.85"
+                        />
+                        {/* Transect marker node */}
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r="4"
+                          fill={pt.risk === "severe" ? "#f43f5e" : pt.risk === "accretion" ? "#10b981" : "#38bdf8"}
+                          className="transect-pulse"
+                          style={{ animationDelay: `${idx * 0.25}s` }}
+                        />
+                        {/* Micro Label */}
+                        <text
+                          x={pt.x + 7}
+                          y={pt.y - 8}
+                          fill={pt.risk === "severe" ? "#fca5a5" : pt.risk === "accretion" ? "#86efac" : "#7dd3fc"}
+                          fontSize="9"
+                          fontFamily="monospace"
+                          fontWeight="700"
+                        >
+                          {pt.id}: {pt.rate}
+                        </text>
+                      </g>
+                    ))}
+
+                    {/* Real-time AI Classification Bounding Box */}
+                    <g transform="translate(180, 75)">
+                      <rect
+                        x="0"
+                        y="0"
+                        width="150"
+                        height="65"
+                        fill="rgba(14, 165, 233, 0.08)"
+                        stroke="#38bdf8"
+                        strokeWidth="1"
+                        strokeDasharray="3 3"
+                      />
+                      <rect x="-1" y="-1" width="6" height="6" fill="#38bdf8" />
+                      <rect x="145" y="-1" width="6" height="6" fill="#38bdf8" />
+                      <rect x="-1" y="60" width="6" height="6" fill="#38bdf8" />
+                      <rect x="145" y="60" width="6" height="6" fill="#38bdf8" />
+                      <text x="8" y="16" fill="#38bdf8" fontSize="8" fontFamily="monospace" fontWeight="700">
+                        [AI DETECT: SHORELINE MASK]
+                      </text>
+                      <text x="8" y="30" fill="#34d399" fontSize="7.5" fontFamily="monospace">
+                        CLASS: WATER / LAND [99.2%]
+                      </text>
+                      <text x="8" y="44" fill="#fbbf24" fontSize="7.5" fontFamily="monospace">
+                        EPR: -1.74m/yr (HIGH VULNERABILITY)
+                      </text>
+                    </g>
+                  </svg>
+
+                  {/* Laser Sweeper Bar */}
+                  <div className="laser-scan-line">
+                    <div className="laser-scan-glow" />
+                  </div>
+
+                  {/* Corner HUD Telemetry */}
+                  <div className="hud-telemetry hud-top-left">
+                    <div>LAT: 13°20'44"N • LNG: 74°44'38"E</div>
+                    <div>SECTOR: UDUPI COASTAL BASIN</div>
+                    <div>RESOLUTION: 10m SATELLITE PIXEL</div>
+                  </div>
+
+                  <div className="hud-telemetry hud-bottom-left">
+                    <div className="hud-audio-bars">
+                      <span className="audio-bar" />
+                      <span className="audio-bar" />
+                      <span className="audio-bar" />
+                      <span className="audio-bar" />
+                      <span className="audio-bar" />
+                    </div>
+                    <div>DATA STREAM // 320 TRANSECTS ACTIVE</div>
+                  </div>
+
+                  <div className="hud-telemetry hud-bottom-right">
+                    <div>ARCHITECTURE: DEEPLABV3+ RESNET101</div>
+                    <div>VALIDATION ACCURACY: 85.48%</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", fontFamily: "monospace", fontSize: "0.7rem" }}>
-              <span>LAT: 13.3409° N</span>
-              <span>LON: 74.7421° E</span>
-            </div>
+
+            {/* Monitor Stand */}
+            <div className="monitor-stand-neck" />
+            <div className="monitor-stand-base" />
           </div>
 
-          {/* Screen Display Area */}
-          <div
-            style={{
-              position: "relative",
-              height: "220px",
-              background: "#050e1d",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            {/* GIS Grid Background */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: `
-                  linear-gradient(rgba(56, 189, 248, 0.07) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(56, 189, 248, 0.07) 1px, transparent 1px)
-                `,
-                backgroundSize: "24px 24px"
-              }}
-            />
-
-            {/* Simulated Coastline SVG Contour */}
-            <svg
-              viewBox="0 0 500 200"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                opacity: 0.85
-              }}
-            >
-              {/* Land fill */}
-              <path
-                d="M 0,0 L 500,0 L 500,70 Q 420,110 350,85 T 220,130 T 110,95 Q 40,140 0,110 Z"
-                fill="rgba(16, 185, 129, 0.08)"
-                stroke="rgba(16, 185, 129, 0.4)"
-                strokeWidth="1.5"
-              />
-              {/* Historical Shoreline 2020 (Blue) */}
-              <path
-                d="M 0,105 Q 80,85 160,115 T 280,100 T 400,120 T 500,85"
-                fill="none"
-                stroke="#0284c7"
-                strokeWidth="2"
-                strokeDasharray="4 4"
-                opacity="0.8"
-              />
-              {/* Active Shoreline 2024 (Cyan) */}
-              <path
-                d="M 0,118 Q 80,100 160,130 T 280,115 T 400,135 T 500,98"
-                fill="none"
-                stroke="#38bdf8"
-                strokeWidth="2.5"
-              />
-              {/* Predicted Retreat Contour (Rose/Amber) */}
-              <path
-                d="M 0,128 Q 80,110 160,140 T 280,128 T 400,145 T 500,108"
-                fill="none"
-                stroke="#f43f5e"
-                strokeWidth="1.8"
-                strokeDasharray="2 2"
-              />
-              {/* Scanning Crosshair */}
-              <circle cx="280" cy="115" r="14" fill="none" stroke="#38bdf8" strokeWidth="1" opacity="0.6" />
-              <circle cx="280" cy="115" r="4" fill="#38bdf8" />
-            </svg>
-
-            {/* Radar / Analysis Scan Beam */}
-            <motion.div
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ repeat: Infinity, duration: 2.2, ease: "linear" }}
-              style={{
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                width: "60px",
-                background: "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.25), rgba(56, 189, 248, 0.5), transparent)",
-                pointerEvents: "none"
-              }}
-            />
-
-            {/* Telemetry Overlays */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "10px",
-                left: "14px",
-                display: "flex",
-                gap: "10px",
-                fontSize: "0.68rem",
-                color: "#7dd3fc",
-                fontFamily: "monospace",
-                background: "rgba(3, 7, 18, 0.75)",
-                padding: "4px 8px",
-                borderRadius: "4px",
-                border: "1px solid rgba(56, 189, 248, 0.2)"
-              }}
-            >
-              <span>EPSG:32643 UTM-43N</span>
-              <span>·</span>
-              <span>TRANSECTS: 3,321</span>
-              <span>·</span>
-              <span>SENSOR: SENTINEL-1/2</span>
+          {/* THE LOADING BAR SECTION */}
+          <div className="loader-progress-section">
+            <div className="progress-header-row">
+              <div className="progress-status-text">
+                <span>{activeStatus}</span>
+                <span className="status-blinking-cursor" />
+              </div>
+              <div className="progress-percentage">{progress}%</div>
             </div>
 
-            <div
-              style={{
-                position: "absolute",
-                top: "12px",
-                right: "14px",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                fontSize: "0.7rem",
-                color: "#34d399",
-                background: "rgba(5, 46, 22, 0.6)",
-                padding: "3px 8px",
-                borderRadius: "4px",
-                border: "1px solid rgba(52, 211, 153, 0.3)"
-              }}
-            >
-              <Radio size={12} className="animate-pulse" />
-              <span>SCANNING CORRIDOR</span>
+            {/* Progress Bar Track */}
+            <div className="progress-bar-track">
+              <div 
+                className="progress-bar-fill" 
+                style={{ width: `${progress}%` }}
+              >
+                <div className="progress-bar-shimmer" />
+              </div>
+            </div>
+
+            {/* Sub-bar Telemetry Row */}
+            <div className="progress-telemetry-row">
+              <span className="telemetry-tag">
+                SYSTEM: <span className="telemetry-highlight">COASTAL-AI CORE</span>
+              </span>
+              <span className="telemetry-tag">
+                TRANSECTS PROCESSED: <span className="telemetry-highlight">{Math.min(Math.round((progress / 100) * 320), 320)} / 320</span>
+              </span>
+              <span className="telemetry-tag">
+                ACCURACY BENCHMARK: <span className="telemetry-highlight">85.48%</span>
+              </span>
             </div>
           </div>
-        </div>
-
-        {/* Progress Section */}
-        <div style={{ width: "min(520px, 92vw)", marginTop: "24px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "8px",
-              fontSize: "0.82rem"
-            }}
-          >
-            <span style={{ color: "#e2e8f0", fontWeight: 500, display: "flex", alignItems: "center", gap: "8px" }}>
-              <Cpu size={15} style={{ color: "#38bdf8" }} />
-              {statusMessage}
-            </span>
-            <span style={{ color: "#38bdf8", fontWeight: 700, fontFamily: "monospace" }}>
-              {progress}%
-            </span>
-          </div>
-
-          {/* Actual Progress Bar */}
-          <div
-            style={{
-              width: "100%",
-              height: "6px",
-              background: "rgba(15, 23, 42, 0.8)",
-              borderRadius: "4px",
-              overflow: "hidden",
-              border: "1px solid rgba(56, 189, 248, 0.2)"
-            }}
-          >
-            <motion.div
-              style={{
-                height: "100%",
-                width: `${progress}%`,
-                background: "linear-gradient(90deg, #0284c7 0%, #38bdf8 60%, #10b981 100%)",
-                borderRadius: "4px",
-                boxShadow: "0 0 12px rgba(56, 189, 248, 0.7)"
-              }}
-              transition={{ ease: "easeOut", duration: 0.2 }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: "10px",
-              fontSize: "0.72rem",
-              color: "#64748b"
-            }}
-          >
-            <span>Udupi Coastal Erosion Analysis Platform</span>
-            <span>Remote Sensing & AI Environment</span>
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };
