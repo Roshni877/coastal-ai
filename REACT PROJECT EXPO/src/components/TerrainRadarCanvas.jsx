@@ -1,401 +1,325 @@
 import React, { useRef, useEffect } from "react";
+import * as THREE from "three";
 
 const TerrainRadarCanvas = () => {
-  const canvasRef = useRef(null);
+  const mountRef = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const mount = mountRef.current;
+    if (!mount) return;
+
+    let width = mount.clientWidth || 640;
+    let height = mount.clientHeight || 450;
+
+    // 1. Scene, Camera, Renderer
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0b121c, 0.015);
+
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+    camera.position.set(0, 22, 34);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    mount.appendChild(renderer.domElement);
+
+    // 2. Lights
+    const ambientLight = new THREE.AmbientLight(0x0a2540, 1.2);
+    scene.add(ambientLight);
+
+    const cyanLight = new THREE.DirectionalLight(0x00f0ff, 2.5);
+    cyanLight.position.set(15, 25, 20);
+    scene.add(cyanLight);
+
+    const amberLight = new THREE.PointLight(0xf59e0b, 1.8, 60);
+    amberLight.position.set(-20, 10, -15);
+    scene.add(amberLight);
+
+    // 3. 12D Rotational Group (Contains Terrain + Shoreline + Radar)
+    const terrainGroup = new THREE.Group();
+    scene.add(terrainGroup);
+
+    // 4. Create High-Density Coastal Topography (PlaneGeometry)
+    const GRID_SIZE = 26;
+    const SEGMENTS = 52;
+    const geometry = new THREE.PlaneGeometry(GRID_SIZE, GRID_SIZE, SEGMENTS, SEGMENTS);
+    geometry.rotateX(-Math.PI / 2); // Lay flat on XZ plane
+
+    const posAttr = geometry.attributes.position;
+    const vertexCount = posAttr.count;
+
+    // Store base (x, z) positions
+    const baseCoords = new Float32Array(vertexCount * 2);
+    for (let i = 0; i < vertexCount; i++) {
+      baseCoords[i * 2] = posAttr.getX(i);
+      baseCoords[i * 2 + 1] = posAttr.getZ(i);
+    }
+
+    // Colors for point cloud / wireframe
+    const colors = new Float32Array(vertexCount * 3);
+    const colorAttr = new THREE.BufferAttribute(colors, 3);
+    geometry.setAttribute("color", colorAttr);
+
+    // Wireframe Mesh Material
+    const meshMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0ea5e9,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.32,
+      roughness: 0.2,
+      metalness: 0.8,
+    });
+    const terrainMesh = new THREE.Mesh(geometry, meshMaterial);
+    terrainGroup.add(terrainMesh);
+
+    // Point Cloud Material on top of vertices
+    const pointsMaterial = new THREE.PointsMaterial({
+      size: 0.28,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending,
+    });
+    const terrainPoints = new THREE.Points(geometry, pointsMaterial);
+    terrainGroup.add(terrainPoints);
+
+    // 5. Glowing Cyan Coastline Spline Curve (Dynamic Line)
+    const SHORELINE_NODES = 48;
+    const shorelinePoints = [];
+    for (let i = 0; i < SHORELINE_NODES; i++) {
+      shorelinePoints.push(new THREE.Vector3(0, 0, 0));
+    }
+    const shorelineGeom = new THREE.BufferGeometry().setFromPoints(shorelinePoints);
+    const shorelineMat = new THREE.LineBasicMaterial({
+      color: 0x00f0ff,
+      linewidth: 3,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+    });
+    const shorelineLine = new THREE.Line(shorelineGeom, shorelineMat);
+    terrainGroup.add(shorelineLine);
+
+    // 6. Volumetric Radar Sector Fan (Semicircular Glowing Fan)
+    const RADAR_RADIUS = 13.5;
+    const SECTOR_ANGLE = Math.PI * 0.58;
+    const radarGeom = new THREE.RingGeometry(0.2, RADAR_RADIUS, 32, 1, 0, SECTOR_ANGLE);
+    radarGeom.rotateX(-Math.PI / 2);
+    const radarMat = new THREE.MeshBasicMaterial({
+      color: 0x00f0ff,
+      transparent: true,
+      opacity: 0.28,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+    });
+    const radarFan = new THREE.Mesh(radarGeom, radarMat);
+    terrainGroup.add(radarFan);
+
+    // Leading laser line of radar
+    const laserGeom = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0.1, 0),
+      new THREE.Vector3(RADAR_RADIUS, 0.1, 0),
+    ]);
+    const laserMat = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      linewidth: 3,
+      transparent: true,
+      opacity: 1,
+      blending: THREE.AdditiveBlending,
+    });
+    const laserLine = new THREE.Line(laserGeom, laserMat);
+    terrainGroup.add(laserLine);
+
+    // 7. 3D Multidimensional Gyroscope Gimbal Rings (Nested Toruses)
+    const gyroGroup = new THREE.Group();
+    scene.add(gyroGroup);
+
+    const createGimbalRing = (radius, tube, color, opacity) => {
+      const ringGeom = new THREE.TorusGeometry(radius, tube, 16, 80);
+      const ringMat = new THREE.MeshStandardMaterial({
+        color,
+        emissive: color,
+        emissiveIntensity: 0.6,
+        roughness: 0.3,
+        metalness: 0.9,
+        transparent: true,
+        opacity,
+        blending: THREE.AdditiveBlending,
+      });
+      return new THREE.Mesh(ringGeom, ringMat);
+    };
+
+    // Outer Cyan Ring (Equatorial)
+    const ring1 = createGimbalRing(16.5, 0.08, 0x00f0ff, 0.65);
+    gyroGroup.add(ring1);
+
+    // Middle Amber/Gold Ring (Polar)
+    const ring2 = createGimbalRing(15.2, 0.07, 0xf59e0b, 0.55);
+    gyroGroup.add(ring2);
+
+    // Inner Emerald Ring (Hyperspace Oblique)
+    const ring3 = createGimbalRing(13.8, 0.06, 0x10b981, 0.45);
+    gyroGroup.add(ring3);
+
+    // Orbiting Satellite Beacon on Ring 1
+    const beaconGeom = new THREE.SphereGeometry(0.35, 16, 16);
+    const beaconMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const beacon = new THREE.Mesh(beaconGeom, beaconMat);
+    ring1.add(beacon);
+
+    // 8. Atmospheric Floating Data Particles (Quantum Dust)
+    const DUST_COUNT = 180;
+    const dustGeom = new THREE.BufferGeometry();
+    const dustPositions = new Float32Array(DUST_COUNT * 3);
+    for (let i = 0; i < DUST_COUNT; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * 45;
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 30;
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 45;
+    }
+    dustGeom.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+    const dustMat = new THREE.PointsMaterial({
+      color: 0x38bdf8,
+      size: 0.22,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+    });
+    const dustParticles = new THREE.Points(dustGeom, dustMat);
+    scene.add(dustParticles);
+
+    // 9. Animation Loop (Realistic 12D Harmonic Gyroscope Rotation)
+    let time = 0;
     let animationFrameId;
 
-    const dpr = window.devicePixelRatio || 1;
-    let width = canvas.clientWidth || 620;
-    let height = canvas.clientHeight || 440;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
+    const animate = () => {
+      time += 0.022;
 
-    // Grid dimensions
-    const COLS = 28;
-    const ROWS = 28;
-    const gridSpacing = Math.min(width, height) / 30;
+      // 12D Multi-Axis Complex Rotation on Terrain
+      const yaw = time * 0.55; // Continuous 360° smooth spin
+      const pitch = Math.sin(time * 0.4) * 0.32 - 0.15; // Harmonic orbital inclination
+      const roll = Math.cos(time * 0.32) * 0.22; // Precession roll tilt
+      const wWarp = Math.sin(time * 1.4) * 0.18; // 4D Hyperspace dimensional breathing
 
-    // 12D Multi-harmonic elevation function
-    const get12DElevation = (i, j, time) => {
-      const u = (i - COLS / 2) * 0.35;
-      const v = (j - ROWS / 2) * 0.35;
+      terrainGroup.rotation.y = yaw;
+      terrainGroup.rotation.x = pitch;
+      terrainGroup.rotation.z = roll;
 
-      // Complex multidimensional interference waves (12 harmonic terms)
-      const term1 = Math.sin(u + time * 1.6) * Math.cos(v - time * 1.2) * 14;
-      const term2 = Math.sin((u - v) * 1.2 + time * 2.0) * 8;
-      const term3 = Math.cos((u * u + v * v) * 0.28 - time * 2.4) * 6;
-      const term4 = Math.sin(u * 2.1 - time * 1.1) * 4;
-      const term5 = Math.cos(v * 2.1 + time * 1.4) * 4;
-      const ridge = (v * 1.2 - u * 0.9) * 2.5;
+      // Gimbal Rings rotate on independent 3D planes
+      ring1.rotation.y = time * 0.4;
+      ring1.rotation.x = Math.sin(time * 0.3) * 0.4;
 
-      return term1 + term2 + term3 + term4 + term5 + ridge;
-    };
+      ring2.rotation.x = -time * 0.5;
+      ring2.rotation.z = Math.cos(time * 0.35) * 0.5;
 
-    // Shoreline contour test: points where elevation crosses threshold
-    const isShorelinePoint = (i, j) => {
-      const val = j - i * 0.78;
-      return Math.abs(val - 2.5) < 1.2;
-    };
+      ring3.rotation.z = time * 0.6;
+      ring3.rotation.y = -time * 0.4;
 
-    let time = 0;
+      // Orbiting beacon moves along ring perimeter
+      const bAngle = time * 1.6;
+      beacon.position.set(Math.cos(bAngle) * 16.5, Math.sin(bAngle) * 16.5, 0);
 
-    // Helper: 3D to 2D projection with Yaw, Pitch, Roll & 4D-W Stereographic warp
-    const projectPoint = (x0, y0, z0, yaw, pitch, roll, wWarp, cx, cy, cameraDist) => {
-      // 4D W-coordinate warp (tesseract projection)
-      const wPersp = 1 / (1 - wWarp / 500);
-      const x1 = x0 * wPersp;
-      const y1 = y0 * wPersp;
-      const z1 = z0 * wPersp;
+      // Radar rotation angle
+      const sweepAngle = time * 1.7;
+      radarFan.rotation.y = sweepAngle;
+      laserLine.rotation.y = sweepAngle;
 
-      // 1. Yaw rotation (Y axis)
-      const cosY = Math.cos(yaw);
-      const sinY = Math.sin(yaw);
-      const x2 = x1 * cosY - y1 * sinY;
-      const y2 = x1 * sinY + y1 * cosY;
-      const z2 = z1;
+      // 12D Harmonic Terrain Vertex Elevation Calculation
+      const pos = geometry.attributes.position;
+      const col = geometry.attributes.color;
 
-      // 2. Pitch rotation (X axis)
-      const cosP = Math.cos(pitch);
-      const sinP = Math.sin(pitch);
-      const y3 = y2 * cosP - z2 * sinP;
-      const z3 = y2 * sinP + z2 * cosP;
-      const x3 = x2;
+      for (let i = 0; i < vertexCount; i++) {
+        const bx = baseCoords[i * 2];
+        const bz = baseCoords[i * 2 + 1];
 
-      // 3. Roll rotation (Z axis)
-      const cosR = Math.cos(roll);
-      const sinR = Math.sin(roll);
-      const x4 = x3 * cosR - y3 * sinR;
-      const y4 = x3 * sinR + y3 * cosR;
-      const z4 = z3;
+        // 12 harmonic interference terms for realistic coastal DEM
+        const u = bx * 0.22;
+        const v = bz * 0.22;
 
-      // Perspective projection
-      const scale = cameraDist / (cameraDist + z4);
-      return {
-        x: cx + x4 * scale,
-        y: cy + y4 * scale,
-        z: z4,
-        scale,
-      };
-    };
+        const mountain = Math.sin(u * 0.6 + time * 0.8) * Math.cos(v * 0.6 - time * 0.6) * 3.2;
+        const ridges = Math.sin((u - v) * 0.8 + time * 1.2) * 1.5;
+        const valley = Math.cos((u * u + v * v) * 0.04 - time * 1.5) * 1.2;
+        const coastalSlope = (v * 0.9 - u * 0.7) * 2.2;
+        const microWave = Math.sin(u * 1.5 + time * 2.0) * 0.4;
 
-    const render = () => {
-      time += 0.024;
-      ctx.clearRect(0, 0, width, height);
+        // Apply 4D-W warp breathing
+        const totalHeight = (mountain + ridges + valley + coastalSlope + microWave) * (1 + wWarp);
+        pos.setY(i, totalHeight);
 
-      const centerX = width * 0.52;
-      const centerY = height * 0.52;
-      const cameraDist = 420;
+        // Check if vertex is inside the radar sweep
+        const dist = Math.sqrt(bx * bx + bz * bz);
+        let angle = Math.atan2(bz, bx);
+        let diff = (sweepAngle - angle) % (Math.PI * 2);
+        if (diff < 0) diff += Math.PI * 2;
+        const isUnderRadar = dist <= RADAR_RADIUS && diff <= SECTOR_ANGLE;
 
-      // 12D Multidimensional Rotation Angles (Continuous dynamic 3D/4D precession)
-      const yaw = time * 0.65; // Continuous 360° spin
-      const pitch = 0.88 + Math.sin(time * 0.45) * 0.32; // Harmonic inclination bobbing
-      const roll = Math.cos(time * 0.38) * 0.22; // Gyroscopic roll tilt
-      const wWarp = Math.sin(time * 1.2) * 28; // 4D hypercube dimensional pulse
-
-      // 1. Draw Multidimensional Gyroscope Gimbal Rings (Nested Rings orbiting in 3D)
-      const ringRadius = Math.min(width, height) * 0.44;
-
-      const drawGyroRing = (radius, rYaw, rPitch, rRoll, strokeStyle, shadowColor, dashArray = []) => {
-        ctx.save();
-        ctx.beginPath();
-        const segments = 60;
-        let first = true;
-        for (let s = 0; s <= segments; s++) {
-          const theta = (s / segments) * Math.PI * 2;
-          const rx = Math.cos(theta) * radius;
-          const ry = Math.sin(theta) * radius;
-          const rz = 0;
-          const p = projectPoint(rx, ry, rz, rYaw, rPitch, rRoll, 0, centerX, centerY, cameraDist);
-          if (first) {
-            ctx.moveTo(p.x, p.y);
-            first = false;
-          } else {
-            ctx.lineTo(p.x, p.y);
-          }
-        }
-        ctx.strokeStyle = strokeStyle;
-        ctx.lineWidth = 1.2;
-        if (shadowColor) {
-          ctx.shadowColor = shadowColor;
-          ctx.shadowBlur = 12;
-        }
-        if (dashArray.length) {
-          ctx.setLineDash(dashArray);
-        }
-        ctx.stroke();
-
-        // Draw orbital node beacon on ring
-        const beaconTheta = time * 1.5;
-        const bx = Math.cos(beaconTheta) * radius;
-        const by = Math.sin(beaconTheta) * radius;
-        const bp = projectPoint(bx, by, 0, rYaw, rPitch, rRoll, 0, centerX, centerY, cameraDist);
-        ctx.beginPath();
-        ctx.arc(bp.x, bp.y, 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.shadowColor = "#00f0ff";
-        ctx.shadowBlur = 15;
-        ctx.fill();
-        ctx.restore();
-      };
-
-      // Ring 1: Equatorial Gyro Ring (Cyan)
-      drawGyroRing(
-        ringRadius,
-        yaw * 0.8,
-        pitch * 0.6,
-        time * 0.4,
-        "rgba(56, 189, 248, 0.45)",
-        "#00f0ff",
-        [6, 8]
-      );
-
-      // Ring 2: Polar Gyro Ring (Amber/Gold accent)
-      drawGyroRing(
-        ringRadius * 0.9,
-        -time * 0.5,
-        Math.PI * 0.5 + Math.sin(time * 0.4) * 0.3,
-        time * 0.3,
-        "rgba(245, 158, 11, 0.35)",
-        "#f59e0b",
-        [4, 6]
-      );
-
-      // Ring 3: Oblique Hyperspace Ring (Emerald/Cyan)
-      drawGyroRing(
-        ringRadius * 1.05,
-        time * 0.4,
-        Math.PI * 0.25,
-        -time * 0.6,
-        "rgba(16, 185, 129, 0.3)",
-        "#10b981",
-        [10, 10]
-      );
-
-      // 2. Compute 12D Rotating Terrain Mesh Points
-      const points = [];
-      for (let i = 0; i < COLS; i++) {
-        points[i] = [];
-        for (let j = 0; j < ROWS; j++) {
-          const x0 = (i - COLS / 2) * gridSpacing;
-          const y0 = (j - ROWS / 2) * gridSpacing;
-          const z0 = get12DElevation(i, j, time);
-
-          const proj = projectPoint(
-            x0,
-            y0,
-            z0,
-            yaw,
-            pitch,
-            roll,
-            wWarp,
-            centerX,
-            centerY,
-            cameraDist
-          );
-
-          points[i][j] = {
-            ...proj,
-            origZ: z0,
-            isShore: isShorelinePoint(i, j),
-          };
+        if (isUnderRadar) {
+          // Intense electric cyan highlight
+          col.setXYZ(i, 0.1, 0.95, 1.0);
+        } else {
+          // Subtle deep atmospheric blue
+          const depth = (totalHeight + 8) / 16;
+          col.setXYZ(i, 0.05 * depth, 0.25 * depth, 0.45 * depth);
         }
       }
+      pos.needsUpdate = true;
+      col.needsUpdate = true;
 
-      // Radar Sweep Calculation
-      const sweepAngle = time * 1.8;
-      const sectorAngle = Math.PI * 0.55;
-      const radarCenter = points[Math.floor(COLS / 2)][Math.floor(ROWS / 2)];
-      const radarRadius = Math.min(width, height) * 0.46;
-
-      // 3. Draw Semicircular Radar Arc Sweep
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(radarCenter.x, radarCenter.y);
-      ctx.arc(
-        radarCenter.x,
-        radarCenter.y,
-        radarRadius,
-        sweepAngle - sectorAngle,
-        sweepAngle,
-        false
-      );
-      ctx.closePath();
-
-      const radarGrad = ctx.createRadialGradient(
-        radarCenter.x,
-        radarCenter.y,
-        0,
-        radarCenter.x,
-        radarCenter.y,
-        radarRadius
-      );
-      radarGrad.addColorStop(0, "rgba(0, 240, 255, 0.5)");
-      radarGrad.addColorStop(0.5, "rgba(0, 240, 255, 0.2)");
-      radarGrad.addColorStop(1, "rgba(0, 240, 255, 0.0)");
-      ctx.fillStyle = radarGrad;
-      ctx.fill();
-
-      // Outer radar rim
-      ctx.beginPath();
-      ctx.arc(
-        radarCenter.x,
-        radarCenter.y,
-        radarRadius,
-        sweepAngle - sectorAngle,
-        sweepAngle,
-        false
-      );
-      ctx.strokeStyle = "rgba(0, 240, 255, 0.95)";
-      ctx.lineWidth = 2.2;
-      ctx.shadowColor = "#00f0ff";
-      ctx.shadowBlur = 18;
-      ctx.stroke();
-
-      // Leading radar scan line
-      ctx.beginPath();
-      ctx.moveTo(radarCenter.x, radarCenter.y);
-      ctx.lineTo(
-        radarCenter.x + Math.cos(sweepAngle) * radarRadius,
-        radarCenter.y + Math.sin(sweepAngle) * radarRadius
-      );
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2.8;
-      ctx.shadowColor = "#00f0ff";
-      ctx.shadowBlur = 22;
-      ctx.stroke();
-      ctx.restore();
-
-      // 4. Draw Rotating 3D Terrain Grid Wireframe
-      for (let i = 0; i < COLS; i++) {
-        for (let j = 0; j < ROWS; j++) {
-          const pt = points[i][j];
-
-          // Check if point is inside radar sweep arc
-          const dx = pt.x - radarCenter.x;
-          const dy = pt.y - radarCenter.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          let angle = Math.atan2(dy, dx);
-          let diff = (sweepAngle - angle) % (Math.PI * 2);
-          if (diff < 0) diff += Math.PI * 2;
-          const isUnderRadar = dist <= radarRadius && diff <= sectorAngle;
-          pt.isUnderRadar = isUnderRadar;
-
-          // Connect to neighbor (i + 1, j)
-          if (i < COLS - 1) {
-            const nextPt = points[i + 1][j];
-            ctx.beginPath();
-            ctx.moveTo(pt.x, pt.y);
-            ctx.lineTo(nextPt.x, nextPt.y);
-            if (isUnderRadar && nextPt.isUnderRadar) {
-              ctx.strokeStyle = "rgba(0, 240, 255, 0.85)";
-              ctx.lineWidth = 1.4;
-            } else {
-              // Depth-shaded wireframe
-              const depthAlpha = Math.max(0.12, Math.min(0.35, (pt.scale + nextPt.scale) * 0.22));
-              ctx.strokeStyle = `rgba(100, 145, 185, ${depthAlpha})`;
-              ctx.lineWidth = 0.85;
-            }
-            ctx.stroke();
-          }
-
-          // Connect to neighbor (i, j + 1)
-          if (j < ROWS - 1) {
-            const nextPt = points[i][j + 1];
-            ctx.beginPath();
-            ctx.moveTo(pt.x, pt.y);
-            ctx.lineTo(nextPt.x, nextPt.y);
-            if (isUnderRadar && nextPt.isUnderRadar) {
-              ctx.strokeStyle = "rgba(0, 240, 255, 0.85)";
-              ctx.lineWidth = 1.4;
-            } else {
-              const depthAlpha = Math.max(0.12, Math.min(0.35, (pt.scale + nextPt.scale) * 0.22));
-              ctx.strokeStyle = `rgba(100, 145, 185, ${depthAlpha})`;
-              ctx.lineWidth = 0.85;
-            }
-            ctx.stroke();
-          }
-        }
+      // Update 3D Coastline Spline
+      const shorePos = shorelineGeom.attributes.position;
+      for (let s = 0; s < SHORELINE_NODES; s++) {
+        const tNorm = (s / (SHORELINE_NODES - 1)) * 2 - 1; // -1 to 1
+        const sx = tNorm * 11;
+        const sz = tNorm * 8 + Math.sin(tNorm * 4 + time) * 1.2;
+        const sy = (Math.sin(sx * 0.3) + Math.cos(sz * 0.3)) * 0.8 + 0.4;
+        shorePos.setXYZ(s, sx, sy, sz);
       }
+      shorePos.needsUpdate = true;
 
-      // 5. Draw 3D Grid Nodes (Dots)
-      for (let i = 0; i < COLS; i++) {
-        for (let j = 0; j < ROWS; j++) {
-          const pt = points[i][j];
-          ctx.beginPath();
-          if (pt.isUnderRadar) {
-            ctx.arc(pt.x, pt.y, 2.2 * pt.scale, 0, Math.PI * 2);
-            ctx.fillStyle = "#ffffff";
-            ctx.shadowColor = "#00f0ff";
-            ctx.shadowBlur = 10;
-          } else {
-            ctx.arc(pt.x, pt.y, 1.2 * pt.scale, 0, Math.PI * 2);
-            ctx.fillStyle = "rgba(148, 163, 184, 0.4)";
-            ctx.shadowBlur = 0;
-          }
-          ctx.fill();
-        }
-      }
+      // Slowly rotate dust particles for deep spatial volume
+      dustParticles.rotation.y = time * 0.08;
 
-      // 6. Draw Glowing Electric-Cyan Coastline Path Rotating with Terrain
-      ctx.save();
-      ctx.beginPath();
-      let first = true;
-      for (let i = 0; i < COLS; i++) {
-        for (let j = 0; j < ROWS; j++) {
-          if (points[i][j].isShore) {
-            if (first) {
-              ctx.moveTo(points[i][j].x, points[i][j].y);
-              first = false;
-            } else {
-              ctx.lineTo(points[i][j].x, points[i][j].y);
-            }
-            break;
-          }
-        }
-      }
-      ctx.strokeStyle = "#00f0ff";
-      ctx.lineWidth = 3.6;
-      ctx.shadowColor = "#00f0ff";
-      ctx.shadowBlur = 24;
-      ctx.stroke();
-      ctx.restore();
-
-      // 7. 12D Telemetry Coordinate HUD Overlay in Corner of 3D Canvas
-      ctx.save();
-      ctx.font = "9px 'JetBrains Mono', monospace";
-      ctx.fillStyle = "rgba(56, 189, 248, 0.75)";
-      ctx.fillText(
-        `12D ROT_MATRIX // YAW: ${Math.round(((yaw % (Math.PI * 2)) / (Math.PI * 2)) * 360)}°  PITCH: ${Math.round(pitch * 57.3)}°  ROLL: ${Math.round(roll * 57.3)}°`,
-        14,
-        22
-      );
-      ctx.fillStyle = "rgba(245, 158, 11, 0.85)";
-      ctx.fillText(
-        `HYPERSPACE W-WARP: ${wWarp.toFixed(2)} | GYRO-GIMBAL: ACTIVE`,
-        14,
-        36
-      );
-      ctx.restore();
-
-      animationFrameId = requestAnimationFrame(render);
+      renderer.render(scene, camera);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    render();
+    animate();
+
+    // Handle responsive resize
+    const handleResize = () => {
+      if (!mount) return;
+      width = mount.clientWidth || 640;
+      height = mount.clientHeight || 450;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+    window.addEventListener("resize", handleResize);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
+      if (mount && renderer.domElement) {
+        mount.removeChild(renderer.domElement);
+      }
+      geometry.dispose();
+      meshMaterial.dispose();
+      pointsMaterial.dispose();
+      shorelineGeom.dispose();
+      shorelineMat.dispose();
+      radarGeom.dispose();
+      radarMat.dispose();
+      laserGeom.dispose();
+      laserMat.dispose();
+      renderer.dispose();
     };
   }, []);
 
   return (
     <div className="terrain-radar-wrapper">
-      <canvas ref={canvasRef} className="terrain-radar-canvas" />
+      <div ref={mountRef} className="terrain-radar-webgl-container" style={{ width: "100%", height: "100%" }} />
     </div>
   );
 };
