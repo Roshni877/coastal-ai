@@ -13,115 +13,154 @@ const TerrainRadarCanvas = () => {
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0b121c, 0.015);
+    scene.fog = new THREE.FogExp2(0x080e18, 0.018);
 
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
-    camera.position.set(0, 22, 34);
-    camera.lookAt(0, 0, 0);
+    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
+    camera.position.set(0, 24, 32);
+    camera.lookAt(0, -1, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.35;
     mount.appendChild(renderer.domElement);
 
-    // 2. Lights
-    const ambientLight = new THREE.AmbientLight(0x0a2540, 1.2);
+    // 2. Realistic Oceanic Lighting
+    const ambientLight = new THREE.AmbientLight(0x072b4a, 1.6);
     scene.add(ambientLight);
 
-    const cyanLight = new THREE.DirectionalLight(0x00f0ff, 2.5);
-    cyanLight.position.set(15, 25, 20);
-    scene.add(cyanLight);
+    // Main sun/satellite specular light (creates liquid glints on water crests)
+    const sunLight = new THREE.DirectionalLight(0x00f0ff, 3.2);
+    sunLight.position.set(18, 30, 22);
+    scene.add(sunLight);
 
-    const amberLight = new THREE.PointLight(0xf59e0b, 1.8, 60);
-    amberLight.position.set(-20, 10, -15);
-    scene.add(amberLight);
+    // Secondary warm ambient light for coastal contrast
+    const warmLight = new THREE.PointLight(0xf59e0b, 2.0, 70);
+    warmLight.position.set(-22, 12, -18);
+    scene.add(warmLight);
 
-    // 3. 12D Rotational Group (Contains Terrain + Shoreline + Radar)
-    const terrainGroup = new THREE.Group();
-    scene.add(terrainGroup);
+    // Deep water bottom glow
+    const deepGlow = new THREE.PointLight(0x0284c7, 3.0, 50);
+    deepGlow.position.set(0, -8, 0);
+    scene.add(deepGlow);
 
-    // 4. Create High-Density Coastal Topography (PlaneGeometry)
-    const GRID_SIZE = 26;
-    const SEGMENTS = 52;
-    const geometry = new THREE.PlaneGeometry(GRID_SIZE, GRID_SIZE, SEGMENTS, SEGMENTS);
-    geometry.rotateX(-Math.PI / 2); // Lay flat on XZ plane
+    // 3. Central 12D Rotational Group (Contains Swirling Ocean Water + Coastline + Radar)
+    const oceanGroup = new THREE.Group();
+    scene.add(oceanGroup);
 
-    const posAttr = geometry.attributes.position;
+    // 4. High-Resolution 3D Fluid Ocean Water Surface Mesh
+    const WATER_SIZE = 28;
+    const WATER_SEGS = 64; // 64x64 = 4,225 fluid vertices
+    const waterGeom = new THREE.PlaneGeometry(WATER_SIZE, WATER_SIZE, WATER_SEGS, WATER_SEGS);
+    waterGeom.rotateX(-Math.PI / 2);
+
+    const posAttr = waterGeom.attributes.position;
     const vertexCount = posAttr.count;
 
-    // Store base (x, z) positions
+    // Store base horizontal coordinates (x, z)
     const baseCoords = new Float32Array(vertexCount * 2);
     for (let i = 0; i < vertexCount; i++) {
       baseCoords[i * 2] = posAttr.getX(i);
       baseCoords[i * 2 + 1] = posAttr.getZ(i);
     }
 
-    // Colors for point cloud / wireframe
-    const colors = new Float32Array(vertexCount * 3);
-    const colorAttr = new THREE.BufferAttribute(colors, 3);
-    geometry.setAttribute("color", colorAttr);
+    // Dynamic vertex colors for water illumination under radar
+    const waterColors = new Float32Array(vertexCount * 3);
+    const colorAttr = new THREE.BufferAttribute(waterColors, 3);
+    waterGeom.setAttribute("color", colorAttr);
 
-    // Wireframe Mesh Material
-    const meshMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0ea5e9,
+    // Real Liquid Water Material (Glossy, translucent with specular glints)
+    const waterMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      roughness: 0.1,
+      metalness: 0.6,
+      transparent: true,
+      opacity: 0.78,
+      vertexColors: true,
+      side: THREE.DoubleSide,
+    });
+    const waterMesh = new THREE.Mesh(waterGeom, waterMaterial);
+    oceanGroup.add(waterMesh);
+
+    // Holographic Cyber Wireframe Overlay on Water (For the high-tech 12D AI feel)
+    const waterWireMaterial = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
       wireframe: true,
       transparent: true,
-      opacity: 0.32,
-      roughness: 0.2,
-      metalness: 0.8,
-    });
-    const terrainMesh = new THREE.Mesh(geometry, meshMaterial);
-    terrainGroup.add(terrainMesh);
-
-    // Point Cloud Material on top of vertices
-    const pointsMaterial = new THREE.PointsMaterial({
-      size: 0.28,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.9,
+      opacity: 0.22,
       blending: THREE.AdditiveBlending,
     });
-    const terrainPoints = new THREE.Points(geometry, pointsMaterial);
-    terrainGroup.add(terrainPoints);
+    const waterWireMesh = new THREE.Mesh(waterGeom, waterWireMaterial);
+    oceanGroup.add(waterWireMesh);
 
-    // 5. Glowing Cyan Coastline Spline Curve (Dynamic Line)
-    const SHORELINE_NODES = 48;
-    const shorelinePoints = [];
-    for (let i = 0; i < SHORELINE_NODES; i++) {
-      shorelinePoints.push(new THREE.Vector3(0, 0, 0));
+    // 5. Swirling Water Foam / Spray Particle Cloud (240 Particles rotating in vortex)
+    const FOAM_COUNT = 240;
+    const foamGeom = new THREE.BufferGeometry();
+    const foamPositions = new Float32Array(FOAM_COUNT * 3);
+    const foamRadii = new Float32Array(FOAM_COUNT);
+    const foamAngles = new Float32Array(FOAM_COUNT);
+    const foamSpeeds = new Float32Array(FOAM_COUNT);
+
+    for (let i = 0; i < FOAM_COUNT; i++) {
+      const r = 2.0 + Math.random() * 12.0;
+      const th = Math.random() * Math.PI * 2;
+      foamRadii[i] = r;
+      foamAngles[i] = th;
+      foamSpeeds[i] = (1.5 / Math.sqrt(r)) * (0.8 + Math.random() * 0.4);
+
+      foamPositions[i * 3] = Math.cos(th) * r;
+      foamPositions[i * 3 + 1] = 0;
+      foamPositions[i * 3 + 2] = Math.sin(th) * r;
     }
-    const shorelineGeom = new THREE.BufferGeometry().setFromPoints(shorelinePoints);
-    const shorelineMat = new THREE.LineBasicMaterial({
+    foamGeom.setAttribute("position", new THREE.BufferAttribute(foamPositions, 3));
+
+    const foamMaterial = new THREE.PointsMaterial({
+      color: 0xa5f3fc,
+      size: 0.32,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+    });
+    const foamParticles = new THREE.Points(foamGeom, foamMaterial);
+    oceanGroup.add(foamParticles);
+
+    // 6. Glowing Electric-Cyan 3D Coastline Boundary
+    const COAST_NODES = 60;
+    const coastPoints = [];
+    for (let i = 0; i < COAST_NODES; i++) {
+      coastPoints.push(new THREE.Vector3(0, 0, 0));
+    }
+    const coastGeom = new THREE.BufferGeometry().setFromPoints(coastPoints);
+    const coastMat = new THREE.LineBasicMaterial({
       color: 0x00f0ff,
-      linewidth: 3,
+      linewidth: 3.5,
       transparent: true,
       opacity: 0.95,
       blending: THREE.AdditiveBlending,
     });
-    const shorelineLine = new THREE.Line(shorelineGeom, shorelineMat);
-    terrainGroup.add(shorelineLine);
+    const coastLine = new THREE.Line(coastGeom, coastMat);
+    oceanGroup.add(coastLine);
 
-    // 6. Volumetric Radar Sector Fan (Semicircular Glowing Fan)
-    const RADAR_RADIUS = 13.5;
+    // 7. Volumetric Radar Scanner Fan (Semicircular Glowing Arc)
+    const RADAR_RADIUS = 13.8;
     const SECTOR_ANGLE = Math.PI * 0.58;
-    const radarGeom = new THREE.RingGeometry(0.2, RADAR_RADIUS, 32, 1, 0, SECTOR_ANGLE);
+    const radarGeom = new THREE.RingGeometry(0.2, RADAR_RADIUS, 36, 1, 0, SECTOR_ANGLE);
     radarGeom.rotateX(-Math.PI / 2);
     const radarMat = new THREE.MeshBasicMaterial({
       color: 0x00f0ff,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.32,
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
     });
     const radarFan = new THREE.Mesh(radarGeom, radarMat);
-    terrainGroup.add(radarFan);
+    oceanGroup.add(radarFan);
 
-    // Leading laser line of radar
+    // Leading laser ray of radar
     const laserGeom = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(0, 0.1, 0),
-      new THREE.Vector3(RADAR_RADIUS, 0.1, 0),
+      new THREE.Vector3(0, 0.2, 0),
+      new THREE.Vector3(RADAR_RADIUS, 0.2, 0),
     ]);
     const laserMat = new THREE.LineBasicMaterial({
       color: 0xffffff,
@@ -131,19 +170,19 @@ const TerrainRadarCanvas = () => {
       blending: THREE.AdditiveBlending,
     });
     const laserLine = new THREE.Line(laserGeom, laserMat);
-    terrainGroup.add(laserLine);
+    oceanGroup.add(laserLine);
 
-    // 7. 3D Multidimensional Gyroscope Gimbal Rings (Nested Toruses)
+    // 8. 3D Multidimensional Gyroscope Rings (Orbiting in 3D around the swirling ocean)
     const gyroGroup = new THREE.Group();
     scene.add(gyroGroup);
 
-    const createGimbalRing = (radius, tube, color, opacity) => {
-      const ringGeom = new THREE.TorusGeometry(radius, tube, 16, 80);
+    const createGyroRing = (radius, tube, color, opacity) => {
+      const ringGeom = new THREE.TorusGeometry(radius, tube, 16, 90);
       const ringMat = new THREE.MeshStandardMaterial({
         color,
         emissive: color,
-        emissiveIntensity: 0.6,
-        roughness: 0.3,
+        emissiveIntensity: 0.55,
+        roughness: 0.2,
         metalness: 0.9,
         transparent: true,
         opacity,
@@ -152,16 +191,11 @@ const TerrainRadarCanvas = () => {
       return new THREE.Mesh(ringGeom, ringMat);
     };
 
-    // Outer Cyan Ring (Equatorial)
-    const ring1 = createGimbalRing(16.5, 0.08, 0x00f0ff, 0.65);
+    const ring1 = createGyroRing(16.5, 0.08, 0x00f0ff, 0.65); // Cyan Equatorial
+    const ring2 = createGyroRing(15.2, 0.07, 0xf59e0b, 0.55); // Amber Polar
+    const ring3 = createGyroRing(13.8, 0.06, 0x10b981, 0.45); // Emerald Oblique
     gyroGroup.add(ring1);
-
-    // Middle Amber/Gold Ring (Polar)
-    const ring2 = createGimbalRing(15.2, 0.07, 0xf59e0b, 0.55);
     gyroGroup.add(ring2);
-
-    // Inner Emerald Ring (Hyperspace Oblique)
-    const ring3 = createGimbalRing(13.8, 0.06, 0x10b981, 0.45);
     gyroGroup.add(ring3);
 
     // Orbiting Satellite Beacon on Ring 1
@@ -170,55 +204,34 @@ const TerrainRadarCanvas = () => {
     const beacon = new THREE.Mesh(beaconGeom, beaconMat);
     ring1.add(beacon);
 
-    // 8. Atmospheric Floating Data Particles (Quantum Dust)
-    const DUST_COUNT = 180;
-    const dustGeom = new THREE.BufferGeometry();
-    const dustPositions = new Float32Array(DUST_COUNT * 3);
-    for (let i = 0; i < DUST_COUNT; i++) {
-      dustPositions[i * 3] = (Math.random() - 0.5) * 45;
-      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 30;
-      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 45;
-    }
-    dustGeom.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
-    const dustMat = new THREE.PointsMaterial({
-      color: 0x38bdf8,
-      size: 0.22,
-      transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending,
-    });
-    const dustParticles = new THREE.Points(dustGeom, dustMat);
-    scene.add(dustParticles);
-
-    // 9. Animation Loop (Realistic 12D Harmonic Gyroscope Rotation)
+    // 9. Realistic 3D Water Rotation & 12D Vortex Simulation Loop
     let time = 0;
     let animationFrameId;
 
     const animate = () => {
-      time += 0.022;
+      time += 0.024;
 
-      // 12D Multi-Axis Complex Rotation on Terrain
-      const yaw = time * 0.55; // Continuous 360° smooth spin
-      const pitch = Math.sin(time * 0.4) * 0.32 - 0.15; // Harmonic orbital inclination
-      const roll = Math.cos(time * 0.32) * 0.22; // Precession roll tilt
-      const wWarp = Math.sin(time * 1.4) * 0.18; // 4D Hyperspace dimensional breathing
+      // 12D Multi-Axis Gyroscopic Rotation on the whole Ocean System
+      const yaw = time * 0.45; // Smooth continuous 360° orbital rotation
+      const pitch = Math.sin(time * 0.35) * 0.28 - 0.12; // Harmonic orbital inclination
+      const roll = Math.cos(time * 0.28) * 0.18; // Precession roll tilt
+      const wWarp = Math.sin(time * 1.5) * 0.15; // 4D Hyperspace breathing
 
-      terrainGroup.rotation.y = yaw;
-      terrainGroup.rotation.x = pitch;
-      terrainGroup.rotation.z = roll;
+      oceanGroup.rotation.y = yaw;
+      oceanGroup.rotation.x = pitch;
+      oceanGroup.rotation.z = roll;
 
-      // Gimbal Rings rotate on independent 3D planes
-      ring1.rotation.y = time * 0.4;
-      ring1.rotation.x = Math.sin(time * 0.3) * 0.4;
+      // Gyro Rings rotate on independent 3D planes
+      ring1.rotation.y = time * 0.35;
+      ring1.rotation.x = Math.sin(time * 0.25) * 0.35;
 
-      ring2.rotation.x = -time * 0.5;
-      ring2.rotation.z = Math.cos(time * 0.35) * 0.5;
+      ring2.rotation.x = -time * 0.45;
+      ring2.rotation.z = Math.cos(time * 0.3) * 0.45;
 
-      ring3.rotation.z = time * 0.6;
-      ring3.rotation.y = -time * 0.4;
+      ring3.rotation.z = time * 0.55;
+      ring3.rotation.y = -time * 0.35;
 
-      // Orbiting beacon moves along ring perimeter
-      const bAngle = time * 1.6;
+      const bAngle = time * 1.4;
       beacon.position.set(Math.cos(bAngle) * 16.5, Math.sin(bAngle) * 16.5, 0);
 
       // Radar rotation angle
@@ -226,60 +239,86 @@ const TerrainRadarCanvas = () => {
       radarFan.rotation.y = sweepAngle;
       laserLine.rotation.y = sweepAngle;
 
-      // 12D Harmonic Terrain Vertex Elevation Calculation
-      const pos = geometry.attributes.position;
-      const col = geometry.attributes.color;
+      // ========================================================
+      // REALISTIC 3D WATER ROTATION & VORTEX WAVE MATHEMATICS
+      // ========================================================
+      const pos = waterGeom.attributes.position;
+      const col = waterGeom.attributes.color;
 
       for (let i = 0; i < vertexCount; i++) {
         const bx = baseCoords[i * 2];
         const bz = baseCoords[i * 2 + 1];
 
-        // 12 harmonic interference terms for realistic coastal DEM
-        const u = bx * 0.22;
-        const v = bz * 0.22;
+        // Polar coordinates from center
+        const r = Math.sqrt(bx * bx + bz * bz);
+        const theta = Math.atan2(bz, bx);
 
-        const mountain = Math.sin(u * 0.6 + time * 0.8) * Math.cos(v * 0.6 - time * 0.6) * 3.2;
-        const ridges = Math.sin((u - v) * 0.8 + time * 1.2) * 1.5;
-        const valley = Math.cos((u * u + v * v) * 0.04 - time * 1.5) * 1.2;
-        const coastalSlope = (v * 0.9 - u * 0.7) * 2.2;
-        const microWave = Math.sin(u * 1.5 + time * 2.0) * 0.4;
+        // Water Swirling Vortex Motion (Fluid angular rotation)
+        const vortexAngle = theta + time * (1.1 / (1 + r * 0.18));
 
-        // Apply 4D-W warp breathing
-        const totalHeight = (mountain + ridges + valley + coastalSlope + microWave) * (1 + wWarp);
-        pos.setY(i, totalHeight);
+        // 12-Harmonic Multi-directional Water Waves
+        // 1. Swirling rotational tidal wave
+        const waveVortex = Math.sin(r * 0.85 - time * 2.8 + vortexAngle * 2.0) * 1.45;
+        // 2. Transverse ocean swell
+        const waveSwell = Math.sin(bx * 0.45 + time * 1.8) * Math.cos(bz * 0.45 - time * 1.4) * 1.1;
+        // 3. High-frequency caustic water ripples
+        const waveChop = Math.sin(r * 1.6 - time * 3.4) * 0.5;
+        // 4. Coastal land elevation shelf (sloping rocky coast on one side)
+        const coastalLand = Math.max(0, (bz * 0.8 - bx * 0.6 - 1.5)) * 1.5;
 
-        // Check if vertex is inside the radar sweep
-        const dist = Math.sqrt(bx * bx + bz * bz);
-        let angle = Math.atan2(bz, bx);
-        let diff = (sweepAngle - angle) % (Math.PI * 2);
+        // Total 3D water displacement
+        const yWater = (waveVortex + waveSwell + waveChop + coastalLand) * (1 + wWarp);
+        pos.setY(i, yWater);
+
+        // Radar Illumination Logic
+        let diff = (sweepAngle - theta) % (Math.PI * 2);
         if (diff < 0) diff += Math.PI * 2;
-        const isUnderRadar = dist <= RADAR_RADIUS && diff <= SECTOR_ANGLE;
+        const isUnderRadar = r <= RADAR_RADIUS && diff <= SECTOR_ANGLE;
 
         if (isUnderRadar) {
-          // Intense electric cyan highlight
-          col.setXYZ(i, 0.1, 0.95, 1.0);
+          // Blazing illuminated turquoise/neon-cyan water crests
+          const crestGlint = Math.max(0, yWater / 3.0);
+          col.setXYZ(i, 0.1 + crestGlint * 0.8, 0.9 + crestGlint * 0.1, 1.0);
         } else {
-          // Subtle deep atmospheric blue
-          const depth = (totalHeight + 8) / 16;
-          col.setXYZ(i, 0.05 * depth, 0.25 * depth, 0.45 * depth);
+          // Deep glassy ocean water colors with depth gradient
+          const depthShade = Math.max(0.15, Math.min(0.85, (yWater + 3.5) / 7.0));
+          col.setXYZ(i, 0.01 * depthShade, 0.35 * depthShade, 0.75 * depthShade);
         }
       }
       pos.needsUpdate = true;
       col.needsUpdate = true;
+      waterGeom.computeVertexNormals(); // Recalculate normals so water specular light shines realistically!
 
-      // Update 3D Coastline Spline
-      const shorePos = shorelineGeom.attributes.position;
-      for (let s = 0; s < SHORELINE_NODES; s++) {
-        const tNorm = (s / (SHORELINE_NODES - 1)) * 2 - 1; // -1 to 1
-        const sx = tNorm * 11;
-        const sz = tNorm * 8 + Math.sin(tNorm * 4 + time) * 1.2;
-        const sy = (Math.sin(sx * 0.3) + Math.cos(sz * 0.3)) * 0.8 + 0.4;
-        shorePos.setXYZ(s, sx, sy, sz);
+      // ========================================================
+      // SWIRLING FOAM / WATER DROPLETS ROTATION
+      // ========================================================
+      const foamPos = foamGeom.attributes.position;
+      for (let i = 0; i < FOAM_COUNT; i++) {
+        foamAngles[i] += foamSpeeds[i] * 0.02;
+        const r = foamRadii[i];
+        const a = foamAngles[i];
+
+        const fx = Math.cos(a) * r;
+        const fz = Math.sin(a) * r;
+        // Float on top of water wave crest
+        const fy = Math.sin(r * 0.85 - time * 2.8 + a * 2.0) * 1.45 + 0.25;
+
+        foamPos.setXYZ(i, fx, fy, fz);
       }
-      shorePos.needsUpdate = true;
+      foamPos.needsUpdate = true;
 
-      // Slowly rotate dust particles for deep spatial volume
-      dustParticles.rotation.y = time * 0.08;
+      // ========================================================
+      // 3D GLOWING COASTLINE CURVE DYNAMICS
+      // ========================================================
+      const coastPos = coastGeom.attributes.position;
+      for (let s = 0; s < COAST_NODES; s++) {
+        const tNorm = (s / (COAST_NODES - 1)) * 2 - 1; // -1 to 1
+        const cx = tNorm * 11.5;
+        const cz = tNorm * 8.5 + Math.sin(tNorm * 3.5 + time * 1.5) * 1.4;
+        const cy = Math.sin(cx * 0.4 + time) * 0.8 + 0.6;
+        coastPos.setXYZ(s, cx, cy, cz);
+      }
+      coastPos.needsUpdate = true;
 
       renderer.render(scene, camera);
       animationFrameId = requestAnimationFrame(animate);
@@ -287,7 +326,7 @@ const TerrainRadarCanvas = () => {
 
     animate();
 
-    // Handle responsive resize
+    // Responsive resize handler
     const handleResize = () => {
       if (!mount) return;
       width = mount.clientWidth || 640;
@@ -304,11 +343,13 @@ const TerrainRadarCanvas = () => {
       if (mount && renderer.domElement) {
         mount.removeChild(renderer.domElement);
       }
-      geometry.dispose();
-      meshMaterial.dispose();
-      pointsMaterial.dispose();
-      shorelineGeom.dispose();
-      shorelineMat.dispose();
+      waterGeom.dispose();
+      waterMaterial.dispose();
+      waterWireMaterial.dispose();
+      foamGeom.dispose();
+      foamMaterial.dispose();
+      coastGeom.dispose();
+      coastMat.dispose();
       radarGeom.dispose();
       radarMat.dispose();
       laserGeom.dispose();
@@ -319,7 +360,11 @@ const TerrainRadarCanvas = () => {
 
   return (
     <div className="terrain-radar-wrapper">
-      <div ref={mountRef} className="terrain-radar-webgl-container" style={{ width: "100%", height: "100%" }} />
+      <div
+        ref={mountRef}
+        className="terrain-radar-webgl-container"
+        style={{ width: "100%", height: "100%" }}
+      />
     </div>
   );
 };
