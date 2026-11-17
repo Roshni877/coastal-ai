@@ -202,9 +202,11 @@ body {
 }
 
 .nav-links a:hover,
-.nav-links a.active {
-  color: var(--teal);
-  opacity: 1;
+.nav-links a.active,
+.nav-links a.active-link {
+  color: #38bdf8 !important;
+  opacity: 1 !important;
+  border-bottom: 2px solid #38bdf8;
 }
 
 .comparison-home-cta::before {

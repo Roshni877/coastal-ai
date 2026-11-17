@@ -1,212 +1,290 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import WaterSplash from "./WaterSplash";
-import WaterDroplets from "./WaterDroplets";
-import EarthGlobe from "./EarthGlobe";
+import { Activity, Radio, Cpu, ShieldCheck } from "lucide-react";
 
 const Loader = () => {
   const [loading, setLoading] = useState(true);
-  const [phase, setPhase] = useState("initial"); // initial -> opening -> droplets -> earth -> falling
-  const [showSplash, setShowSplash] = useState(false);
-  const audioRef = useRef(null);
+  const [progress, setProgress] = useState(15);
+  const [statusMessage, setStatusMessage] = useState("Initializing Coastal Analysis System...");
 
   useEffect(() => {
-    // Play subtle ocean sound on mount
-    if (audioRef.current) {
-      audioRef.current.volume = 0.3;
-      audioRef.current.play().catch(() => { });
-    }
-  }, []);
-
-  const handleThreadClick = () => {
-    if (phase === "initial") {
-      setPhase("opening");
-      setShowSplash(true);
-
-      // Sequence:
-      // 1. Curtains open & show droplets
-      setTimeout(() => setPhase("droplets"), 500);
-
-      // 2. Show Earth after droplets have been visible for a bit
-      setTimeout(() => setPhase("earth"), 3500);
-
-      if (audioRef.current) {
-        const fadeOut = setInterval(() => {
-          if (audioRef.current.volume > 0.05) {
-            audioRef.current.volume -= 0.05;
-          } else {
-            clearInterval(fadeOut);
-          }
-        }, 100);
+    let currentProgress = 20;
+    const interval = setInterval(() => {
+      // Check actual browser readyState
+      if (document.readyState === "complete") {
+        currentProgress += Math.floor(Math.random() * 20) + 15;
+      } else {
+        currentProgress += Math.floor(Math.random() * 10) + 5;
       }
-    }
-  };
 
-  const handleEarthClick = () => {
-    if (phase === "earth") {
-      setPhase("whiteout");
-      // After whiteout, transition to final falling phase and complete
-      setTimeout(() => {
-        setPhase("falling");
+      if (currentProgress >= 40 && currentProgress < 70) {
+        setStatusMessage("Loading Remote Sensing Telemetry & Shoreline GeoJSON...");
+      } else if (currentProgress >= 70 && currentProgress < 95) {
+        setStatusMessage("Calibrating DeepLabV3+ & ResNet-34 Feature Weights...");
+      } else if (currentProgress >= 100) {
+        currentProgress = 100;
+        setStatusMessage("Coastal Intelligence System Ready");
+        clearInterval(interval);
         setTimeout(() => {
           setLoading(false);
-        }, 800);
-      }, 1200);
-    }
-  };
+        }, 350);
+      }
+      setProgress(Math.min(currentProgress, 100));
+    }, 120);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (!loading) return null;
 
   return (
-    <div className="palace-loader" style={{ backgroundColor: "#000", position: 'fixed', inset: 0, zIndex: 99999, overflow: 'hidden' }}>
-      <audio
-        ref={audioRef}
-        src="https://www.soundjay.com/nature/ocean-wave-1.mp3"
-        loop
-        preload="auto"
-      />
-
-      {/* 0. Whiteout Overlay (Flash effect) */}
+    <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: phase === "whiteout" || phase === "falling" ? 1 : 0 }}
-        transition={{ duration: 0.8, ease: "easeIn" }}
+        key="scientific-loader"
+        initial={{ opacity: 1 }}
+        exit={{ opacity: 0, transition: { duration: 0.5, ease: "easeInOut" } }}
         style={{
-          position: 'fixed',
+          position: "fixed",
           inset: 0,
-          backgroundColor: '#fff',
-          zIndex: 100,
-          pointerEvents: 'none'
+          zIndex: 999999,
+          backgroundColor: "#030712",
+          backgroundImage: "radial-gradient(ellipse at 50% 30%, rgba(14, 165, 233, 0.12) 0%, rgba(2, 6, 23, 0.98) 75%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+          color: "#f8fafc",
+          padding: "24px",
+          userSelect: "none"
         }}
-      />
-
-      <AnimatePresence>
-        {/* 1. Red Curtains */}
-        {phase !== "completed" && (
-          <motion.div
-            key="door-left"
-            initial={{ x: 0 }}
-            animate={phase !== "initial" ? { x: "-100%" } : { x: 0 }}
-            transition={{ duration: 1.5, ease: [0.45, 0, 0.55, 1] }}
-            className="palace-door palace-door-left"
-            style={{ width: '50%', height: '100%', position: 'absolute', left: 0, zIndex: 50 }}
-          />
-        )}
-        {phase !== "completed" && (
-          <motion.div
-            key="door-right"
-            initial={{ x: 0 }}
-            animate={phase !== "initial" ? { x: "100%" } : { x: 0 }}
-            transition={{ duration: 1.5, ease: [0.45, 0, 0.55, 1] }}
-            className="palace-door palace-door-right"
-            style={{ width: '50%', height: '100%', position: 'absolute', right: 0, zIndex: 50 }}
-          />
-        )}
-
-        {/* 2. Yellow Thread/Knot */}
-        {phase === "initial" && (
-          <motion.div
-            key="curtain-knot"
-            className="curtain-knot"
-            onClick={handleThreadClick}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            style={{
-              position: 'absolute',
-              top: '72%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              zIndex: 60,
-              cursor: 'pointer'
-            }}
-          />
-        )}
-
-        {/* 3. Title Animation (Centered -> Up on open) */}
-        <motion.div
-          key="loader-title"
-          initial={{ x: "-50%", y: "-50%", opacity: 0, scale: 0.8, filter: "blur(20px)" }}
-          animate={
-            phase === "initial" ? { x: "-50%", y: "-50%", scale: 1, opacity: 1, filter: "blur(0px)" } :
-              phase === "opening" || phase === "droplets" || phase === "earth" ? { x: "-50%", y: "-500px", scale: 0.7, opacity: 0, filter: "blur(10px)" } :
-                phase === "falling" ? { x: "-50%", y: "-50%", scale: 1.2, opacity: 0, filter: "blur(0px)" } : {}
-          }
-          transition={{
-            duration: 1.5,
-            ease: [0.45, 0, 0.55, 1]
-          }}
-          className="loader-center-content"
+      >
+        {/* Computer Screen Frame / Radar Analysis Canvas */}
+        <div
           style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            zIndex: 55,
-            pointerEvents: 'none',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            textAlign: 'center'
+            width: "min(520px, 92vw)",
+            background: "#081325",
+            borderRadius: "14px",
+            border: "1px solid rgba(56, 189, 248, 0.25)",
+            boxShadow: "0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(14, 165, 233, 0.15)",
+            overflow: "hidden",
+            position: "relative"
           }}
         >
-          <div className="palace-seal">
-            <h1 className="seal-text">COASTAL</h1>
-            <h1 className="seal-text outline-seal">AI</h1>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* 4. Background Effects (Water Splash & Rain) */}
-      {showSplash && <WaterSplash />}
-
-      <motion.div
-        className="droplets-layer"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: (phase === "droplets" || phase === "earth" || phase === "falling") ? 1 : 0 }}
-        transition={{ duration: 1 }}
-        style={{ position: 'absolute', inset: 0, zIndex: 9 }}
-      >
-        <WaterDroplets />
-      </motion.div>
-
-      <motion.div
-        className="earth-layer"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: (phase === "earth" || phase === "falling") ? 1 : 0 }}
-        transition={{ duration: 2, ease: "easeOut" }}
-        style={{ position: 'absolute', inset: 0, zIndex: 10 }}
-      >
-        <EarthGlobe onExplore={handleEarthClick} phase={phase} />
-      </motion.div>
-
-      {/* 5. Click to Explore Button */}
-      <AnimatePresence>
-        {phase === "earth" && (
-          <motion.div
-            className="explore-button-container"
-            initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            exit={{ opacity: 0, scale: 0.5, rotate: 20 }}
-            transition={{ delay: 1, duration: 0.8, ease: "backOut" }}
-            onClick={handleEarthClick}
-            style={{ cursor: 'pointer' }}
+          {/* Top Window Bar */}
+          <div
+            style={{
+              padding: "10px 16px",
+              background: "rgba(15, 23, 42, 0.9)",
+              borderBottom: "1px solid rgba(56, 189, 248, 0.15)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              fontSize: "0.75rem",
+              letterSpacing: "0.5px",
+              color: "#94a3b8"
+            }}
           >
-            <button className="explore-btn">
-              CLICK THE HIGHLIGHTED AREA<br />ON THE INDIA'S WESTERN<br />COASTLINE TO EXPLORE<br />COASTAL AI
-            </button>
-            <span className="explore-hint">START</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 8px #10b981" }} />
+              <span style={{ fontWeight: 600, color: "#38bdf8" }}>COASTAL MONITORING TERMINAL</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", fontFamily: "monospace", fontSize: "0.7rem" }}>
+              <span>LAT: 13.3409° N</span>
+              <span>LON: 74.7421° E</span>
+            </div>
+          </div>
 
-      {/* SVG Filter for realistic fabric texture (applied to curtains) */}
-      <svg style={{ position: "absolute", width: 0, height: 0, pointerEvents: "none" }}>
-        <filter id="fabric-texture">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
-        </filter>
-      </svg>
-    </div>
+          {/* Screen Display Area */}
+          <div
+            style={{
+              position: "relative",
+              height: "220px",
+              background: "#050e1d",
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            {/* GIS Grid Background */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `
+                  linear-gradient(rgba(56, 189, 248, 0.07) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(56, 189, 248, 0.07) 1px, transparent 1px)
+                `,
+                backgroundSize: "24px 24px"
+              }}
+            />
+
+            {/* Simulated Coastline SVG Contour */}
+            <svg
+              viewBox="0 0 500 200"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                opacity: 0.85
+              }}
+            >
+              {/* Land fill */}
+              <path
+                d="M 0,0 L 500,0 L 500,70 Q 420,110 350,85 T 220,130 T 110,95 Q 40,140 0,110 Z"
+                fill="rgba(16, 185, 129, 0.08)"
+                stroke="rgba(16, 185, 129, 0.4)"
+                strokeWidth="1.5"
+              />
+              {/* Historical Shoreline 2020 (Blue) */}
+              <path
+                d="M 0,105 Q 80,85 160,115 T 280,100 T 400,120 T 500,85"
+                fill="none"
+                stroke="#0284c7"
+                strokeWidth="2"
+                strokeDasharray="4 4"
+                opacity="0.8"
+              />
+              {/* Active Shoreline 2024 (Cyan) */}
+              <path
+                d="M 0,118 Q 80,100 160,130 T 280,115 T 400,135 T 500,98"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="2.5"
+              />
+              {/* Predicted Retreat Contour (Rose/Amber) */}
+              <path
+                d="M 0,128 Q 80,110 160,140 T 280,128 T 400,145 T 500,108"
+                fill="none"
+                stroke="#f43f5e"
+                strokeWidth="1.8"
+                strokeDasharray="2 2"
+              />
+              {/* Scanning Crosshair */}
+              <circle cx="280" cy="115" r="14" fill="none" stroke="#38bdf8" strokeWidth="1" opacity="0.6" />
+              <circle cx="280" cy="115" r="4" fill="#38bdf8" />
+            </svg>
+
+            {/* Radar / Analysis Scan Beam */}
+            <motion.div
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ repeat: Infinity, duration: 2.2, ease: "linear" }}
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                width: "60px",
+                background: "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.25), rgba(56, 189, 248, 0.5), transparent)",
+                pointerEvents: "none"
+              }}
+            />
+
+            {/* Telemetry Overlays */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                left: "14px",
+                display: "flex",
+                gap: "10px",
+                fontSize: "0.68rem",
+                color: "#7dd3fc",
+                fontFamily: "monospace",
+                background: "rgba(3, 7, 18, 0.75)",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                border: "1px solid rgba(56, 189, 248, 0.2)"
+              }}
+            >
+              <span>EPSG:32643 UTM-43N</span>
+              <span>·</span>
+              <span>TRANSECTS: 3,321</span>
+              <span>·</span>
+              <span>SENSOR: SENTINEL-1/2</span>
+            </div>
+
+            <div
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "14px",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                fontSize: "0.7rem",
+                color: "#34d399",
+                background: "rgba(5, 46, 22, 0.6)",
+                padding: "3px 8px",
+                borderRadius: "4px",
+                border: "1px solid rgba(52, 211, 153, 0.3)"
+              }}
+            >
+              <Radio size={12} className="animate-pulse" />
+              <span>SCANNING CORRIDOR</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Section */}
+        <div style={{ width: "min(520px, 92vw)", marginTop: "24px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+              fontSize: "0.82rem"
+            }}
+          >
+            <span style={{ color: "#e2e8f0", fontWeight: 500, display: "flex", alignItems: "center", gap: "8px" }}>
+              <Cpu size={15} style={{ color: "#38bdf8" }} />
+              {statusMessage}
+            </span>
+            <span style={{ color: "#38bdf8", fontWeight: 700, fontFamily: "monospace" }}>
+              {progress}%
+            </span>
+          </div>
+
+          {/* Actual Progress Bar */}
+          <div
+            style={{
+              width: "100%",
+              height: "6px",
+              background: "rgba(15, 23, 42, 0.8)",
+              borderRadius: "4px",
+              overflow: "hidden",
+              border: "1px solid rgba(56, 189, 248, 0.2)"
+            }}
+          >
+            <motion.div
+              style={{
+                height: "100%",
+                width: `${progress}%`,
+                background: "linear-gradient(90deg, #0284c7 0%, #38bdf8 60%, #10b981 100%)",
+                borderRadius: "4px",
+                boxShadow: "0 0 12px rgba(56, 189, 248, 0.7)"
+              }}
+              transition={{ ease: "easeOut", duration: 0.2 }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "10px",
+              fontSize: "0.72rem",
+              color: "#64748b"
+            }}
+          >
+            <span>Udupi Coastal Erosion Analysis Platform</span>
+            <span>Remote Sensing & AI Environment</span>
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
