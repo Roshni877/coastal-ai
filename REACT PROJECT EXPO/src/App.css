@@ -1916,28 +1916,28 @@ body {
 /* ========================================================
    FULL-SCREEN ARCHIVE IMMERSIVE VIEW
    ======================================================== */
-.fullscreen-archive-view {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background-color: var(--bg-color);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 30px 20px 80px 20px;
+.fullscreen-archive-view,
+.dashboard-content {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  padding: 20px 20px 80px 20px;
 }
 
 .archive-top-controls {
   position: sticky;
-  top: 24px;
+  top: 90px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: flex-start;
-  max-width: 1300px;
+  max-width: 1200px;
   margin: 0 auto 20px auto;
   z-index: 100;
   pointer-events: auto;
-  padding: 0 20px;
+  padding: 0;
 }
 
 .archive-back-btn {
@@ -3194,7 +3194,8 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
-  margin-top: 40px;
+  margin: 40px auto 0 auto;
+  max-width: 920px;
 }
 
 .performance-card {
@@ -3204,6 +3205,9 @@ body {
   backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   transition: all 0.5s ease;
+  max-width: 440px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .performance-card:hover {
@@ -3228,7 +3232,8 @@ body {
 
 .ml-image {
   width: 100%;
-  height: auto;
+  max-height: 280px;
+  object-fit: contain;
   display: block;
   filter: brightness(0.9) contrast(1.1);
   transition: filter 0.5s ease;

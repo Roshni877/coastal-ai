@@ -33,12 +33,20 @@ function Visualization() {
     setTimeout(() => {
       setIsUnlocked(true);
       setIsOpening(false);
-    }, 700);
+      window.scrollTo({ top: 0, behavior: "instant" });
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 100);
+    }, 650);
   };
 
   // Return/close back to the initial circular button view
   const handleCloseArchive = () => {
     setIsUnlocked(false);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 100);
   };
 
   // Allow closing via Escape key
