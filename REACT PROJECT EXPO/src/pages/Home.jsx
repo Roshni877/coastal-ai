@@ -15,6 +15,7 @@ function Home() {
   const buttonsRef = useRef();
   const containerRef = useRef();
   const [videoOpen, setVideoOpen] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [isDark, setIsDark] = useState(
     typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark"
   );
@@ -146,15 +147,35 @@ function Home() {
                 </button>
               </div>
 
-              {/* Video */}
+              {/* Video Player */}
               <div className="video-embed-wrapper">
-                <iframe
-                  src={VIDEO_EMBED_URL}
-                  title="Coastal AI Project Video"
-                  allow="autoplay"
-                  allowFullScreen
-                  className="video-embed-frame"
-                />
+                {!videoError ? (
+                  <video
+                    src="/demo_video.mp4"
+                    controls
+                    autoPlay
+                    playsInline
+                    className="video-embed-frame"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      backgroundColor: "#000",
+                    }}
+                    onError={() => setVideoError(true)}
+                  >
+                    <source src="/demo_video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <iframe
+                    src={VIDEO_EMBED_URL}
+                    title="Coastal AI Project Video"
+                    allow="autoplay"
+                    allowFullScreen
+                    className="video-embed-frame"
+                  />
+                )}
               </div>
 
               {/* Footer bar */}

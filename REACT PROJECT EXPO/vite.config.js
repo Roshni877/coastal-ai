@@ -52,6 +52,11 @@ function existingShorelineData() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), existingShorelineData()],
+  server: {
+    watch: {
+      ignored: ['**/*.mp4'],
+    },
+  },
   esbuild: {
     loader: 'jsx',
     include: /src\/.*\.jsx?$/,

@@ -25,6 +25,7 @@ temp_data/
 *.tiff
 
 # System files
+*.mp4
 .DS_Store
 Thumbs.db
 .vscode/
