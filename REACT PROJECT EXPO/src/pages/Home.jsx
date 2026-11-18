@@ -19,7 +19,6 @@ function Home() {
   const containerRef = useRef(null);
 
   const [videoOpen, setVideoOpen] = useState(false);
-  const [videoError, setVideoError] = useState(false);
   const [isDark, setIsDark] = useState(
     typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark"
   );
@@ -222,13 +221,13 @@ function Home() {
             <span className="console-left-tag">TECHNICAL EVALUATION & DEFENSE</span>
             <h4 className="console-left-title">Experience the Complete Scientific Pipeline</h4>
             <p className="console-left-desc">
-              Watch the 2-minute project walkthrough or launch into the interactive evidence portals for the final presentation.
+              Watch the complete project demonstration video or launch into the interactive evidence portals for the final presentation.
             </p>
           </div>
           <div className="console-actions">
             <button className="btn-console-demo" onClick={() => setVideoOpen(true)}>
               <FiPlay style={{ marginRight: "4px" }} />
-              <span>Watch 2-Min Demo</span>
+              <span>Watch Latest Demo Video</span>
             </button>
             <NavLink to="/evidence-lab" className="btn-console-pill">
               <FiAward style={{ marginRight: "4px" }} />
@@ -247,7 +246,7 @@ function Home() {
       </section>
 
       {/* =====================================================================
-          3. CINEMATIC VIDEO MODAL
+          3. CINEMATIC VIDEO MODAL (PLAYS LATEST TEAM-21 VIDEO)
           ===================================================================== */}
       <AnimatePresence>
         {videoOpen && (
@@ -269,8 +268,8 @@ function Home() {
               {/* Header */}
               <div className="video-modal-header">
                 <div>
-                  <span className="video-modal-tag">PROJECT // COASTAL AI</span>
-                  <h3 className="video-modal-title">PROJECT OVERVIEW</h3>
+                  <span className="video-modal-tag">PROJECT // TEAM-21 DEMONSTRATION</span>
+                  <h3 className="video-modal-title">COASTAL EROSION DETECTION USING ML & REMOTE SENSING</h3>
                 </div>
                 <button className="video-modal-close" onClick={() => setVideoOpen(false)}>
                   <FiX size={22} />
@@ -279,39 +278,37 @@ function Home() {
 
               {/* Video Player */}
               <div className="video-embed-wrapper">
-                {!videoError ? (
-                  <video
-                    src="/demo_video.mp4"
-                    controls
-                    autoPlay
-                    playsInline
-                    className="video-embed-frame"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      backgroundColor: "#000",
-                    }}
-                    onError={() => setVideoError(true)}
-                  >
-                    <source src="/demo_video.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <iframe
-                    src={VIDEO_EMBED_URL}
-                    title="Coastal AI Project Video"
-                    allow="autoplay"
-                    allowFullScreen
-                    className="video-embed-frame"
-                  />
-                )}
+                <video
+                  src="/demo_video.mp4"
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="auto"
+                  className="video-embed-frame"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    backgroundColor: "#000",
+                  }}
+                >
+                  <source src="/demo_video.mp4" type="video/mp4" />
+                  Your browser does not support HTML5 video playback.
+                </video>
               </div>
 
               {/* Footer bar */}
               <div className="video-modal-footer">
-                <span className="vessel-id">COASTAL_AI_V1 // NATURE INTELLIGENCE</span>
-                <span className="vessel-id">2024 // RESEARCH OUTPUT</span>
+                <span className="vessel-id">TEAM-21 // FINAL YEAR MAJOR PROJECT</span>
+                <a 
+                  href={VIDEO_EMBED_URL} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="vessel-id" 
+                  style={{ textDecoration: 'none', color: '#38bdf8' }}
+                >
+                  ↗ External Mirror
+                </a>
               </div>
             </motion.div>
           </motion.div>

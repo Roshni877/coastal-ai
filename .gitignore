@@ -26,6 +26,7 @@ temp_data/
 
 # System files
 *.mp4
+!REACT PROJECT EXPO/public/demo_video.mp4
 .DS_Store
 Thumbs.db
 .vscode/
