@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { FiArrowRight, FiSun, FiMap, FiX, FiPlay } from "react-icons/fi";
+import { 
+  FiArrowRight, FiSun, FiMap, FiX, FiPlay, 
+  FiChevronDown, FiShield, FiCpu, FiAward, FiLayers, FiActivity 
+} from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import MagneticButton from "../components/MagneticButton";
@@ -9,11 +12,12 @@ import Coastal3D from "../components/Coastal3D";
 const VIDEO_EMBED_URL = "https://drive.google.com/file/d/1S8UMPUD5OIofQhb2c-wDUCMZ201IA5Jq/preview";
 
 function Home() {
-  const titleRef = useRef();
-  const taglineRef = useRef();
-  const descRef = useRef();
-  const buttonsRef = useRef();
-  const containerRef = useRef();
+  const titleRef = useRef(null);
+  const taglineRef = useRef(null);
+  const descRef = useRef(null);
+  const buttonsRef = useRef(null);
+  const containerRef = useRef(null);
+
   const [videoOpen, setVideoOpen] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isDark, setIsDark] = useState(
@@ -30,11 +34,11 @@ function Home() {
 
   useEffect(() => {
     const tl = gsap.timeline();
-    tl.fromTo(containerRef.current, { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 2, ease: "power2.out" })
-      .fromTo(taglineRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power4.out" }, "-=1.5")
-      .fromTo(titleRef.current, { y: -300, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.5, ease: "bounce.out" }, "-=1.2")
-      .fromTo(descRef.current, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, "-=1")
-      .fromTo(buttonsRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, "-=0.8");
+    tl.fromTo(containerRef.current, { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" })
+      .fromTo(taglineRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power4.out" }, "-=1.2")
+      .fromTo(titleRef.current, { y: -80, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.3, ease: "bounce.out" }, "-=0.9")
+      .fromTo(descRef.current, { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, "-=0.8")
+      .fromTo(buttonsRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, "-=0.6");
   }, []);
 
   // Close video on Escape key
@@ -44,11 +48,25 @@ function Home() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  const scrollToStory = () => {
+    const target = document.getElementById("story-section");
+    if (!target) return;
+    if (window.locomotiveScroll && typeof window.locomotiveScroll.scrollTo === "function") {
+      window.locomotiveScroll.scrollTo(target);
+    } else {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <main className="page" ref={containerRef}>
+    <main className="page home-page-layout" ref={containerRef}>
+      {/* 3D Dynamic Ocean Experience in Background */}
       <Coastal3D />
 
-      <section className="hero-container">
+      {/* =====================================================================
+          1. HERO SECTION (100VH)
+          ===================================================================== */}
+      <section className="home-hero-wrapper">
         <div ref={taglineRef} className="tagline-marquee">
           <div className="marquee-content">
             <span className="tagline-text"><FiSun style={{ marginRight: '8px' }} /> PRESERVING COASTAL ECOSYSTEMS</span>
@@ -115,9 +133,122 @@ function Home() {
             </button>
           </MagneticButton>
         </div>
+
+        {/* Smooth Scroll Prompt Indicator */}
+        <div className="home-scroll-prompt" onClick={scrollToStory} role="button" tabIndex={0}>
+          <span>The Story of Coastal AI</span>
+          <FiChevronDown className="scroll-prompt-icon" />
+        </div>
       </section>
 
-      {/* 🎬 CINEMATIC VIDEO MODAL */}
+      {/* =====================================================================
+          2. SIMPLE STORYTELLING SECTION (3 CLEAN ACTS)
+          ===================================================================== */}
+      <section id="story-section" className="simple-story-section" data-scroll-section>
+        <div className="story-section-header">
+          <div className="story-pill-badge">
+            <FiShield style={{ marginRight: '6px' }} />
+            <span>01 // NARRATIVE ARCHITECTURE</span>
+          </div>
+          <h2 className="story-main-title">The Story Behind Coastal AI</h2>
+          <p className="story-main-subtitle">
+            How 97.2 km of vulnerable Karnataka coastline inspired an all-weather satellite AI monitoring system.
+          </p>
+        </div>
+
+        {/* 3 Simple Story Cards */}
+        <div className="simple-story-grid">
+          {/* Card 1 */}
+          <div className="simple-story-card">
+            <div className="story-card-top">
+              <span className="card-act-badge">ACT 01 // OBSERVATION</span>
+              <h3 className="card-story-title">A Dynamic Coast Under Threat</h3>
+              <p className="card-story-body">
+                The Udupi coastline faces relentless Arabian Sea monsoon swell and dynamic sediment shifts. Critical spit formations and fishing settlements retreat silently without automated continuous tracking.
+              </p>
+              <div className="card-story-metric">
+                <FiActivity style={{ flexShrink: 0 }} />
+                <span>Up to -24.0 m hotspot retreat at Bengre Sandspit</span>
+              </div>
+            </div>
+            <NavLink to="/comparison" className="card-action-link">
+              <span>Explore Shoreline Comparison</span>
+              <FiArrowRight />
+            </NavLink>
+          </div>
+
+          {/* Card 2 */}
+          <div className="simple-story-card">
+            <div className="story-card-top">
+              <span className="card-act-badge">ACT 02 // INTELLIGENCE</span>
+              <h3 className="card-story-title">Penetrating Monsoon Clouds</h3>
+              <p className="card-story-body">
+                Standard optical satellites are blinded by dense monsoon clouds for four months each year. We fused cloud-penetrating Sentinel-1 SAR with Sentinel-2 optical bands into a 9-channel AI tensor.
+              </p>
+              <div className="card-story-metric">
+                <FiCpu style={{ flexShrink: 0 }} />
+                <span>85.48% Validation Dice Score (DeepLabV3+)</span>
+              </div>
+            </div>
+            <NavLink to="/evidence-lab" className="card-action-link">
+              <span>Inspect Research & Evidence Lab</span>
+              <FiArrowRight />
+            </NavLink>
+          </div>
+
+          {/* Card 3 */}
+          <div className="simple-story-card">
+            <div className="story-card-top">
+              <span className="card-act-badge">ACT 03 // PREPAREDNESS</span>
+              <h3 className="card-story-title">Forecasting Future Vulnerability</h3>
+              <p className="card-story-body">
+                Moving beyond historical recording, Coastal AI computes End Point Rates (EPR) across 1,944 baseline transects and models future risk with XGBoost, projecting vulnerable areas before land is lost.
+              </p>
+              <div className="card-story-metric">
+                <FiLayers style={{ flexShrink: 0 }} />
+                <span>7.88 Hectares projected land loss by 2029</span>
+              </div>
+            </div>
+            <NavLink to="/dashboard" className="card-action-link">
+              <span>Launch Live GIS Dashboard</span>
+              <FiArrowRight />
+            </NavLink>
+          </div>
+        </div>
+
+        {/* Simple Story Console & Viva Links */}
+        <div className="simple-story-console">
+          <div className="console-left">
+            <span className="console-left-tag">TECHNICAL EVALUATION & DEFENSE</span>
+            <h4 className="console-left-title">Experience the Complete Scientific Pipeline</h4>
+            <p className="console-left-desc">
+              Watch the 2-minute project walkthrough or launch into the interactive evidence portals for the final presentation.
+            </p>
+          </div>
+          <div className="console-actions">
+            <button className="btn-console-demo" onClick={() => setVideoOpen(true)}>
+              <FiPlay style={{ marginRight: "4px" }} />
+              <span>Watch 2-Min Demo</span>
+            </button>
+            <NavLink to="/evidence-lab" className="btn-console-pill">
+              <FiAward style={{ marginRight: "4px" }} />
+              <span>Evidence Lab (Viva Mode)</span>
+            </NavLink>
+            <NavLink to="/methodology" className="btn-console-pill">
+              <FiCpu style={{ marginRight: "4px" }} />
+              <span>Methodology</span>
+            </NavLink>
+            <NavLink to="/synopsis" className="btn-console-pill">
+              <FiLayers style={{ marginRight: "4px" }} />
+              <span>Synopsis</span>
+            </NavLink>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          3. CINEMATIC VIDEO MODAL
+          ===================================================================== */}
       <AnimatePresence>
         {videoOpen && (
           <motion.div
@@ -127,7 +258,6 @@ function Home() {
             exit={{ opacity: 0 }}
             onClick={() => setVideoOpen(false)}
           >
-
             <motion.div
               className="video-modal-container"
               initial={{ scale: 0.7, opacity: 0, y: 80 }}
