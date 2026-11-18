@@ -8605,3 +8605,258 @@ body.lightbox-open .theme-toggle-container {
   background: #f8fafc !important;
   border-color: rgba(14, 165, 233, 0.2) !important;
 }
+
+
+/* =========================================================================
+   DEFINITIVE EVIDENCE LAB FIGURE SIZING & IMAGE CONTAINMENT (NO ZOOM / BLOWUP)
+   ========================================================================= */
+
+/* 1. All Two-Column Scientific Evidence Blocks (Loss, Confusion Matrix, QGIS, Google Earth, EPR, Scatter, Forecast, Feature Importance) */
+.pane-image-block {
+  position: relative !important;
+  width: 100% !important;
+  height: 290px !important;
+  max-height: 290px !important;
+  background: #020617 !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--border-color, rgba(56, 189, 248, 0.2)) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 14px 6px 14px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.pane-image-block:hover {
+  transform: translateY(-3px) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="light"] .pane-image-block {
+  background: #f8fafc !important;
+  border-color: rgba(14, 165, 233, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+.pane-image-block img {
+  max-width: 100% !important;
+  max-height: 220px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: auto !important;
+  border-radius: 6px !important;
+  transform: none !important;
+}
+
+/* 2. NDWI Stage Preview & Historical Epoch Preview */
+.ndwi-stage-image-container,
+.hist-img-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 310px !important;
+  max-height: 310px !important;
+  aspect-ratio: auto !important;
+  background: #020617 !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--border-color, rgba(56, 189, 248, 0.2)) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+
+.ndwi-stage-image-container img,
+.hist-img-wrap img {
+  max-width: 100% !important;
+  max-height: 270px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+  transform: none !important;
+}
+
+.ndwi-stage-image-container:hover img,
+.hist-img-wrap:hover img {
+  transform: scale(1.02) !important;
+}
+
+/* 3. Band Composite Stage & Comparison Sliders */
+.composite-image-stage {
+  position: relative !important;
+  width: 100% !important;
+  height: 330px !important;
+  max-height: 330px !important;
+  aspect-ratio: auto !important;
+  background: #020617 !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--border-color, rgba(56, 189, 248, 0.2)) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.composite-main-img {
+  max-width: 100% !important;
+  max-height: 300px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: auto !important;
+}
+
+.slider-stage-container,
+.split-slider-container {
+  position: relative !important;
+  width: 100% !important;
+  height: 330px !important;
+  max-height: 330px !important;
+  aspect-ratio: auto !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  background: #020617 !important;
+  cursor: ew-resize !important;
+  border: 1px solid var(--border-color, rgba(56, 189, 248, 0.2)) !important;
+}
+
+.slider-img-layer {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 330px !important;
+  object-fit: contain !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* 4. Training Dataset Triad Boxes (Input, GT, Prediction) */
+.triad-img-box {
+  width: 100% !important;
+  height: 175px !important;
+  max-height: 175px !important;
+  aspect-ratio: auto !important;
+  background: #020617 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.triad-img-box img {
+  max-width: 100% !important;
+  max-height: 160px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  transform: none !important;
+}
+
+/* 5. Individual Band Cards & Radar Products */
+.band-img-wrap,
+.radar-img-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 115px !important;
+  max-height: 115px !important;
+  aspect-ratio: auto !important;
+  background: #020617 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px !important;
+  border-radius: 8px 8px 0 0 !important;
+  box-sizing: border-box !important;
+}
+
+.band-img-wrap img,
+.radar-img-wrap img {
+  max-width: 100% !important;
+  max-height: 103px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  transform: none !important;
+}
+
+/* 6. Centralized Evidence Library Thumbnails */
+.evidence-thumb-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 150px !important;
+  max-height: 150px !important;
+  background: #020617 !important;
+  border-radius: 12px 12px 0 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.evidence-thumb-wrap img {
+  max-width: 100% !important;
+  max-height: 134px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  transform: none !important;
+}
+
+/* 7. Image Captions */
+.img-caption-bar {
+  margin-top: auto !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 6px 12px !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0 0 12px 12px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+/* Light Theme Adaptations */
+[data-theme="light"] .ndwi-stage-image-container,
+[data-theme="light"] .hist-img-wrap,
+[data-theme="light"] .composite-image-stage,
+[data-theme="light"] .slider-stage-container,
+[data-theme="light"] .split-slider-container,
+[data-theme="light"] .triad-img-box,
+[data-theme="light"] .band-img-wrap,
+[data-theme="light"] .radar-img-wrap,
+[data-theme="light"] .evidence-thumb-wrap {
+  background: #f8fafc !important;
+  border-color: rgba(14, 165, 233, 0.25) !important;
+}
+
+[data-theme="light"] .img-caption-bar {
+  background: rgba(241, 245, 249, 0.95) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #475569 !important;
+}
