@@ -1727,6 +1727,267 @@ body {
   filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.9));
 }
 
+/* ========================================================
+   CIRCULAR INTERACTIVE ARCHIVE BUTTON & FULL-SCREEN PORTAL
+   ======================================================== */
+
+.archive-circular-entry {
+  width: 100%;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.archive-header-block {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.circular-orb-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+/* The Circular Interactive Button */
+.archive-circular-button {
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Outer Pulsing Glow Aura */
+.orb-pulse-aura {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.35) 0%, rgba(56, 189, 248, 0.15) 50%, transparent 70%);
+  animation: orbPulse 3s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes orbPulse {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  100% { transform: scale(1.15); opacity: 0.95; }
+}
+
+/* Rotating Outer Dashed Orbital Ring */
+.orb-orbital-ring {
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(56, 189, 248, 0.6);
+  animation: orbSpin 12s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes orbSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Inner Translucent Glassmorphic Core */
+.orb-glass-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.28) 0%, rgba(14, 165, 233, 0.18) 55%, rgba(2, 6, 23, 0.85) 100%);
+  border: 1.5px solid rgba(56, 189, 248, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 
+    0 0 35px rgba(14, 165, 233, 0.45),
+    inset 0 0 25px rgba(56, 189, 248, 0.25),
+    0 12px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  position: relative;
+  z-index: 3;
+  color: #ffffff;
+  transition: all 0.35s ease;
+}
+
+[data-theme='light'] .orb-glass-core {
+  background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.35) 0%, rgba(14, 165, 233, 0.2) 55%, rgba(240, 249, 255, 0.9) 100%);
+  color: #0f172a;
+  border-color: rgba(14, 165, 233, 0.7);
+  box-shadow: 
+    0 0 35px rgba(14, 165, 233, 0.35),
+    inset 0 0 20px rgba(56, 189, 248, 0.3),
+    0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.archive-circular-button:hover .orb-glass-core {
+  border-color: #38bdf8;
+  box-shadow: 
+    0 0 50px rgba(56, 189, 248, 0.8),
+    inset 0 0 30px rgba(56, 189, 248, 0.45),
+    0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.archive-circular-button:hover .orb-orbital-ring {
+  border-color: #38bdf8;
+  animation-duration: 6s;
+}
+
+.orb-icon-wrapper {
+  color: #38bdf8;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.7));
+  margin-bottom: 3px;
+  transition: transform 0.3s ease;
+}
+
+.archive-circular-button:hover .orb-icon-wrapper {
+  transform: scale(1.15) rotate(15deg);
+}
+
+.orb-label {
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.orb-sublabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+[data-theme='light'] .orb-sublabel {
+  color: #0284c7;
+}
+
+.archive-orb-hint {
+  margin-top: 22px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+/* ========================================================
+   FULL-SCREEN EXPANDING OPENING ANIMATION PORTAL
+   ======================================================== */
+.archive-expanding-portal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #38bdf8 0%, #0284c7 35%, #030812 75%);
+  box-shadow: 0 0 120px 40px rgba(56, 189, 248, 0.8);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ========================================================
+   FULL-SCREEN ARCHIVE IMMERSIVE VIEW
+   ======================================================== */
+.fullscreen-archive-view {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: var(--bg-color);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px 20px 80px 20px;
+}
+
+.archive-top-controls {
+  position: sticky;
+  top: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-start;
+  max-width: 1300px;
+  margin: 0 auto 20px auto;
+  z-index: 100;
+  pointer-events: auto;
+  padding: 0 20px;
+}
+
+.archive-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 26px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  border-radius: 50px;
+  cursor: pointer;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+[data-theme='light'] .archive-back-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(14, 165, 233, 0.45);
+  color: #0284c7;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.archive-back-btn:hover {
+  background: rgba(14, 165, 233, 0.25);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+}
+
+[data-theme='light'] .archive-back-btn:hover {
+  background: #0ea5e9;
+  color: #ffffff;
+}
+
+.archive-back-btn .esc-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  opacity: 0.75;
+  background: rgba(56, 189, 248, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 .dashboard-controls-top {
   padding: 20px 0;
   display: flex;
