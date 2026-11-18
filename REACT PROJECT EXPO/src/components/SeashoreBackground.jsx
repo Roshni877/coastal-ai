@@ -92,7 +92,7 @@ function FishSwarm() {
 const SeashoreBackground = () => {
   const [isDark, setIsDark] = useState(
     typeof document !== "undefined" &&
-      document.documentElement.getAttribute("data-theme") === "dark"
+    document.documentElement.getAttribute("data-theme") === "dark"
   );
 
   useEffect(() => {
