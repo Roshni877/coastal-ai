@@ -7971,13 +7971,13 @@ body.lightbox-open .theme-toggle-container {
 /* 1. HERO SECTION */
 .home-hero-landing {
   position: relative;
-  min-height: 94vh;
+  min-height: calc(100vh - 110px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 120px 24px 60px 24px;
+  padding: 30px 24px 50px 24px;
   z-index: 10;
 }
 
@@ -9283,3 +9283,16 @@ body.lightbox-open .theme-toggle-container {
 .citation-text b {
   color: var(--text-color, #f8fafc);
 }
+
+/* GLOBAL SCROLL UNLOCK GUARANTEE */
+html, body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scroll-behavior: smooth !important;
+}
+
+#scroll-container, .app-container, .content, .home-super-wrapper {
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+
