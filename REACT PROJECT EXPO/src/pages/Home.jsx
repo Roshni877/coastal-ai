@@ -123,7 +123,7 @@ function Home() {
             >
               <div className="btn-text-wrapper">
                 <span className="btn-text-normal">Watch Project Demo</span>
-                <span className="btn-text-hover">Watch Demo</span>
+                <span className="btn-text-hover">Team-21 Video</span>
               </div>
               <div className="btn-icon-wrapper">
                 <FiPlay className="btn-icon-normal" />
@@ -221,13 +221,13 @@ function Home() {
             <span className="console-left-tag">TECHNICAL EVALUATION & DEFENSE</span>
             <h4 className="console-left-title">Experience the Complete Scientific Pipeline</h4>
             <p className="console-left-desc">
-              Watch the complete project demonstration video or launch into the interactive evidence portals for the final presentation.
+              Watch the complete Team-21 project demonstration video or launch into the interactive evidence portals for the final presentation.
             </p>
           </div>
           <div className="console-actions">
             <button className="btn-console-demo" onClick={() => setVideoOpen(true)}>
               <FiPlay style={{ marginRight: "4px" }} />
-              <span>Watch Latest Demo Video</span>
+              <span>Watch Team-21 Video</span>
             </button>
             <NavLink to="/evidence-lab" className="btn-console-pill">
               <FiAward style={{ marginRight: "4px" }} />
@@ -246,7 +246,7 @@ function Home() {
       </section>
 
       {/* =====================================================================
-          3. CINEMATIC VIDEO MODAL (PLAYS LATEST TEAM-21 VIDEO)
+          3. CINEMATIC VIDEO MODAL (PLAYS EXACT TEAM-21 VIDEO)
           ===================================================================== */}
       <AnimatePresence>
         {videoOpen && (
@@ -279,7 +279,7 @@ function Home() {
               {/* Video Player */}
               <div className="video-embed-wrapper">
                 <video
-                  src="/demo_video.mp4"
+                  key="team-21-video-player"
                   controls
                   autoPlay
                   playsInline
@@ -292,6 +292,7 @@ function Home() {
                     backgroundColor: "#000",
                   }}
                 >
+                  <source src="/Team-21%20-%20Coastal%20Erosion%20Detection%20Using%20ML%20and%20Remote%20Sensing.mp4" type="video/mp4" />
                   <source src="/demo_video.mp4" type="video/mp4" />
                   Your browser does not support HTML5 video playback.
                 </video>
@@ -299,7 +300,7 @@ function Home() {
 
               {/* Footer bar */}
               <div className="video-modal-footer">
-                <span className="vessel-id">TEAM-21 // FINAL YEAR MAJOR PROJECT</span>
+                <span className="vessel-id">TEAM-21 // Coastal Erosion Detection Using ML and Remote Sensing.mp4</span>
                 <a 
                   href={VIDEO_EMBED_URL} 
                   target="_blank" 
