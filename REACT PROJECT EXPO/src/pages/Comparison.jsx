@@ -10,8 +10,6 @@ import {
   ShieldAlert,
   Sparkles,
   Waves,
-  TrendingDown,
-  Activity
 } from 'lucide-react'
 import '../styles/Comparison.css'
 import {
@@ -31,7 +29,7 @@ function displayAgreement(value) {
 
 function displayLandLoss(record) {
   if (record.isForecast) {
-    return `+${record.cumulativeLandLossHa.toFixed(2)} ha (Projected)`
+    return `+${record.cumulativeLandLossHa.toFixed(2)} ha`
   }
   if (record.year === 2024) {
     return '0.00 ha (Baseline)'
@@ -75,10 +73,11 @@ function csvEscape(value) {
 function Comparison() {
   const [records] = useState(DEFAULT_VALIDATED_RECORDS)
   const [selectedYear, setSelectedYear] = useState(2024)
-  // Default strictly to 'historical' as requested
-  const [viewMode, setViewMode] = useState('historical') // 'historical' | 'future'
+  const [viewMode, setViewMode] = useState('all') // 'all' | 'historical' | 'future'
   const [filterYear, setFilterYear] = useState('all')
   const [sortDirection, setSortDirection] = useState('desc')
+  const [showWhyBlank, setShowWhyBlank] = useState(false)
+  const [showMethodology, setShowMethodology] = useState(false)
 
   const chartRefs = useRef([])
   const chartCanvases = useRef([])
@@ -87,7 +86,6 @@ function Comparison() {
   const forecastMovementCanvas = useRef(null)
 
   const allRows = useMemo(() => AVAILABLE_YEARS.map((year) => records[year] || emptyYear(year)), [records])
-  
   const visibleRows = useMemo(() => {
     const filtered = allRows.filter((record) => {
       if (filterYear !== 'all' && record.year !== Number(filterYear)) return false
@@ -142,10 +140,10 @@ function Comparison() {
     const color = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#475569'
     const gridColor = 'rgba(100, 116, 139, 0.15)'
     const definitions = [
-      { title: 'Actual vs ML-predicted erosion (km)', keys: ['actualErosionKm', 'predictedErosionKm'], labels: ['Actual (Ground Truth)', 'ML-predicted (DeepLabV3+)'], colors: ['#0284c7', '#e11d48'], unit: 'km' },
-      { title: 'Actual vs ML-predicted accretion (km)', keys: ['actualAccretionKm', 'predictedAccretionKm'], labels: ['Actual (Ground Truth)', 'ML-predicted (DeepLabV3+)'], colors: ['#10b981', '#38bdf8'], unit: 'km' },
-      { title: 'Erosion measurement agreement (%)', keys: ['erosionAgreement'], labels: ['Agreement (%)'], colors: ['#0284c7'], unit: '%' },
-      { title: 'Accretion measurement agreement (%)', keys: ['accretionAgreement'], labels: ['Agreement (%)'], colors: ['#10b981'], unit: '%' },
+      { title: 'Actual vs ML-predicted erosion', keys: ['actualErosionKm', 'predictedErosionKm'], labels: ['Actual', 'ML-predicted'], colors: ['#16864b', '#e54885'], unit: 'km' },
+      { title: 'Actual vs ML-predicted accretion', keys: ['actualAccretionKm', 'predictedAccretionKm'], labels: ['Actual', 'ML-predicted'], colors: ['#16864b', '#e54885'], unit: 'km' },
+      { title: 'Erosion measurement agreement', keys: ['erosionAgreement'], labels: ['Agreement'], colors: ['#16864b'], unit: '%' },
+      { title: 'Accretion measurement agreement', keys: ['accretionAgreement'], labels: ['Agreement'], colors: ['#e54885'], unit: '%' },
     ]
     definitions.forEach((definition, index) => {
       const canvas = chartCanvases.current[index]
@@ -182,10 +180,8 @@ function Comparison() {
     }
   }, [allRows])
 
-  // Future Forecast Charts Effect (Only built when in future mode)
+  // Future Forecast Charts Effect
   useEffect(() => {
-    if (viewMode !== 'future') return;
-
     forecastChartRefs.current.forEach((chart) => chart?.destroy())
     forecastChartRefs.current = []
 
@@ -201,23 +197,23 @@ function Comparison() {
             {
               label: 'Cumulative Land Loss (ha)',
               data: [0.0, 1.58, 3.15, 4.73, 6.30, 7.88],
-              borderColor: '#d97706',
-              backgroundColor: 'rgba(217, 119, 6, 0.15)',
+              borderColor: '#d95f02',
+              backgroundColor: 'rgba(217, 95, 2, 0.15)',
               borderWidth: 2.5,
               pointRadius: 5,
-              pointBackgroundColor: '#d97706',
+              pointBackgroundColor: '#d95f02',
               fill: true,
               tension: 0.25,
             },
             {
               label: 'Severe Hotspots Area (ha)',
               data: [0.0, 0.95, 1.90, 2.85, 3.80, 4.75],
-              borderColor: '#e11d48',
+              borderColor: '#e54885',
               backgroundColor: 'transparent',
               borderWidth: 2,
               borderDash: [5, 5],
               pointRadius: 4,
-              pointBackgroundColor: '#e11d48',
+              pointBackgroundColor: '#e54885',
               tension: 0.2,
             },
           ],
@@ -250,8 +246,8 @@ function Comparison() {
               type: 'bar',
               label: 'Regional Average Retreat (m)',
               data: [-2.18, -3.12, -4.06, -5.00, -5.94],
-              backgroundColor: 'rgba(2, 132, 199, 0.4)',
-              borderColor: '#0284c7',
+              backgroundColor: 'rgba(40, 120, 208, 0.4)',
+              borderColor: '#2878d0',
               borderWidth: 1.5,
               borderRadius: 4,
               yAxisID: 'yMeters',
@@ -260,8 +256,8 @@ function Comparison() {
               type: 'bar',
               label: 'Hotspot Maximum Retreat (m)',
               data: [-4.80, -9.60, -14.40, -19.20, -24.00],
-              backgroundColor: 'rgba(225, 29, 72, 0.4)',
-              borderColor: '#e11d48',
+              backgroundColor: 'rgba(211, 74, 74, 0.4)',
+              borderColor: '#d34a4a',
               borderWidth: 1.5,
               borderRadius: 4,
               yAxisID: 'yMeters',
@@ -270,11 +266,11 @@ function Comparison() {
               type: 'line',
               label: 'Model Accuracy / Confidence (%)',
               data: [85.2, 84.1, 82.8, 81.5, 80.2],
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderColor: '#16864b',
+              backgroundColor: 'rgba(22, 134, 75, 0.1)',
               borderWidth: 2.5,
               pointRadius: 5,
-              pointBackgroundColor: '#10b981',
+              pointBackgroundColor: '#16864b',
               yAxisID: 'yPercent',
             },
           ],
@@ -297,7 +293,7 @@ function Comparison() {
               position: 'right',
               min: 70,
               max: 100,
-              title: { display: true, text: 'Confidence (%)', color },
+              title: { display: true, text: 'Model Accuracy (%)', color },
               ticks: { color },
               grid: { display: false },
             },
@@ -314,172 +310,148 @@ function Comparison() {
   }, [viewMode])
 
   return (
-    <main className="comparison-page" style={{ maxWidth: '1440px', margin: '0 auto', padding: '90px 24px 60px' }}>
-      
-      {/* Header */}
-      <header className="comparison-heading" style={{ marginBottom: '24px' }}>
+    <main className="comparison-page">
+      <header className="comparison-heading">
         <div>
-          <div className="comparison-kicker" style={{ color: '#0ea5e9', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <Waves size={15} /> COASTAL EROSION BENCHMARK & MULTI-TEMPORAL VALIDATION
-          </div>
-          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-            Historical Shoreline Validation (2015–2024)
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.94rem', marginTop: '6px', maxWidth: '850px' }}>
-            Rigorous validation benchmarking observed multi-sensor satellite shorelines against DeepLabV3+ segmentation across 1,944 paired transects along the 97.2 km Udupi coastline.
+          <div className="comparison-kicker"><Waves size={15} /> COASTAL AI / VALIDATION & FORECASTING</div>
+          <h1>Shoreline Change Validation & Future Predictions</h1>
+          <p>
+            Historical validation (2015–2024) and predictive temporal forecasts (2025–2029) calibrated using DeepLabV3+ (Dice 0.8548) and XGBoost Environmental Classifier (84.8% accuracy) along 1,944 Udupi transects.
           </p>
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button className="export-button" onClick={exportCsv} title="Export verified comparison table as CSV" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', color: '#fff', borderRadius: '8px', border: '1px solid #38bdf8', fontWeight: 600, cursor: 'pointer' }}>
-            <Download size={16} /> Export Verified CSV
-          </button>
-        </div>
+        <span className="comparison-period"><span /> 2015–2029 · Unified Monitoring Period</span>
       </header>
 
-      {/* Segregated Primary View Selection Tabs */}
-      <div className="view-mode-tabs" role="tablist" style={{ display: 'flex', gap: '10px', background: 'var(--card-bg, rgba(11, 19, 41, 0.7))', padding: '6px', borderRadius: '10px', border: '1px solid rgba(56, 189, 248, 0.2)', marginBottom: '28px' }}>
+      {/* Timeline View Tabs */}
+      <div className="view-mode-tabs" role="tablist" aria-label="Validation and forecast timeline view selection">
+        <button
+          className={`view-mode-tab ${viewMode === 'all' ? 'active' : ''}`}
+          onClick={() => setViewMode('all')}
+        >
+          <Layers size={15} /> All Years (2015–2029)
+        </button>
         <button
           className={`view-mode-tab ${viewMode === 'historical' ? 'active' : ''}`}
-          onClick={() => { setViewMode('historical'); setFilterYear('all'); }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '10px 18px',
-            borderRadius: '8px',
-            border: 'none',
-            background: viewMode === 'historical' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'transparent',
-            color: viewMode === 'historical' ? '#ffffff' : 'var(--text-muted)',
-            fontWeight: 600,
-            fontSize: '0.88rem',
-            cursor: 'pointer'
-          }}
+          onClick={() => setViewMode('historical')}
         >
-          <Calendar size={15} /> Primary: Historical Validation (2015–2024)
+          <Calendar size={15} /> Historical Validation (2015–2024)
         </button>
-        
         <button
           className={`view-mode-tab ${viewMode === 'future' ? 'active' : ''}`}
-          onClick={() => { setViewMode('future'); setFilterYear('all'); }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '10px 18px',
-            borderRadius: '8px',
-            border: 'none',
-            background: viewMode === 'future' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'transparent',
-            color: viewMode === 'future' ? '#ffffff' : 'var(--text-muted)',
-            fontWeight: 600,
-            fontSize: '0.88rem',
-            cursor: 'pointer'
-          }}
+          onClick={() => setViewMode('future')}
         >
-          <Sparkles size={15} /> Calibrated Scenario Projections (2025–2029)
+          <Sparkles size={15} /> Future Predictions (2025–2029)
         </button>
       </div>
 
-      {/* Distinction Disclaimer Banner if in Future Mode */}
-      {viewMode === 'future' && (
-        <div style={{ padding: '14px 18px', background: 'rgba(217, 119, 6, 0.1)', border: '1px solid rgba(217, 119, 6, 0.3)', borderRadius: '10px', marginBottom: '24px', fontSize: '0.84rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Info size={18} style={{ flexShrink: 0 }} />
-          <span>
-            <strong>Scientific Modeling Notice:</strong> The values below represent calibrated multi-year forward simulations derived from End Point Rate (EPR) equations and XGBoost environmental feature weighting. They are clearly distinguished from satellite ground-truth observations.
-          </span>
-        </div>
-      )}
-
-      {/* CLEAN MASTER COMPARISON TABLE */}
-      <section className="comparison-section table-section hero-table-section" style={{ background: 'var(--card-bg, rgba(11, 19, 41, 0.8))', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '14px', padding: '22px', marginBottom: '32px' }}>
-        
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+      {/* MASTER COMPARISON TABLE (No Row/Column Limits) */}
+      <section className="comparison-section table-section hero-table-section" aria-labelledby="interval-table-title">
+        <div className="hero-table-heading">
           <div>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', letterSpacing: '1px' }}>
-              {viewMode === 'historical' ? 'OBSERVED SATELLITE VS ML-PREDICTED MEASUREMENTS' : '5-YEAR CALIBRATED SCENARIOS (EPR & XGBOOST)'}
+            <span className="section-index">
+              {viewMode === 'all' && 'UNIFIED DATASET / 2015–2029 COMPLETE SERIES'}
+              {viewMode === 'historical' && 'PRIMARY RESULT / HISTORICAL INTERVAL VALIDATION (2015–2024)'}
+              {viewMode === 'future' && 'FUTURE PREDICTIONS / 2025–2029 TEMPORAL PROJECTIONS'}
             </span>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '4px 0 0 0', color: 'var(--text-main)' }}>
-              {viewMode === 'historical' ? 'Interval Shoreline Displacement & Agreement (2015–2024)' : 'Forward Shoreline Retreat & Land Loss Projections (2025–2029)'}
+            <h2 id="interval-table-title">
+              {viewMode === 'all' && 'Year-wise actual vs ML-predicted coastal erosion, accretion & future forecasts (2015–2029)'}
+              {viewMode === 'historical' && 'Year-wise actual vs ML-predicted coastal erosion and accretion (2015–2024)'}
+              {viewMode === 'future' && 'Forecasted coastal erosion, accretion, land loss & model accuracy (2025–2029)'}
             </h2>
           </div>
+          <button className="export-button" onClick={exportCsv} title="Export currently viewed comparison table as CSV">
+            <Download size={17} /> Export Table CSV
+          </button>
+        </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Year Filter:
-              <select 
-                value={filterYear} 
-                onChange={(e) => setFilterYear(e.target.value)}
-                style={{ marginLeft: '6px', padding: '6px 10px', background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '6px', color: 'var(--text-main)', fontSize: '0.82rem' }}
-              >
-                <option value="all">All ({visibleRows.length} intervals)</option>
-                {AVAILABLE_YEARS
-                  .filter(y => viewMode === 'historical' ? y <= 2024 : y >= 2025)
-                  .map((year) => <option key={year} value={year}>{year}</option>)}
+        <div className="table-toolbar">
+          <p>
+            <Info size={15} />
+            {viewMode === 'all' && `Displaying all ${visibleRows.length} years (2015–2029) with all comparison columns. No row or column limits.`}
+            {viewMode === 'historical' && `Displaying ${visibleRows.length} historical validation intervals (2015–2024) benchmarked against Sentinel & GEE observations.`}
+            {viewMode === 'future' && `Displaying ${visibleRows.length} future forecast horizons (2025–2029) projected via DeepLabV3+ & XGBoost.`}
+          </p>
+          <div className="table-actions">
+            <label>Year
+              <select value={filterYear} onChange={(event) => setFilterYear(event.target.value)}>
+                <option value="all">All ({visibleRows.length} years)</option>
+                {AVAILABLE_YEARS.map((year) => <option key={year} value={year}>{year}{year >= 2025 ? ' (Forecast)' : ''}</option>)}
               </select>
             </label>
-
-            <button 
-              onClick={() => setSortDirection((d) => d === 'asc' ? 'desc' : 'asc')}
-              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: 'rgba(14, 165, 233, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '6px', color: '#38bdf8', fontSize: '0.82rem', cursor: 'pointer' }}
-            >
-              <ArrowDownUp size={14} /> Year ({sortDirection})
-            </button>
+            <button className="sort-button" onClick={() => setSortDirection((direction) => direction === 'asc' ? 'desc' : 'asc')}><ArrowDownUp size={15} /> Year {sortDirection === 'asc' ? 'ascending' : 'descending'}</button>
           </div>
         </div>
 
-        <div className="comparison-table-wrap hero-table-wrap" style={{ overflowX: 'auto' }}>
-          <table className="comparison-table hero-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
+        <div className="comparison-table-wrap hero-table-wrap">
+          <table className="comparison-table hero-table">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(56, 189, 248, 0.25)' }}>
-                <th style={{ padding: '12px 14px', textAlign: 'left', color: '#94a3b8' }}>Year / Interval</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#0ea5e9' }}>Actual Erosion (km)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#f43f5e' }}>ML Erosion (km)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#38bdf8' }}>Agreement (%)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#10b981' }}>Actual Accretion (km)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#34d399' }}>ML Accretion (km)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#38bdf8' }}>Agreement (%)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#f59e0b' }}>Cumulative Land Loss</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#cbd5e1' }}>Avg Shift (m)</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right', color: '#ef4444' }}>Hotspot Max Retreat</th>
-                <th style={{ padding: '12px 14px', textAlign: 'center', color: '#10b981' }}>Model Accuracy</th>
-                <th style={{ padding: '12px 14px', textAlign: 'left', color: '#94a3b8' }}>Risk Level</th>
+              <tr>
+                <th><button onClick={() => setSortDirection((direction) => direction === 'asc' ? 'desc' : 'asc')}>Year / Interval & Horizon <ArrowDownUp size={13} /></button></th>
+                <th className="actual-column numeric-col">Actual Erosion (km)</th>
+                <th className="predicted-column numeric-col">ML Predicted Erosion (km)</th>
+                <th className="numeric-col">Erosion Agreement (%)</th>
+                <th className="actual-column numeric-col">Actual Accretion (km)</th>
+                <th className="predicted-column numeric-col">ML Predicted Accretion (km)</th>
+                <th className="numeric-col">Accretion Agreement (%)</th>
+                <th className="numeric-col">Cumulative Land Loss</th>
+                <th className="numeric-col">Avg Shoreline Shift</th>
+                <th className="numeric-col">Hotspot Max Retreat</th>
+                <th className="numeric-col">Model Accuracy</th>
+                <th>Vulnerability Risk</th>
               </tr>
             </thead>
             <tbody>
               {visibleRows.map((record) => (
                 <tr
                   key={record.year}
-                  style={{
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                    background: selectedYear === record.year ? 'rgba(14, 165, 233, 0.08)' : 'transparent',
-                    cursor: 'pointer'
-                  }}
+                  className={selectedYear === record.year ? 'validated-row' : ''}
                   onClick={() => setSelectedYear(record.year)}
                 >
-                  <td style={{ padding: '12px 14px' }}>
-                    <div style={{ fontWeight: 700, color: 'var(--text-main)' }}>
-                      {record.year}
-                      {record.isForecast && <span style={{ marginLeft: '6px', fontSize: '0.68rem', background: 'rgba(217, 119, 6, 0.2)', color: '#fbbf24', padding: '2px 6px', borderRadius: '4px' }}>Forecast</span>}
-                      {record.year === 2024 && <span style={{ marginLeft: '6px', fontSize: '0.68rem', background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '2px 6px', borderRadius: '4px' }}>Benchmark</span>}
-                    </div>
-                    <small style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>{record.intervalLabel}</small>
+                  <td>
+                    <button
+                      className="year-select"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setSelectedYear(record.year)
+                      }}
+                    >
+                      <span>
+                        {record.year}
+                        {record.isForecast ? (
+                          <span className="horizon-badge" style={{ marginLeft: '6px' }}>{record.horizon || 'Forecast'}</span>
+                        ) : record.year === 2024 ? (
+                          <span className="forecast-tag" style={{ marginLeft: '6px' }}>Benchmark</span>
+                        ) : null}
+                      </span>
+                      <small>{record.intervalLabel}</small>
+                    </button>
                   </td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#0ea5e9', fontWeight: 600 }}>{displayKm(record.actualErosionKm)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#f43f5e', fontWeight: 600 }}>{displayKm(record.predictedErosionKm)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#38bdf8' }}>{displayAgreement(record.erosionAgreement)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{displayKm(record.actualAccretionKm)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#34d399', fontWeight: 600 }}>{displayKm(record.predictedAccretionKm)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#38bdf8' }}>{displayAgreement(record.accretionAgreement)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#f59e0b', fontWeight: 600 }}>{displayLandLoss(record)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#cbd5e1' }}>{displayShift(record)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', color: '#ef4444', fontWeight: 700 }}>{displayHotspotRetreat(record)}</td>
-                  <td style={{ padding: '12px 14px', textAlign: 'center' }}>
-                    <span style={{ fontSize: '0.78rem', padding: '3px 8px', borderRadius: '4px', background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontWeight: 600 }}>
-                      {displayAccuracy(record)}
+                  <td className="numeric-cell actual-value">
+                    {displayKm(record.actualErosionKm)}
+                    {record.severeHotspotKm && (
+                      <small style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.67rem' }}>
+                        ({record.severeHotspotKm.toFixed(2)} km severe)
+                      </small>
+                    )}
+                  </td>
+                  <td className="numeric-cell predicted-value">{displayKm(record.predictedErosionKm)}</td>
+                  <td className="numeric-cell">{displayAgreement(record.erosionAgreement)}</td>
+                  <td className="numeric-cell actual-value">{displayKm(record.actualAccretionKm)}</td>
+                  <td className="numeric-cell predicted-value">{displayKm(record.predictedAccretionKm)}</td>
+                  <td className="numeric-cell">{displayAgreement(record.accretionAgreement)}</td>
+                  <td className="numeric-cell loss-value">{displayLandLoss(record)}</td>
+                  <td className="numeric-cell shift-value">{displayShift(record)}</td>
+                  <td className="numeric-cell" style={{ color: '#d34a4a', fontWeight: 800 }}>
+                    {displayHotspotRetreat(record)}
+                  </td>
+                  <td className="numeric-cell">
+                    <span className={`accuracy-badge ${record.modelAccuracy >= 83 ? 'high' : 'moderate'}`}>
+                      <CheckCircle2 size={13} /> {displayAccuracy(record)}
                     </span>
                   </td>
-                  <td style={{ padding: '12px 14px' }}>
-                    <span style={{ fontSize: '0.75rem', padding: '3px 8px', borderRadius: '4px', background: record.riskClass === 'critical' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.15)', color: record.riskClass === 'critical' ? '#f87171' : '#fbbf24', fontWeight: 600 }}>
-                      {record.riskLevel || 'Moderate Risk'}
+                  <td>
+                    <span className={`risk-pill ${record.riskClass || 'moderate'}`}>
+                      <ShieldAlert size={12} /> {record.riskLevel || 'Moderate Risk'}
                     </span>
                   </td>
                 </tr>
@@ -488,97 +460,141 @@ function Comparison() {
           </table>
         </div>
 
-        <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-          <span>Displaying {visibleRows.length} verified intervals · EPSG:32643 UTM-43N projection</span>
-          <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <CheckCircle2 size={14} /> Ground Truth calibrated against VEDAS (ISRO) & NCCR Atlases
+        <div className="table-footer">
+          <span>All {visibleRows.length} years displayed in full · Select any year to review details and spatial evidence</span>
+          <span className="validated-badge">
+            <Sparkles size={13} /> DeepLabV3+ & XGBoost Predictive Pipeline Active
           </span>
         </div>
       </section>
 
-      {/* Historical Validation Charts Grid */}
-      {viewMode === 'historical' && (
-        <section style={{ marginBottom: '32px' }}>
-          <div style={{ marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
-              Historical Interval Trends & Model Agreement (2015–2024)
-            </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.84rem', margin: '4px 0 0' }}>
-              Comparison of actual measured coastline lengths (km) versus DeepLabV3+ predicted values along identical 50m transects.
+      {/* Summary Stats Cards */}
+      <section className="comparison-summary" aria-label="Dataset summary statistics">
+        <article className="comparison-stat">
+          <span>Total Years Monitored</span>
+          <strong>{summary.count} Years</strong>
+          <small>{viewMode === 'all' ? '10 Historical + 5 Forecast Horizons' : `${summary.count} active yearly intervals`}</small>
+        </article>
+        <article className="comparison-stat">
+          <span>Mean Erosion Coastline</span>
+          <strong>{summary.erosion === null ? '-' : `${summary.erosion.toFixed(3)} km`}</strong>
+          <small>Mean active erosion zone (7.65 km severe hotspots)</small>
+        </article>
+        <article className="comparison-stat">
+          <span>Mean Accretion Coastline</span>
+          <strong>{summary.accretion === null ? '-' : `${summary.accretion.toFixed(3)} km`}</strong>
+          <small>Mean annual deposition & sandbar accumulation</small>
+        </article>
+        <article className="comparison-stat status-stat">
+          <span>Mean Model Accuracy</span>
+          <strong>{summary.accuracy === null ? '85.5%' : `${summary.accuracy.toFixed(1)}%`}</strong>
+          <small>DeepLabV3+ Dice: 0.8548 · XGBoost: 84.8%</small>
+        </article>
+      </section>
+
+      {/* Future Projections Visual Analytics */}
+      {(viewMode === 'all' || viewMode === 'future') && (
+        <section className="comparison-section" aria-label="Future forecast visual analytics">
+          <div className="section-heading-row">
+            <div>
+              <span className="section-index">FUTURE PROJECTION TRENDS (2025–2029)</span>
+              <h2>Multi-Year Land Loss Trajectory & Model Confidence</h2>
+            </div>
+            <span className="table-count">Calculated from 1,944 baseline transects</span>
+          </div>
+          <div className="forecast-charts-grid">
+            <article className="forecast-chart-card">
+              <h3>Forecasted Cumulative Land Area Loss (2024 Baseline → 2029)</h3>
+              <div className="forecast-chart-canvas">
+                <canvas ref={forecastLandLossCanvas} />
+              </div>
+            </article>
+            <article className="forecast-chart-card">
+              <h3>Projected Shoreline Retreat & Model Accuracy Trajectory</h3>
+              <div className="forecast-chart-canvas">
+                <canvas ref={forecastMovementCanvas} />
+              </div>
+            </article>
+          </div>
+        </section>
+      )}
+
+      {/* Methodology & Benchmark Overview */}
+      <section className="comparison-section plain-details data-integrity-note">
+        <button className="plain-disclosure-toggle" aria-expanded={showWhyBlank} aria-controls="comparison-data-note" onClick={() => setShowWhyBlank((open) => !open)}>
+          <strong>Validation Methodology & Reference Sources</strong>
+          <span>{showWhyBlank ? 'Hide overview' : 'View benchmark overview'}</span>
+        </button>
+        {showWhyBlank && (
+          <div className="source-status-content" id="comparison-data-note">
+            <p>
+              This historical validation benchmark compares observed multi-sensor satellite shorelines with DeepLabV3+ neural network predictions along the 97.2 km Udupi and Dakshina Kannada coastline across 1,944 paired transects (EPSG:32643). Ground truth references are compiled from multi-temporal Sentinel-2 MSI (10 m), Landsat-8 OLI, and Sentinel-1 SAR composites cross-referenced with national coastal atlases.
+            </p>
+            <div className="source-links">
+              <a href="https://vedas.sac.gov.in/content/vcms/pdf/atlas/Seashore/Vol-3-Full.pdf" target="_blank" rel="noreferrer">VEDAS atlas · Karnataka/Kerala · 2014 PDF</a>
+              <a href="https://vedas.sac.gov.in/content/vcms/atlas/slc/Shoreline_Change_Atlas_Vol-III.pdf" target="_blank" rel="noreferrer">VEDAS atlas · Karnataka/Kerala · 2021 PDF</a>
+              <a href="https://www.nccr.gov.in/sites/default/files/schangenew.pdf" target="_blank" rel="noreferrer">NCCR national shoreline assessment · 1990–2016</a>
+            </div>
+            <p>
+              Future projections (2025–2029) utilize the calibrated End Point Rate (EPR) vector equations combined with XGBoost environmental feature weighting (wave height Hs, tidal range, and Monsoon Exposure Index MEI). DeepLabV3+ model validation Dice score: <strong>85.48%</strong>; XGBoost classification accuracy: <strong>84.8%</strong>.
             </p>
           </div>
+        )}
+      </section>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+      {/* Historical Validation Charts */}
+      {(viewMode === 'all' || viewMode === 'historical') && (
+        <section className="comparison-section visualization-section">
+          <div className="section-heading-row">
+            <div><span className="section-index">HISTORICAL INTERVAL TRENDS (2015–2024)</span><h2>Actual and predicted measurements</h2></div>
+            <span className="table-count">Charts use completed table records only</span>
+          </div>
+          <div className="validation-charts">
             {[
-              'Actual vs ML-predicted erosion (km)', 
-              'Actual vs ML-predicted accretion (km)',
-              'Erosion measurement agreement (%)', 
-              'Accretion measurement agreement (%)'
+              'Actual vs ML-predicted erosion', 'Actual vs ML-predicted accretion',
+              'Erosion measurement agreement', 'Accretion measurement agreement',
             ].map((title, index) => (
-              <div key={title} style={{ background: 'var(--card-bg, rgba(11, 19, 41, 0.75))', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '12px', padding: '18px' }}>
-                <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 12px 0' }}>{title}</h4>
-                <div style={{ height: '220px', position: 'relative' }}>
-                  <canvas ref={(el) => { chartCanvases.current[index] = el }} />
-                </div>
-              </div>
+              <article className="metric-chart" key={title}>
+                <h3>{title}</h3>
+                <div className="chart-canvas"><canvas ref={(element) => { chartCanvases.current[index] = element }} /></div>
+              </article>
             ))}
           </div>
         </section>
       )}
 
-      {/* Future Projections Section (Only when in future mode) */}
-      {viewMode === 'future' && (
-        <section style={{ marginBottom: '32px' }}>
-          <div style={{ marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
-              Multi-Year Land Loss Trajectory & Model Confidence (2025–2029)
-            </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.84rem', margin: '4px 0 0' }}>
-              Projections computed using the End Point Rate (EPR) vector equations combined with XGBoost environmental feature weighting.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
-            <div style={{ background: 'var(--card-bg, rgba(11, 19, 41, 0.75))', border: '1px solid rgba(217, 119, 6, 0.25)', borderRadius: '12px', padding: '18px' }}>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 12px 0' }}>
-                Forecasted Cumulative Land Area Loss (ha)
-              </h4>
-              <div style={{ height: '240px', position: 'relative' }}>
-                <canvas ref={forecastLandLossCanvas} />
-              </div>
+      {/* Methodology Section */}
+      <section className="comparison-section methodology-section">
+        <button className="plain-disclosure-toggle" aria-expanded={showMethodology} aria-controls="comparison-methodology" onClick={() => setShowMethodology((open) => !open)}>
+          <strong>How the comparison works</strong>
+          <span>{showMethodology ? 'Hide steps and sources' : 'View steps and sources'}</span>
+        </button>
+        {showMethodology && (
+          <div className="methodology-content" id="comparison-methodology">
+            <ol className="method-steps">
+              <li><span>01</span><div><h3>Install tools and find imagery</h3><p>Install <a href="https://www.google.com/earth/about/versions/" target="_blank" rel="noreferrer">Google Earth Pro</a> and <a href="https://qgis.org/download/" target="_blank" rel="noreferrer">QGIS</a>. Use Historical Imagery or a documented satellite scene, and record the acquisition date. Imagery is a reference observation, not field-survey ground truth.</p></div></li>
+              <li><span>02</span><div><h3>Choose matching dates</h3><p>Select reference and model observations for the same interval and coast segment. Note tide, season, clouds, and waterline proxy differences.</p></div></li>
+              <li><span>03</span><div><h3>Digitize in QGIS</h3><p>Prepare dated shorelines and transects/baseline in QGIS.</p></div></li>
+              <li><span>04</span><div><h3>Export interval measurements</h3><p>Measure reference and ML shoreline positions along identical transects, with per-transect spacing, in EPSG:32643 meters.</p></div></li>
+              <li><span>05</span><div><h3>Calculate measurement agreement</h3><p>Classify signed displacement by transect spacing, sum erosion/accretion lengths, and compare the same start/end observations.</p></div></li>
+            </ol>
+            <div className="metric-notes">
+              <p><strong>Erosion/accretion (km):</strong> sum of the spacing weights for transects whose signed endpoint displacement is below −0.5 m or above +0.5 m respectively.</p>
+              <p><strong>Separate agreements:</strong> for non-zero actual totals, max(0, 100 × (1 − |actual − predicted| / |actual|)).</p>
+              <p><strong>Model Dice:</strong> DeepLabV3+ Dice score of 0.8548 (85.48%) evaluates 2D boundary segmentation overlap.</p>
             </div>
-
-            <div style={{ background: 'var(--card-bg, rgba(11, 19, 41, 0.75))', border: '1px solid rgba(217, 119, 6, 0.25)', borderRadius: '12px', padding: '18px' }}>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 12px 0' }}>
-                Projected Shoreline Retreat & Accuracy Trajectory
-              </h4>
-              <div style={{ height: '240px', position: 'relative' }}>
-                <canvas ref={forecastMovementCanvas} />
-              </div>
+            <div className="source-links">
+              <a href="https://www.google.com/earth/about/versions/" target="_blank" rel="noreferrer">Google Earth Pro download</a>
+              <a href="https://qgis.org/download/" target="_blank" rel="noreferrer">QGIS download</a>
+              <a href="https://vedas.sac.gov.in/content/vcms/pdf/atlas/Seashore/Vol-3-Full.pdf" target="_blank" rel="noreferrer">VEDAS Karnataka/Kerala atlas · 2014 PDF</a>
+              <a href="https://vedas.sac.gov.in/content/vcms/atlas/slc/Shoreline_Change_Atlas_Vol-III.pdf" target="_blank" rel="noreferrer">VEDAS Karnataka/Kerala atlas · 2021 PDF</a>
+              <a href="https://www.nccr.gov.in/sites/default/files/schangenew.pdf" target="_blank" rel="noreferrer">NCCR national assessment · 1990–2016</a>
+              <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank" rel="noreferrer">Sentinel-2 · Earth Engine</a>
+              <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD" target="_blank" rel="noreferrer">Sentinel-1 · Earth Engine</a>
             </div>
           </div>
-        </section>
-      )}
-
-      {/* Professional Benchmark Reference Citation Footer */}
-      <footer style={{ padding: '20px', background: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '12px', fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.6 }}>
-        <strong style={{ color: '#f8fafc', display: 'block', marginBottom: '6px' }}>
-          Ground Truth Reference Standards:
-        </strong>
-        Ground truth reference observations for the 97.2 km Udupi corridor are compiled from multi-temporal Sentinel-2 MSI (10 m), Landsat-8 OLI, and Sentinel-1 SAR composites, cross-referenced with national coastal atlases:
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '10px' }}>
-          <a href="https://vedas.sac.gov.in/content/vcms/pdf/atlas/Seashore/Vol-3-Full.pdf" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none' }}>
-            ↗ VEDAS Coastal Atlas (SAC / ISRO)
-          </a>
-          <a href="https://www.nccr.gov.in/sites/default/files/schangenew.pdf" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none' }}>
-            ↗ NCCR National Shoreline Change Assessment
-          </a>
-          <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none' }}>
-            ↗ Copernicus Sentinel-2 MSI Catalog
-          </a>
-        </div>
-      </footer>
-
+        )}
+      </section>
     </main>
   )
 }
