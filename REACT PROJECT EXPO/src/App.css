@@ -1733,7 +1733,8 @@ body {
 
 .archive-circular-entry {
   width: 100%;
-  min-height: 85vh;
+  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1742,11 +1743,15 @@ body {
   z-index: 10;
   text-align: center;
   padding: 40px 20px;
+  overflow: hidden;
 }
 
 .archive-header-block {
   text-align: center;
   margin-bottom: 35px;
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .circular-orb-container {

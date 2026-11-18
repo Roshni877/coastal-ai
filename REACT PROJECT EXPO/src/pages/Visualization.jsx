@@ -4,6 +4,7 @@ import { Compass, ArrowLeft } from "lucide-react";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
 import PremiumGallery from "../components/PremiumGallery";
+import SeashoreBackground from "../components/SeashoreBackground";
 
 function Visualization() {
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -77,6 +78,9 @@ function Visualization() {
               transition={{ duration: 0.5 }}
               className="archive-circular-entry"
             >
+              {/* Restored Immersive Seashore Background (Ocean Waves + 3D Beach Canvas) */}
+              <SeashoreBackground />
+
               {/* Header Title Section */}
               <div className="archive-header-block">
                 <span
