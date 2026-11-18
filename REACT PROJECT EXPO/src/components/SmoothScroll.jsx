@@ -1,32 +1,22 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import LocomotiveScroll from "locomotive-scroll";
+import "locomotive-scroll/dist/locomotive-scroll.css";
 
 function SmoothScroll({ children }) {
-  const location = useLocation();
-
-  // Scroll to top on route change
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "instant"
+    const scroll = new LocomotiveScroll({
+      el: document.querySelector("#scroll-container"),
+      smooth: true,
+      multiplier: 1.2,
+      lerp: 0.1,
     });
-  }, [location.pathname]);
 
-  // Ensure html and body have smooth scrolling enabled and no overflow lock
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = "smooth";
-    document.body.style.overflowX = "hidden";
-    document.body.style.overflowY = "auto";
-    document.documentElement.classList.remove("has-scroll-smooth");
-    document.body.classList.remove("has-scroll-smooth");
+    return () => {
+      if (scroll) scroll.destroy();
+    };
   }, []);
 
-  return (
-    <div id="scroll-container" style={{ width: "100%", minHeight: "100vh", position: "relative" }}>
-      {children}
-    </div>
-  );
+  return <div id="scroll-container" data-scroll-container>{children}</div>;
 }
 
 export default SmoothScroll;

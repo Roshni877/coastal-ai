@@ -275,27 +275,24 @@ button,
   }
 }
 
-/* NATIVE SMOOTH SCROLLING (GUARANTEED VISIBILITY & WHEEL SCROLL) */
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  overflow-y: auto !important;
+/* LOCOMOTIVE SCROLL FIXES */
+html.has-scroll-smooth {
+  overflow: hidden;
 }
 
-body {
-  overflow-x: hidden;
-  overflow-y: auto !important;
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-html.has-scroll-smooth,
 .has-scroll-smooth body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden;
 }
 
-[data-scroll-container] {
+.has-scroll-smooth [data-scroll-container] {
   min-height: 100vh;
-  overflow: visible !important;
 }
 
 /* Custom Scrollbar */
