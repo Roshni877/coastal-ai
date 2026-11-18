@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
 
@@ -333,6 +335,29 @@ function DatasetGuide() {
             </TiltCard>
           </motion.div>
         </div>
+
+        {/* Viva Research & Evidence Lab Callout Banner */}
+        <motion.div 
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1.8 }}
+          className="evidence-banner-wrapper"
+        >
+          <div className="evidence-callout-banner">
+            <div className="callout-badge">
+              <ShieldCheck size={16} />
+              <span>OFFICIAL RESEARCH VERIFICATION</span>
+            </div>
+            <h2 className="callout-heading">Need Authentic Project Viva Evidence?</h2>
+            <p className="callout-subtext">
+              Examine the verified Google Colab training notebooks, 9-channel Sentinel multi-spectral tensors, DeepLabV3+ 85.48% Dice loss graphs, 1,944 transect EPR calculations, and downstream XGBoost risk analysis in our dedicated Research &amp; Evidence Lab.
+            </p>
+            <Link to="/evidence-lab" className="callout-action-btn">
+              <span>Open Research &amp; Evidence Lab</span>
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </motion.div>
 
         <section className="mission-footer">
           <div className="mission-line"></div>

@@ -21,6 +21,7 @@ function Navbar() {
           <NavLink to="/visualization">Visualization and Results</NavLink>
           <NavLink to="/comparison">Comparison</NavLink>
           <NavLink to="/dataset">Datasets & Algorithms</NavLink>
+          <NavLink to="/evidence-lab">Research & Evidence Lab</NavLink>
           <NavLink to="/synopsis">Synopsis and Report</NavLink>
           <NavLink to="/team">Team</NavLink>
         </div>

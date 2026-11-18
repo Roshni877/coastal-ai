@@ -10,6 +10,7 @@ import Model from "./pages/Model";
 import Team from "./pages/Team";
 import DatasetGuide from "./pages/DatasetGuide";
 import Synopsis from "./pages/Synopsis";
+import EvidenceLab from "./pages/EvidenceLab";
 import Dashboard from "./pages/Dashboard";
 import Comparison from "./pages/Comparison";
 import SmoothScroll from "./components/SmoothScroll";
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/model" element={<Model />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/dataset" element={<DatasetGuide />} />
+                <Route path="/evidence-lab" element={<EvidenceLab />} />
                 <Route path="/synopsis" element={<Synopsis />} />
               </Routes>
             </div>
