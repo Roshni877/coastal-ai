@@ -14,7 +14,7 @@ function BeachShoreEnvironment({ isDark }) {
           roughness={0.15}
           metalness={0.7}
           transparent
-          opacity={0.25}
+          opacity={0.35}
         />
       </mesh>
 
@@ -26,7 +26,7 @@ function BeachShoreEnvironment({ isDark }) {
           roughness={0.2}
           metalness={0.1}
           transparent
-          opacity={0.3}
+          opacity={0.45}
         />
       </mesh>
 
@@ -34,11 +34,11 @@ function BeachShoreEnvironment({ isDark }) {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.8, 0]} receiveShadow>
         <planeGeometry args={[90, 90]} />
         <meshStandardMaterial
-          color={isDark ? "#0f172a" : "#fde68a"}
+          color={isDark ? "#0f172a" : "#cbd5e1"}
           roughness={0.85}
           metalness={0.1}
           transparent
-          opacity={0.3}
+          opacity={0.45}
         />
       </mesh>
     </group>
@@ -47,7 +47,7 @@ function BeachShoreEnvironment({ isDark }) {
 
 function FishSwarm() {
   const meshRef = useRef();
-  const count = 25;
+  const count = 30;
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const particles = useMemo(() => {
     const temp = [];
@@ -120,12 +120,12 @@ const SeashoreBackground = () => {
         zIndex: 0,
         overflow: "hidden",
         pointerEvents: "none",
-        background: "transparent",
-        opacity: isDark ? 0.3 : 0.22, // Soft, light opacity exactly like the team section
+        backgroundColor: isDark ? "#030812" : "#0a1626",
+        opacity: isDark ? 0.68 : 0.58, // Richer, darker presence
         transition: "opacity 0.4s ease",
       }}
     >
-      {/* 🌊 IMMERSIVE OCEAN GIF BACKGROUND - SOFT & LIGHT */}
+      {/* 🌊 IMMERSIVE OCEAN GIF BACKGROUND - BALANCED CONTRAST */}
       <div
         className="rotating-wave-section"
         style={{
@@ -151,10 +151,10 @@ const SeashoreBackground = () => {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            opacity: 0.45,
+            opacity: 0.75,
             filter: isDark
-              ? "brightness(0.95) contrast(1.05)"
-              : "brightness(1.15) contrast(0.95)",
+              ? "brightness(0.85) contrast(1.15)"
+              : "brightness(0.92) contrast(1.1)",
           }}
         />
         <div
@@ -166,8 +166,8 @@ const SeashoreBackground = () => {
             width: "100%",
             height: "100%",
             background: isDark
-              ? "radial-gradient(circle, transparent 35%, rgba(4, 11, 20, 0.6) 100%)"
-              : "radial-gradient(circle, transparent 35%, rgba(248, 250, 252, 0.7) 100%)",
+              ? "radial-gradient(circle, transparent 25%, rgba(2, 6, 15, 0.75) 100%)"
+              : "radial-gradient(circle, transparent 25%, rgba(4, 15, 30, 0.65) 100%)",
             pointerEvents: "none",
             zIndex: 2,
           }}
@@ -194,25 +194,25 @@ const SeashoreBackground = () => {
             position={[0, 15, -1]}
             angle={0.55}
             penumbra={0.85}
-            intensity={18}
+            intensity={20}
             color="#7dd3fc"
             castShadow
             attenuation={5}
           />
           <pointLight
             position={[0, -1.0, -1.5]}
-            intensity={2.0}
+            intensity={2.6}
             color="#fed7aa"
             distance={10}
           />
           <BeachShoreEnvironment isDark={isDark} />
           <FishSwarm />
           <Sparkles
-            count={75}
+            count={90}
             scale={20}
-            size={1.8}
+            size={2}
             speed={0.4}
-            opacity={0.4}
+            opacity={0.55}
             color="#38bdf8"
           />
           <Environment preset={isDark ? "night" : "city"} />

@@ -1740,13 +1740,12 @@ body {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: transparent !important;
-  opacity: 0.3; /* Subtle and light like .team-immersive-bg */
+  opacity: 0.65;
   transition: opacity 0.5s ease;
 }
 
 [data-theme='light'] .seashore-bg-container {
-  opacity: 0.22;
+  opacity: 0.55;
 }
 
 .archive-circular-entry {
