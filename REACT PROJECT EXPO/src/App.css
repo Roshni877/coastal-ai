@@ -1731,6 +1731,24 @@ body {
    CIRCULAR INTERACTIVE ARCHIVE BUTTON & FULL-SCREEN PORTAL
    ======================================================== */
 
+.seashore-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent !important;
+  opacity: 0.3; /* Subtle and light like .team-immersive-bg */
+  transition: opacity 0.5s ease;
+}
+
+[data-theme='light'] .seashore-bg-container {
+  opacity: 0.22;
+}
+
 .archive-circular-entry {
   width: 100%;
   height: 100vh;
