@@ -3,13 +3,11 @@ import {
   ArrowRight,
   Compass,
   ShieldCheck,
-  Play,
-  Pause,
   ChevronDown,
   Mouse,
   Layers,
   Activity,
-  Sparkles
+  Sliders
 } from "lucide-react";
 import "./CoastalFrameSequence.css";
 
@@ -56,23 +54,21 @@ const STORY_CHAPTERS = [
 ];
 
 export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage }) {
-  const containerRef = useRef(null);
+  const viewportRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef([]);
   const animFrameIdRef = useRef(null);
-  const autoPlayTimerRef = useRef(null);
 
   // States
   const [loadedCount, setLoadedCount] = useState(0);
   const [isBuffering, setIsBuffering] = useState(true);
   const [currentFrame, setCurrentFrame] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
 
   // Smooth frame interpolation ref
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
+  const touchStartYRef = useRef(0);
 
   // 1. Preload all 240 frames progressively
   useEffect(() => {
@@ -88,7 +84,7 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
         imagesRef.current[i] = img;
         loaded++;
         setLoadedCount(loaded);
-        if (loaded >= 25 && isBuffering) {
+        if (loaded >= 20 && isBuffering) {
           setIsBuffering(false);
         }
       };
@@ -96,7 +92,7 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
         if (isCancelled) return;
         loaded++;
         setLoadedCount(loaded);
-        if (loaded >= 25 && isBuffering) {
+        if (loaded >= 20 && isBuffering) {
           setIsBuffering(false);
         }
       };
@@ -107,13 +103,12 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
     };
   }, []);
 
-  // 2. Draw a given frame index to canvas with aspect ratio preserved
+  // 2. Draw frame to canvas maintaining aspect ratio
   const drawFrame = useCallback((frameIdx) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
 
-    // Match canvas dimensions to viewport
     if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -126,7 +121,6 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Centered contain/cover with natural aspect ratio
       const hRatio = canvas.width / img.naturalWidth;
       const vRatio = canvas.height / img.naturalHeight;
       const ratio = Math.max(hRatio, vRatio);
@@ -139,20 +133,21 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
     }
   }, []);
 
-  // 3. Smooth animation loop (LERP interpolation for buttery-smooth scrolling)
+  // 3. Animation loop: smoothly interpolate towards targetFrameRef (NO AUTO-PLAY, 100% USER DRIVEN)
   useEffect(() => {
     if (isBuffering) return;
 
+    // Draw initial frame 0
+    drawFrame(0);
+
     const tick = () => {
-      // Smoothly ease currentFrame towards targetFrame
       const diff = targetFrameRef.current - currentFrameRef.current;
       if (Math.abs(diff) > 0.05) {
-        currentFrameRef.current += diff * 0.22; // Smooth easing factor
-        const rounded = Math.round(currentFrameRef.current);
+        currentFrameRef.current += diff * 0.28; // Responsive inertial easing
+        const rounded = Math.min(Math.max(Math.round(currentFrameRef.current), 0), TOTAL_FRAMES - 1);
         setCurrentFrame(rounded);
         drawFrame(rounded);
       }
-
       animFrameIdRef.current = requestAnimationFrame(tick);
     };
 
@@ -163,61 +158,78 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
     };
   }, [isBuffering, drawFrame]);
 
-  // 4. Scroll Event Handler: Maps scroll depth to target frame index
-  const handleScroll = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const scrollTop = el.scrollTop;
-    const maxScroll = el.scrollHeight - el.clientHeight;
-    if (maxScroll <= 0) return;
-
-    const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
-    setScrollProgress(progress);
-
-    if (scrollTop > 20 && !hasScrolled) {
-      setHasScrolled(true);
-    }
-
-    const nextTargetFrame = Math.round(progress * (TOTAL_FRAMES - 1));
-    targetFrameRef.current = nextTargetFrame;
-  }, [hasScrolled]);
-
-  // 5. Auto-Play Mode: Automatically scrolls smoothly down the track
+  // 4. MULTI-INPUT USER SCROLL HANDLERS (Wheel, Touch, Trackpad, Keyboard)
   useEffect(() => {
-    if (!isAutoPlaying) {
-      if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
-      return;
-    }
+    if (isBuffering) return;
 
-    const interval = 1000 / 25; // 25 FPS auto progression
-    autoPlayTimerRef.current = setInterval(() => {
-      const el = containerRef.current;
-      if (!el) return;
+    // A. Mouse Wheel & Laptop Touchpad Scroll Handler
+    const handleWheel = (e) => {
+      e.preventDefault();
+      setHasScrolled(true);
 
-      const maxScroll = el.scrollHeight - el.clientHeight;
-      const step = maxScroll / (TOTAL_FRAMES * 0.85);
+      // Normalize delta
+      const delta = e.deltaY;
+      const step = delta > 0
+        ? Math.max(1, Math.min(Math.abs(delta) * 0.12, 8))
+        : -Math.max(1, Math.min(Math.abs(delta) * 0.12, 8));
 
-      if (el.scrollTop + step < maxScroll) {
-        el.scrollTop += step;
-      } else {
-        el.scrollTop = maxScroll;
-        setIsAutoPlaying(false);
+      targetFrameRef.current = Math.min(
+        Math.max(targetFrameRef.current + step, 0),
+        TOTAL_FRAMES - 1
+      );
+    };
+
+    // B. Mobile & Tablet Touch Swiping
+    const handleTouchStart = (e) => {
+      if (e.touches.length > 0) {
+        touchStartYRef.current = e.touches[0].clientY;
       }
-    }, interval);
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        e.preventDefault();
+        setHasScrolled(true);
+        const currentY = e.touches[0].clientY;
+        const delta = touchStartYRef.current - currentY;
+        touchStartYRef.current = currentY;
+
+        const step = delta * 0.45;
+        targetFrameRef.current = Math.min(
+          Math.max(targetFrameRef.current + step, 0),
+          TOTAL_FRAMES - 1
+        );
+      }
+    };
+
+    // C. Keyboard Arrow Keys & Spacebar
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+        e.preventDefault();
+        setHasScrolled(true);
+        targetFrameRef.current = Math.min(targetFrameRef.current + 6, TOTAL_FRAMES - 1);
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        setHasScrolled(true);
+        targetFrameRef.current = Math.max(targetFrameRef.current - 6, 0);
+      }
+    };
+
+    const targetEl = viewportRef.current || window;
+    targetEl.addEventListener("wheel", handleWheel, { passive: false });
+    targetEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+    targetEl.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
+      targetEl.removeEventListener("wheel", handleWheel);
+      targetEl.removeEventListener("touchstart", handleTouchStart);
+      targetEl.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isAutoPlaying]);
+  }, [isBuffering]);
 
-  // Toggle Auto-Play
-  const toggleAutoPlay = () => {
-    setIsAutoPlaying((prev) => !prev);
-    setHasScrolled(true);
-  };
-
-  // 6. Resize listener to keep canvas sharp
+  // Window resize listener
   useEffect(() => {
     const handleResize = () => {
       drawFrame(currentFrameRef.current);
@@ -226,152 +238,151 @@ export default function CoastalFrameSequence({ onEnterHomepage, onDirectHomepage
     return () => window.removeEventListener("resize", handleResize);
   }, [drawFrame]);
 
-  // Active Story Chapter based on currentFrame
+  // Direct Interactive Timeline Slider Drag
+  const handleSliderChange = (e) => {
+    setHasScrolled(true);
+    const frame = parseInt(e.target.value, 10);
+    targetFrameRef.current = frame;
+    currentFrameRef.current = frame;
+    setCurrentFrame(frame);
+    drawFrame(frame);
+  };
+
+  // Active Story Chapter
   const activeChapter = STORY_CHAPTERS.find(
     (ch) => currentFrame >= ch.range[0] && currentFrame <= ch.range[1]
   ) || STORY_CHAPTERS[0];
 
-  const isComplete = currentFrame >= 235 || scrollProgress >= 0.98;
+  const progressPercent = Math.round((currentFrame / (TOTAL_FRAMES - 1)) * 100);
+  const isComplete = currentFrame >= 235;
 
   return (
     <div
-      ref={containerRef}
+      ref={viewportRef}
       className="coastal-story-scroll-viewport"
-      onScroll={handleScroll}
     >
-      {/* Tall Scroll Track (Drives Frame Progression) */}
-      <div className="coastal-story-track">
-        {/* Sticky Viewport Stage */}
-        <div className="coastal-story-sticky-stage">
-          {/* 1. Cinematic Canvas */}
-          <canvas ref={canvasRef} className="story-canvas" />
+      {/* 1. Cinematic Canvas */}
+      <canvas ref={canvasRef} className="story-canvas" />
 
-          {/* 2. Initial Buffer State */}
-          {isBuffering && (
-            <div className="sequence-buffering-overlay">
-              <div className="buffering-spinner" />
-              <div className="buffering-text">
-                <span>CALIBRATING SATELLITE DESCENT TELEMETRY...</span>
-                <small>Buffering optical frames ({loadedCount} / {TOTAL_FRAMES})</small>
-              </div>
-            </div>
-          )}
-
-          {/* 3. Top HUD Bar */}
-          {!isBuffering && (
-            <div className="story-hud-top">
-              <div className="hud-telemetry-badge">
-                <div className="hud-indicator">
-                  <span className="hud-pulse" />
-                  <span>SCROLLYTELLING // DESCENT RECONNAISSANCE</span>
-                </div>
-                <div className="hud-coords">
-                  <span>TARGET: 13.3409° N, 74.7421° E · KARNATAKA COAST</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="hud-action-group">
-                {/* Auto Play / Pause Toggle Button */}
-                <button
-                  type="button"
-                  className={`hud-auto-play-btn ${isAutoPlaying ? "active" : ""}`}
-                  onClick={toggleAutoPlay}
-                  title={isAutoPlaying ? "Pause Auto-Descent" : "Auto-Play Descent"}
-                >
-                  {isAutoPlaying ? <Pause size={14} /> : <Play size={14} />}
-                  <span>{isAutoPlaying ? "Pause Story" : "Auto Play"}</span>
-                </button>
-
-                {/* Direct to Homepage Button */}
-                <button
-                  type="button"
-                  className="hud-direct-btn"
-                  onClick={onDirectHomepage}
-                  title="Direct to Homepage"
-                >
-                  <span>Direct to Homepage</span>
-                  <ArrowRight size={15} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* 4. Story Chapter Overlay Card (Changes as you scroll) */}
-          {!isBuffering && !isComplete && (
-            <div className="story-chapter-card-container">
-              <div className="story-chapter-card" key={activeChapter.chapter}>
-                <div className="chapter-badge" style={{ color: activeChapter.color, borderColor: `${activeChapter.color}66` }}>
-                  <Layers size={13} />
-                  <span>{activeChapter.chapter}</span>
-                </div>
-                <h3 className="chapter-title">{activeChapter.title}</h3>
-                <p className="chapter-desc">{activeChapter.desc}</p>
-                <div className="chapter-metric-tag">
-                  <Activity size={12} className="text-sky" />
-                  <span>{activeChapter.metric}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 5. Scroll Prompt (Disappears once user starts scrolling) */}
-          {!isBuffering && !hasScrolled && !isComplete && (
-            <div className="story-scroll-prompt">
-              <div className="mouse-icon-wrap">
-                <Mouse size={20} className="mouse-pulse" />
-                <ChevronDown size={18} className="chevron-pulse" />
-              </div>
-              <span className="scroll-prompt-text">SCROLL TO DESCEND & ADVANCE STORY</span>
-            </div>
-          )}
-
-          {/* 6. Bottom Story Timeline Progress Bar */}
-          {!isBuffering && !isComplete && (
-            <div className="story-bottom-progress-bar">
-              <div className="story-progress-stats">
-                <span className="stats-chapter-label">{activeChapter.chapter}</span>
-                <span className="stats-frame-counter">
-                  FRAME {String(currentFrame + 1).padStart(3, "0")} / {TOTAL_FRAMES} · {Math.round(scrollProgress * 100)}%
-                </span>
-              </div>
-              <div className="story-progress-track">
-                <div
-                  className="story-progress-fill"
-                  style={{ width: `${Math.max(scrollProgress * 100, ((currentFrame + 1) / TOTAL_FRAMES) * 100)}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* 7. Completion Modal Overlay (Revealed at Frame 239 / 100% Scroll) */}
-          {isComplete && (
-            <div className="sequence-complete-overlay">
-              <div className="sequence-complete-modal">
-                <div className="complete-badge">
-                  <ShieldCheck size={18} className="text-emerald" />
-                  <span>COASTAL RECONNAISSANCE COMPLETE</span>
-                </div>
-                <h2 className="complete-title">Karnataka Shoreline Target Acquired</h2>
-                <p className="complete-desc">
-                  High-resolution optical frames successfully calibrated across Karnataka's 97.2 km monitored corridor.
-                  Historical actual observed data (2020–2024) and Deep Learning predictive models (2027–2029) are fully loaded.
-                </p>
-
-                <button
-                  type="button"
-                  className="btn-explore-coastal-ai"
-                  onClick={onEnterHomepage}
-                >
-                  <Compass size={22} className="btn-icon-spin" />
-                  <span>Explore Coastal AI – Enter Homepage</span>
-                  <ArrowRight size={22} className="btn-icon-arrow" />
-                </button>
-              </div>
-            </div>
-          )}
+      {/* 2. Initial Buffer State */}
+      {isBuffering && (
+        <div className="sequence-buffering-overlay">
+          <div className="buffering-spinner" />
+          <div className="buffering-text">
+            <span>CALIBRATING SATELLITE DESCENT TELEMETRY...</span>
+            <small>Buffering optical frames ({loadedCount} / {TOTAL_FRAMES})</small>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* 3. Top HUD Bar */}
+      {!isBuffering && (
+        <div className="story-hud-top">
+          <div className="hud-telemetry-badge">
+            <div className="hud-indicator">
+              <span className="hud-pulse" />
+              <span>SCROLLYTELLING // USER-CONTROLLED DESCENT</span>
+            </div>
+            <div className="hud-coords">
+              <span>TARGET: 13.3409° N, 74.7421° E · KARNATAKA COAST</span>
+            </div>
+          </div>
+
+          <div className="hud-action-group">
+            {/* Direct to Homepage Button */}
+            <button
+              type="button"
+              className="hud-direct-btn"
+              onClick={onDirectHomepage}
+              title="Direct to Homepage"
+            >
+              <span>Direct to Homepage</span>
+              <ArrowRight size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Story Chapter Overlay Card (Dynamically updates as you scroll) */}
+      {!isBuffering && !isComplete && (
+        <div className="story-chapter-card-container">
+          <div className="story-chapter-card" key={activeChapter.chapter}>
+            <div className="chapter-badge" style={{ color: activeChapter.color, borderColor: `${activeChapter.color}66` }}>
+              <Layers size={13} />
+              <span>{activeChapter.chapter}</span>
+            </div>
+            <h3 className="chapter-title">{activeChapter.title}</h3>
+            <p className="chapter-desc">{activeChapter.desc}</p>
+            <div className="chapter-metric-tag">
+              <Activity size={12} className="text-sky" />
+              <span>{activeChapter.metric}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Scroll Prompt (Guides user to scroll or swipe) */}
+      {!isBuffering && !hasScrolled && !isComplete && (
+        <div className="story-scroll-prompt">
+          <div className="mouse-icon-wrap">
+            <Mouse size={24} className="mouse-pulse" />
+            <ChevronDown size={20} className="chevron-pulse" />
+          </div>
+          <span className="scroll-prompt-text">SCROLL DOWN OR SWIPE TO ADVANCE STORY</span>
+        </div>
+      )}
+
+      {/* 6. Interactive Bottom Story Scrubbing Bar */}
+      {!isBuffering && !isComplete && (
+        <div className="story-bottom-progress-bar">
+          <div className="story-progress-stats">
+            <span className="stats-chapter-label">{activeChapter.chapter}</span>
+            <span className="stats-frame-counter">
+              FRAME {String(currentFrame + 1).padStart(3, "0")} / {TOTAL_FRAMES} · {progressPercent}%
+            </span>
+          </div>
+
+          {/* Interactive Scrub Track Slider */}
+          <div className="story-slider-wrap">
+            <input
+              type="range"
+              min="0"
+              max={TOTAL_FRAMES - 1}
+              value={currentFrame}
+              onChange={handleSliderChange}
+              className="story-scrub-slider"
+              title="Drag to scrub story frames"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 7. Completion Modal Overlay (Revealed at Frame 239 / End of Story) */}
+      {isComplete && (
+        <div className="sequence-complete-overlay">
+          <div className="sequence-complete-modal">
+            <div className="complete-badge">
+              <ShieldCheck size={18} className="text-emerald" />
+              <span>COASTAL RECONNAISSANCE COMPLETE</span>
+            </div>
+            <h2 className="complete-title">Karnataka Shoreline Target Acquired</h2>
+            <p className="complete-desc">
+              High-resolution optical frames successfully calibrated across Karnataka's 97.2 km monitored corridor.
+              Historical actual observed data (2020–2024) and Deep Learning predictive models (2027–2029) are fully loaded.
+            </p>
+
+            <button
+              type="button"
+              className="btn-explore-coastal-ai"
+              onClick={onEnterHomepage}
+            >
+              <Compass size={22} className="btn-icon-spin" />
+              <span>Explore Coastal AI – Enter Homepage</span>
+              <ArrowRight size={22} className="btn-icon-arrow" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
