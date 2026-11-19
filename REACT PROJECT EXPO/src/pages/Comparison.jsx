@@ -206,8 +206,8 @@ function Comparison() {
 
       lines.push(
         [
-          r.year,
-          r.intervalLabel,
+          `${r.year} (${r.startYear} to ${r.endYear})`,
+          `(${r.startYear} to ${r.endYear})`,
           typeLabel,
           r.actualErosionKm ?? 'N/A',
           r.predictedErosionKm ?? 'N/A',
@@ -892,11 +892,13 @@ function Comparison() {
                     {/* Year & Interval */}
                     <td>
                       <div className="year-cell">
-                        <strong className="year-number">{record.year}</strong>
-                        <span className="interval-tag">
-                          {record.startYear && record.endYear
-                            ? `(${record.startYear} to ${record.endYear})`
-                            : record.intervalLabel}
+                        <span className="year-display">
+                          <strong className="year-number">{record.year}</strong>{' '}
+                          <span className="interval-text">
+                            {record.startYear && record.endYear
+                              ? `(${record.startYear} to ${record.endYear})`
+                              : record.intervalLabel}
+                          </span>
                         </span>
                       </div>
                     </td>

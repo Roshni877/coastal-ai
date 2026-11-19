@@ -2212,34 +2212,41 @@
   }
 }
 
-/* Year & Interval Bracket Presentation */
+/* Year & Interval Inline Bracket Presentation */
 .year-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  align-items: flex-start;
+  white-space: nowrap;
 }
 
+.year-display {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.year-display .year-number,
 .year-cell .year-number {
   font-size: 1.05rem;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.02em;
-  line-height: 1.1;
 }
 
-.year-cell .interval-tag {
+.year-display .interval-text,
+.year-cell .interval-tag,
+.year-cell .interval-bracket {
   display: inline-block;
-  font-size: 0.74rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 4px;
-  padding: 1px 6px;
+  padding: 1px 7px;
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   white-space: nowrap;
 }
+
 
 .type-badge.actual-badge {
   background: rgba(16, 185, 129, 0.16);
