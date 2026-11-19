@@ -1067,18 +1067,14 @@ function EvidenceLab() {
               />
               <span className="slider-layer-label right">FALSE COLOUR (B8-B4-B3)</span>
 
-              {/* Top Layer: Natural Colour (Clipped by slider position) */}
-              <div 
-                className="slider-clip-wrapper"
-                style={{ width: `${sliderPosition}%` }}
-              >
-                <img 
-                  src="/satellite_bands/composite_natural_color.png" 
-                  alt="Natural Colour"
-                  className="slider-img-layer top" 
-                />
-                <span className="slider-layer-label left">NATURAL COLOUR (B4-B3-B2)</span>
-              </div>
+              {/* Top Layer: Natural Colour (Clipped with pixel-perfect clip-path) */}
+              <img 
+                src="/satellite_bands/composite_natural_color.png" 
+                alt="Natural Colour"
+                className="slider-img-layer top" 
+                style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+              />
+              <span className="slider-layer-label left">NATURAL COLOUR (B4-B3-B2)</span>
 
               {/* Divider Line & Handle */}
               <div 
@@ -1659,18 +1655,14 @@ function EvidenceLab() {
               />
               <span className="slider-layer-label right">2024 LATEST OBSERVED</span>
 
-              {/* Top Layer: 2020 Baseline */}
-              <div 
-                className="slider-clip-wrapper"
-                style={{ width: `${historySliderPos}%` }}
-              >
-                <img 
-                  src="/shoreline/2020.png" 
-                  alt="2020 Baseline"
-                  className="slider-img-layer top" 
-                />
-                <span className="slider-layer-label left">2020 REFERENCE BASELINE</span>
-              </div>
+              {/* Top Layer: 2020 Baseline (Clipped with pixel-perfect clip-path) */}
+              <img 
+                src="/shoreline/2020.png" 
+                alt="2020 Baseline"
+                className="slider-img-layer top" 
+                style={{ clipPath: `inset(0 ${100 - historySliderPos}% 0 0)` }}
+              />
+              <span className="slider-layer-label left">2020 REFERENCE BASELINE</span>
 
               {/* Divider Line */}
               <div 

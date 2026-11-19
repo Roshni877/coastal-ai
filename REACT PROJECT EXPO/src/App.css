@@ -8611,28 +8611,43 @@ body.lightbox-open .theme-toggle-container {
    DEFINITIVE EVIDENCE LAB FIGURE SIZING & IMAGE CONTAINMENT (NO ZOOM / BLOWUP)
    ========================================================================= */
 
+/* Two-column layout grid for scientific figures (Loss, Confusion Matrix, QGIS, Google Earth, EPR, Scatter, Forecast, Feature Importance) */
+.tab-two-col-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 24px !important;
+  width: 100% !important;
+  margin-top: 24px !important;
+}
+
+@media (max-width: 860px) {
+  .tab-two-col-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* 1. All Two-Column Scientific Evidence Blocks (Loss, Confusion Matrix, QGIS, Google Earth, EPR, Scatter, Forecast, Feature Importance) */
 .pane-image-block {
   position: relative !important;
   width: 100% !important;
-  height: 290px !important;
-  max-height: 290px !important;
+  height: 250px !important;
+  max-height: 250px !important;
   background: #020617 !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   border: 1px solid var(--border-color, rgba(56, 189, 248, 0.2)) !important;
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 12px 14px 6px 14px !important;
+  padding: 10px 14px 4px 14px !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
 }
 
 .pane-image-block:hover {
-  transform: translateY(-3px) !important;
+  transform: translateY(-2px) !important;
   border-color: rgba(56, 189, 248, 0.5) !important;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35) !important;
 }
@@ -8644,8 +8659,8 @@ body.lightbox-open .theme-toggle-container {
 }
 
 .pane-image-block img {
-  max-width: 100% !important;
-  max-height: 220px !important;
+  max-width: 90% !important;
+  max-height: 180px !important;
   height: auto !important;
   width: auto !important;
   object-fit: contain !important;
@@ -8656,8 +8671,20 @@ body.lightbox-open .theme-toggle-container {
 }
 
 /* 2. NDWI Stage Preview & Historical Epoch Preview */
-.ndwi-stage-image-container,
-.hist-img-wrap {
+.historical-active-display {
+  display: grid !important;
+  grid-template-columns: 280px 1fr !important;
+  gap: 24px !important;
+  align-items: center !important;
+}
+
+@media (max-width: 860px) {
+  .historical-active-display {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.ndwi-stage-image-container {
   position: relative !important;
   width: 100% !important;
   height: 310px !important;
@@ -8675,8 +8702,7 @@ body.lightbox-open .theme-toggle-container {
   box-sizing: border-box !important;
 }
 
-.ndwi-stage-image-container img,
-.hist-img-wrap img {
+.ndwi-stage-image-container img {
   max-width: 100% !important;
   max-height: 270px !important;
   height: auto !important;
@@ -8686,7 +8712,38 @@ body.lightbox-open .theme-toggle-container {
   transform: none !important;
 }
 
-.ndwi-stage-image-container:hover img,
+.ndwi-stage-image-container:hover img {
+  transform: scale(1.02) !important;
+}
+
+.hist-img-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 250px !important;
+  max-height: 250px !important;
+  aspect-ratio: auto !important;
+  background: #020617 !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border-color, rgba(56, 189, 248, 0.2)) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+
+.hist-img-wrap img {
+  max-width: 100% !important;
+  max-height: 220px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  border-radius: 6px !important;
+  transform: none !important;
+}
+
 .hist-img-wrap:hover img {
   transform: scale(1.02) !important;
 }
@@ -8723,8 +8780,8 @@ body.lightbox-open .theme-toggle-container {
 .split-slider-container {
   position: relative !important;
   width: 100% !important;
-  height: 330px !important;
-  max-height: 330px !important;
+  height: 380px !important;
+  max-height: 380px !important;
   aspect-ratio: auto !important;
   border-radius: 14px !important;
   overflow: hidden !important;
@@ -8739,9 +8796,9 @@ body.lightbox-open .theme-toggle-container {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  max-height: 330px !important;
+  max-height: 380px !important;
   object-fit: contain !important;
-  padding: 8px !important;
+  padding: 10px !important;
   box-sizing: border-box !important;
 }
 
