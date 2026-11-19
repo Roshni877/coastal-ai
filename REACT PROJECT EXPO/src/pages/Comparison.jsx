@@ -206,8 +206,8 @@ function Comparison() {
 
       lines.push(
         [
-          `${r.year} (${r.startYear} to ${r.endYear})`,
-          `(${r.startYear} to ${r.endYear})`,
+          r.year,
+          `(${r.startYear}–${r.endYear})`,
           typeLabel,
           r.actualErosionKm ?? 'N/A',
           r.predictedErosionKm ?? 'N/A',
@@ -262,7 +262,7 @@ function Comparison() {
       const chart1 = new Chart(histErosionAccretionCanvas.current, {
         type: 'bar',
         data: {
-          labels: histData.map((d) => `${d.year} (${d.startYear} to ${d.endYear})`),
+          labels: histData.map((d) => `${d.year} (${d.startYear}–${d.endYear})`),
           datasets: [
             {
               label: 'Actual Erosion (km) [Satellite GT]',
@@ -337,7 +337,7 @@ function Comparison() {
       const chart2 = new Chart(histAgreementCanvas.current, {
         type: 'line',
         data: {
-          labels: histData.map((d) => `${d.year} (${d.startYear} to ${d.endYear})`),
+          labels: histData.map((d) => `${d.year} (${d.startYear}–${d.endYear})`),
           datasets: [
             {
               label: 'Erosion Agreement (%)',
@@ -396,10 +396,10 @@ function Comparison() {
     // -------------------------------------------------------------
     if (forecastLandLossCanvas.current) {
       const dlPoints = [
-        { label: '2024 (2020 to 2024)', year: 2024, loss: 0.0, avgRetreat: 0.0, hotspotRetreat: 0.0 },
-        { label: '2027 (2024 to 2027)', year: 2027, loss: 4.73, avgRetreat: -4.06, hotspotRetreat: -14.4 },
-        { label: '2028 (2024 to 2028)', year: 2028, loss: 6.30, avgRetreat: -5.00, hotspotRetreat: -19.2 },
-        { label: '2029 (2024 to 2029)', year: 2029, loss: 7.88, avgRetreat: -5.94, hotspotRetreat: -24.0 },
+        { label: '2024 (2020–2024)', year: 2024, loss: 0.0, avgRetreat: 0.0, hotspotRetreat: 0.0 },
+        { label: '2027 (2024–2027)', year: 2027, loss: 4.73, avgRetreat: -4.06, hotspotRetreat: -14.4 },
+        { label: '2028 (2024–2028)', year: 2028, loss: 6.30, avgRetreat: -5.00, hotspotRetreat: -19.2 },
+        { label: '2029 (2024–2029)', year: 2029, loss: 7.88, avgRetreat: -5.94, hotspotRetreat: -24.0 },
       ]
 
       const chart3 = new Chart(forecastLandLossCanvas.current, {
@@ -831,7 +831,7 @@ function Comparison() {
                 <option value="all">All Available Years</option>
                 {AVAILABLE_YEARS.map((y) => {
                   const rec = records[y]
-                  const intervalText = rec?.startYear && rec?.endYear ? ` (${rec.startYear} to ${rec.endYear})` : ''
+                  const intervalText = rec?.startYear && rec?.endYear ? ` (${rec.startYear}–${rec.endYear})` : ''
                   const typeTag = y >= 2027 ? ' · DL Forecast' : y >= 2025 ? ' · Data Gap' : ' · Actual & DL'
                   return (
                     <option key={y} value={y}>
@@ -892,13 +892,11 @@ function Comparison() {
                     {/* Year & Interval */}
                     <td>
                       <div className="year-cell">
-                        <span className="year-display">
-                          <strong className="year-number">{record.year}</strong>{' '}
-                          <span className="interval-text">
-                            {record.startYear && record.endYear
-                              ? `(${record.startYear} to ${record.endYear})`
-                              : record.intervalLabel}
-                          </span>
+                        <strong className="year-number">{record.year}</strong>
+                        <span className="interval-tag">
+                          {record.startYear && record.endYear
+                            ? `(${record.startYear}–${record.endYear})`
+                            : record.intervalLabel}
                         </span>
                       </div>
                     </td>
@@ -1020,7 +1018,7 @@ function Comparison() {
             </span>
             <span className="legend-chip">
               <span className="chip-indicator dl-chip" />
-              <strong>DL Prediction:</strong> DeepLabV3+ ResNet-34 Future Spatial Extrapolations (2027 to 2029)
+              <strong>DL Prediction:</strong> DeepLabV3+ ResNet-34 Future Spatial Extrapolations (2027–2029)
             </span>
             <span className="legend-chip">
               <span className="chip-indicator gap-chip" />

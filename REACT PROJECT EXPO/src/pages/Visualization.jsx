@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Compass, ArrowLeft } from "lucide-react";
+import { Compass, ArrowLeft, X } from "lucide-react";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
 import PremiumGallery from "../components/PremiumGallery";
@@ -397,6 +397,18 @@ function Visualization() {
                     exit={{ opacity: 0 }}
                     onClick={() => setSelectedMlImage(null)}
                   >
+                    <button
+                      type="button"
+                      className="global-lightbox-close-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedMlImage(null);
+                      }}
+                      aria-label="Close image"
+                    >
+                      <X size={24} strokeWidth={2.5} />
+                    </button>
+
                     <motion.div
                       className="ml-lightbox-content"
                       initial={{ scale: 0.96, opacity: 0 }}
@@ -408,9 +420,9 @@ function Visualization() {
                         type="button"
                         className="ml-lightbox-close"
                         onClick={() => setSelectedMlImage(null)}
-                        aria-label="Close model image"
+                        aria-label="Close image"
                       >
-                        ×
+                        <X size={22} strokeWidth={2.5} />
                       </button>
                       <img
                         src={selectedMlImage.src}

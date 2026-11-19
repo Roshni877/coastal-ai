@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiChevronLeft, FiChevronRight, FiCamera } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiCamera, FiX } from "react-icons/fi";
 
 const filmImages = [
   {
@@ -34,6 +34,25 @@ function PostcardFilmStrip() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
   const scrollRef = useRef(null);
+  // Escape key handler & body scroll lock for filmstrip lightbox
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && selectedImage) {
+        setSelectedImage(null);
+      }
+    };
+    if (selectedImage) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedImage]);
+
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -169,14 +188,14 @@ function PostcardFilmStrip() {
           >
             <button 
               type="button"
-              className="film-lightbox-close"
-              aria-label="Close analysis preview"
+              className="film-lightbox-close global-lightbox-close-btn"
+              aria-label="Close image"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedImage(null);
               }}
             >
-              ×
+              <FiX size={24} />
             </button>
 
             <button 

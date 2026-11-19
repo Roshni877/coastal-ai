@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiLock } from "react-icons/fi";
+import { FiLock, FiX } from "react-icons/fi";
 
 const images = [
   { id: 1, src: "/shoreline/2020.png", alt: "Shoreline Detection 2020", title: "Shoreline Detection 2020" },
@@ -174,10 +174,12 @@ function PremiumGallery() {
     };
 
     document.body.classList.toggle("lightbox-open", Boolean(selectedImage));
+    if (selectedImage) { document.body.style.overflow = "hidden"; } else { document.body.style.overflow = "unset"; }
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.classList.remove("lightbox-open");
+      document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedImage]);
@@ -301,6 +303,19 @@ function PremiumGallery() {
             className="lightbox-overlay"
             onClick={closeLightbox}
           >
+            {/* High-visibility viewport fixed close button */}
+            <button
+              type="button"
+              className="global-lightbox-close-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeLightbox();
+              }}
+              aria-label="Close image"
+            >
+              <FiX size={24} />
+            </button>
+
             <motion.div
               layoutId={`gallery-image-${selectedImage.id}`}
               className="lightbox-content pro-lightbox"
@@ -309,13 +324,13 @@ function PremiumGallery() {
               <button
                 type="button"
                 className="lightbox-close-pro"
-                aria-label="Close image preview"
+                aria-label="Close image"
                 onClick={(e) => {
                   e.stopPropagation();
                   closeLightbox();
                 }}
               >
-                ×
+                <FiX size={22} />
               </button>
 
               <div className="lightbox-media-container">

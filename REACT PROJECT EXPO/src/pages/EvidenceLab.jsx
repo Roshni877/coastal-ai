@@ -947,21 +947,38 @@ function EvidenceLab() {
   // Shoreline Animation Modal State (Google Drive: 1H3Cv-Yw_3O4bzLczOT-6JY5CZeQ9yuU4)
   const [animModalOpen, setAnimModalOpen] = useState(false);
 
-  // Keyboard navigation for Presentation Mode
+  // Keyboard navigation & Escape key handler for all image viewers and modals
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (selectedImage) setSelectedImage(null);
+        if (animModalOpen) setAnimModalOpen(false);
+        if (presentationMode) setPresentationMode(false);
+        return;
+      }
       if (!presentationMode) return;
       if (e.key === "ArrowRight") {
         setCurrentSlide((prev) => Math.min(prev + 1, PRESENTATION_SLIDES.length - 1));
       } else if (e.key === "ArrowLeft") {
         setCurrentSlide((prev) => Math.max(prev - 1, 0));
-      } else if (e.key === "Escape") {
-        setPresentationMode(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [presentationMode]);
+  }, [presentationMode, selectedImage, animModalOpen]);
+
+  // Lock and restore body scrolling when any modal or lightbox is open
+  useEffect(() => {
+    const isAnyModalOpen = Boolean(selectedImage || animModalOpen || presentationMode);
+    if (isAnyModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedImage, animModalOpen, presentationMode]);
 
 
 
@@ -3727,6 +3744,19 @@ function EvidenceLab() {
               exit={{ opacity: 0 }}
               onClick={() => setSelectedImage(null)}
             >
+              {/* High-visibility viewport fixed close button */}
+              <button
+                type="button"
+                className="global-lightbox-close-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImage(null);
+                }}
+                aria-label="Close image"
+              >
+                <X size={24} strokeWidth={2.5} />
+              </button>
+
               <motion.div
                 className="evidence-lightbox-modal"
                 initial={{ scale: 0.92, opacity: 0 }}
@@ -3736,11 +3766,12 @@ function EvidenceLab() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  className="lightbox-close-btn"
+                  type="button"
+                  className="lightbox-close-btn lightbox-close-btn-fixed"
                   onClick={() => setSelectedImage(null)}
-                  aria-label="Close dialog"
+                  aria-label="Close image"
                 >
-                  <X size={20} />
+                  <X size={22} strokeWidth={2.5} />
                 </button>
 
                 <div className="lightbox-image-wrap">
@@ -3819,11 +3850,12 @@ function EvidenceLab() {
                     </h3>
                   </div>
                   <button
-                    className="video-modal-close"
+                    type="button"
+                    className="video-modal-close global-lightbox-close-btn"
                     onClick={() => setAnimModalOpen(false)}
-                    aria-label="Close animation modal"
+                    aria-label="Close image"
                   >
-                    <X size={20} />
+                    <X size={22} strokeWidth={2.5} />
                   </button>
                 </div>
 
