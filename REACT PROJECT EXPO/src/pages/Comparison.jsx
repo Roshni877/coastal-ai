@@ -202,7 +202,7 @@ function Comparison() {
         ? 'Deep Learning (DL) Prediction'
         : r.isForecast
         ? 'Future Projection'
-        : 'Historical Ground Truth & ML'
+        : 'Actual & DL'
 
       lines.push(
         [
@@ -262,7 +262,7 @@ function Comparison() {
       const chart1 = new Chart(histErosionAccretionCanvas.current, {
         type: 'bar',
         data: {
-          labels: histData.map((d) => d.year === 2024 ? '2024 (Benchmark)' : d.year === 2015 ? '2015 (Historical)' : `${d.year}`),
+          labels: histData.map((d) => `${d.year} (${d.startYear} to ${d.endYear})`),
           datasets: [
             {
               label: 'Actual Erosion (km) [Satellite GT]',
@@ -273,7 +273,7 @@ function Comparison() {
               borderRadius: 4,
             },
             {
-              label: 'ML Predicted Erosion (km)',
+              label: 'DL Predicted Erosion (km)',
               data: histData.map((d) => d.predictedErosionKm),
               backgroundColor: 'rgba(244, 63, 94, 0.35)',
               borderColor: '#f43f5e',
@@ -289,7 +289,7 @@ function Comparison() {
               borderRadius: 4,
             },
             {
-              label: 'ML Predicted Accretion (km)',
+              label: 'DL Predicted Accretion (km)',
               data: histData.map((d) => d.predictedAccretionKm),
               backgroundColor: 'rgba(52, 211, 153, 0.35)',
               borderColor: '#34d399',
@@ -337,7 +337,7 @@ function Comparison() {
       const chart2 = new Chart(histAgreementCanvas.current, {
         type: 'line',
         data: {
-          labels: histData.map((d) => `${d.year}`),
+          labels: histData.map((d) => `${d.year} (${d.startYear} to ${d.endYear})`),
           datasets: [
             {
               label: 'Erosion Agreement (%)',
@@ -396,10 +396,10 @@ function Comparison() {
     // -------------------------------------------------------------
     if (forecastLandLossCanvas.current) {
       const dlPoints = [
-        { label: '2024 (Baseline)', year: 2024, loss: 0.0, avgRetreat: 0.0, hotspotRetreat: 0.0 },
-        { label: '2027 (DL +3y)', year: 2027, loss: 4.73, avgRetreat: -4.06, hotspotRetreat: -14.4 },
-        { label: '2028 (DL +4y)', year: 2028, loss: 6.30, avgRetreat: -5.00, hotspotRetreat: -19.2 },
-        { label: '2029 (DL +5y)', year: 2029, loss: 7.88, avgRetreat: -5.94, hotspotRetreat: -24.0 },
+        { label: '2024 (2020 to 2024)', year: 2024, loss: 0.0, avgRetreat: 0.0, hotspotRetreat: 0.0 },
+        { label: '2027 (2024 to 2027)', year: 2027, loss: 4.73, avgRetreat: -4.06, hotspotRetreat: -14.4 },
+        { label: '2028 (2024 to 2028)', year: 2028, loss: 6.30, avgRetreat: -5.00, hotspotRetreat: -19.2 },
+        { label: '2029 (2024 to 2029)', year: 2029, loss: 7.88, avgRetreat: -5.94, hotspotRetreat: -24.0 },
       ]
 
       const chart3 = new Chart(forecastLandLossCanvas.current, {
@@ -550,7 +550,7 @@ function Comparison() {
           <p>
             An evidence-backed scientific comparison platform distinguishing{' '}
             <strong>Historical Actual Observations (2015, 2020–2024)</strong>,{' '}
-            <strong>ML Model Benchmark Outputs</strong>, and{' '}
+            <strong>Deep Learning (DL) Benchmark Outputs</strong>, and{' '}
             <strong>Deep Learning (DeepLabV3+) Predictive Trajectories (2027–2029)</strong> across 1,944
             baseline transects along Karnataka’s 97.2 km coastline.
           </p>
@@ -576,11 +576,11 @@ function Comparison() {
 
         <article className="comparison-stat-card">
           <div className="stat-card-header">
-            <span className="stat-label">ML BENCHMARK AGREEMENT</span>
+            <span className="stat-label">DL BENCHMARK AGREEMENT</span>
             <ShieldCheck size={18} className="text-emerald" />
           </div>
           <strong className="stat-value">94.81%</strong>
-          <small className="stat-sub">2020–2024 satellite erosion validation agreement</small>
+          <small className="stat-sub">2020–2024 satellite erosion validation agreement (DeepLabV3+)</small>
         </article>
 
         <article className="comparison-stat-card">
@@ -786,10 +786,10 @@ function Comparison() {
             <Activity size={14} />
             <span>YEAR-BY-YEAR MASTER REPOSITORY // 2015–2029 COMPLETE AUDIT</span>
           </div>
-          <h2 className="section-main-title">Year-Wise Actual Observations vs. ML &amp; DL Predictions</h2>
+          <h2 className="section-main-title">Year-Wise Actual Observations vs. DL Predictions</h2>
           <p className="section-desc">
             Follow strictly verified timeline data: <strong>2015</strong> historical baseline comparison,{' '}
-            <strong>2020–2024</strong> multi-temporal satellite ground truth and ML outputs,{' '}
+            <strong>2020–2024</strong> multi-temporal satellite ground truth and DL outputs,{' '}
             <strong>2025–2026</strong> documented unmodeled gap (no fabricated data), and{' '}
             <strong>2027–2029</strong> Deep Learning (DL) future predictions.
           </p>
@@ -812,7 +812,7 @@ function Comparison() {
               onClick={() => setViewMode('historical')}
             >
               <Calendar size={15} />
-              <span>Historical Actual vs. ML (2015, 2020–2024)</span>
+              <span>Historical Actual vs. DL (2015, 2020–2024)</span>
             </button>
             <button
               type="button"
@@ -829,11 +829,16 @@ function Comparison() {
               <span>Filter Year:</span>
               <select value={filterYear} onChange={(e) => setFilterYear(e.target.value)}>
                 <option value="all">All Available Years</option>
-                {AVAILABLE_YEARS.map((y) => (
-                  <option key={y} value={y}>
-                    {y} {y >= 2027 ? '(DL Forecast)' : y >= 2025 ? '(Data Gap)' : '(Actual/ML)'}
-                  </option>
-                ))}
+                {AVAILABLE_YEARS.map((y) => {
+                  const rec = records[y]
+                  const intervalText = rec?.startYear && rec?.endYear ? ` (${rec.startYear} to ${rec.endYear})` : ''
+                  const typeTag = y >= 2027 ? ' · DL Forecast' : y >= 2025 ? ' · Data Gap' : ' · Actual & DL'
+                  return (
+                    <option key={y} value={y}>
+                      {y}{intervalText}{typeTag}
+                    </option>
+                  )
+                })}
               </select>
             </label>
 
@@ -859,7 +864,7 @@ function Comparison() {
           <table className="comparison-table">
             <thead>
               <tr>
-                <th>Year &amp; Interval</th>
+                <th>Year (Interval)</th>
                 <th>Observation Type</th>
                 <th className="numeric-col">Actual Erosion (km)</th>
                 <th className="numeric-col">Predicted Erosion (km)</th>
@@ -884,11 +889,15 @@ function Comparison() {
                     className={`${isSelected ? 'selected-row' : ''} ${record.isDataGap ? 'gap-row' : ''}`}
                     onClick={() => setSelectedYear(record.year)}
                   >
-                    {/* Year & Horizon */}
+                    {/* Year & Interval */}
                     <td>
                       <div className="year-cell">
-                        <strong>{record.year}</strong>
-                        <span className="interval-tag">{record.intervalLabel}</span>
+                        <strong className="year-number">{record.year}</strong>
+                        <span className="interval-tag">
+                          {record.startYear && record.endYear
+                            ? `(${record.startYear} to ${record.endYear})`
+                            : record.intervalLabel}
+                        </span>
                       </div>
                     </td>
 
@@ -904,7 +913,7 @@ function Comparison() {
                         </span>
                       ) : (
                         <span className="type-badge actual-badge">
-                          <CheckCircle2 size={12} /> Actual &amp; ML
+                          <CheckCircle2 size={12} /> Actual &amp; DL
                         </span>
                       )}
                     </td>
@@ -1005,19 +1014,15 @@ function Comparison() {
           <div className="legend-items">
             <span className="legend-chip">
               <span className="chip-indicator actual-chip" />
-              <strong>Actual Observations:</strong> Verified Sentinel-2 MSI Level-2A &amp; GEE Satellite Composites
-            </span>
-            <span className="legend-chip">
-              <span className="chip-indicator ml-chip" />
-              <strong>ML Model Results:</strong> Historical 4-Year Benchmark Segment Agreement (94.81%)
+              <strong>Actual &amp; DL:</strong> Verified Sentinel-2 MSI Ground Truth paired with DeepLabV3+ DL Benchmark
             </span>
             <span className="legend-chip">
               <span className="chip-indicator dl-chip" />
-              <strong>DL Predictions:</strong> DeepLabV3+ ResNet-34 Future Spatial Extrapolations (2027–2029)
+              <strong>DL Prediction:</strong> DeepLabV3+ ResNet-34 Future Spatial Extrapolations (2027 to 2029)
             </span>
             <span className="legend-chip">
               <span className="chip-indicator gap-chip" />
-              <strong>Data Not Available:</strong> 2024–2025 intermediate &amp; 2026 unmodeled gap (Strict scientific transparency)
+              <strong>Data Not Available:</strong> 2024 to 2025 intermediate &amp; 2026 unmodeled gap (Strict scientific transparency)
             </span>
           </div>
         </div>
@@ -1043,11 +1048,11 @@ function Comparison() {
           {/* Chart 1: Historical Actual vs ML Predicted Erosion & Accretion */}
           <article className="analytics-chart-card">
             <div className="chart-card-header">
-              <h3>Historical Actual vs. ML-Predicted Changes (2015, 2020–2024)</h3>
+              <h3>Historical Actual vs. DL-Predicted Changes (2015, 2020–2024)</h3>
               <span className="chart-badge">Kilometers (km)</span>
             </div>
             <p className="chart-caption">
-              Direct paired comparison between satellite observed erosion/accretion and ML model predictions.
+              Direct paired comparison between satellite observed erosion/accretion and DL model predictions.
             </p>
             <div className="chart-canvas-container">
               <canvas ref={histErosionAccretionCanvas} />
@@ -1169,7 +1174,7 @@ function Comparison() {
 
           <div className="workflow-step-card">
             <div className="step-num-pill">06</div>
-            <h4>AI &amp; ML Multi-Model Analysis</h4>
+            <h4>AI &amp; Deep Learning (DL) Modeling</h4>
             <span className="step-tech">DeepLabV3+ (Dice 85.48%) &amp; XGBoost (84.8%)</span>
             <p>
               Train DeepLabV3+ with ResNet-34 encoder on 9-channel fused tensors. Classify physical environmental vulnerability
