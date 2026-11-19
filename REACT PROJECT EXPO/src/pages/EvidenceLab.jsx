@@ -915,6 +915,7 @@ function EvidenceLab() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [vivaGuideOpen, setVivaGuideOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [animModalOpen, setAnimModalOpen] = useState(false);
 
   // Synchronize modal state with document.body to suppress navbar and lock scroll
   useEffect(() => {
@@ -927,15 +928,24 @@ function EvidenceLab() {
     } else {
       document.body.style.overflow = "unset";
     }
+  }, [selectedImage, animModalOpen, presentationMode]);
 
+  // Keyboard navigation & Escape key handler for all image viewers and modals
+  useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         if (selectedImage) setSelectedImage(null);
         if (animModalOpen) setAnimModalOpen(false);
         if (presentationMode) setPresentationMode(false);
+        return;
+      }
+      if (!presentationMode) return;
+      if (e.key === "ArrowRight") {
+        setCurrentSlide((prev) => Math.min(prev + 1, PRESENTATION_SLIDES.length - 1));
+      } else if (e.key === "ArrowLeft") {
+        setCurrentSlide((prev) => Math.max(prev - 1, 0));
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
@@ -944,7 +954,7 @@ function EvidenceLab() {
       document.body.classList.remove("modal-open");
       document.body.style.overflow = "unset";
     };
-  }, [selectedImage, animModalOpen, presentationMode]);
+  }, [presentationMode, selectedImage, animModalOpen]);
 
   // Section B: Band Combinations State
   const [selectedComposite, setSelectedComposite] = useState("natural");
@@ -974,47 +984,6 @@ function EvidenceLab() {
 
   // Section D: Verified Drive Proof Explorer State
   const [showAllDriveFiles, setShowAllDriveFiles] = useState(false);
-
-  // Shoreline Animation Modal State (Google Drive: 1H3Cv-Yw_3O4bzLczOT-6JY5CZeQ9yuU4)
-  const [animModalOpen, setAnimModalOpen] = useState(false);
-
-  // Keyboard navigation & Escape key handler for all image viewers and modals
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        if (selectedImage) setSelectedImage(null);
-        if (animModalOpen) setAnimModalOpen(false);
-        if (presentationMode) setPresentationMode(false);
-        return;
-      }
-      if (!presentationMode) return;
-      if (e.key === "ArrowRight") {
-        setCurrentSlide((prev) => Math.min(prev + 1, PRESENTATION_SLIDES.length - 1));
-      } else if (e.key === "ArrowLeft") {
-        setCurrentSlide((prev) => Math.max(prev - 1, 0));
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [presentationMode, selectedImage, animModalOpen]);
-
-  // Lock and restore body scrolling when any modal or lightbox is open, and toggle lightbox-active class
-  useEffect(() => {
-    const isAnyModalOpen = Boolean(selectedImage || animModalOpen || presentationMode);
-    if (isAnyModalOpen) {
-      document.body.style.overflow = "hidden";
-      document.body.classList.add("lightbox-active");
-    } else {
-      document.body.style.overflow = "unset";
-      document.body.classList.remove("lightbox-active");
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-      document.body.classList.remove("lightbox-active");
-    };
-  }, [selectedImage, animModalOpen, presentationMode]);
-
-
 
   // Filter Research Library
   const filteredLibrary = LIBRARY_ASSETS.filter((item) => {
