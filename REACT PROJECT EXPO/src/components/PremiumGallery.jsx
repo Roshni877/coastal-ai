@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiLock, FiX } from "react-icons/fi";
@@ -174,11 +175,13 @@ function PremiumGallery() {
     };
 
     document.body.classList.toggle("lightbox-open", Boolean(selectedImage));
+    document.body.classList.toggle("lightbox-active", Boolean(selectedImage));
     if (selectedImage) { document.body.style.overflow = "hidden"; } else { document.body.style.overflow = "unset"; }
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.classList.remove("lightbox-open");
+      document.body.classList.remove("lightbox-active");
       document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -233,7 +236,8 @@ function PremiumGallery() {
             }}>
               CLICK TO UNLOCK VAULT
             </span>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
 
@@ -295,7 +299,7 @@ function PremiumGallery() {
 
       {/* 🔍 LIGHTBOX */}
       <AnimatePresence>
-        {selectedImage && (
+        {selectedImage && typeof document !== "undefined" && createPortal(
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -358,7 +362,8 @@ function PremiumGallery() {
                 <p>Detailed visualization of coastal change patterns across the monitoring period.</p>
               </div>
             </motion.div>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
 

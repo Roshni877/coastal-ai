@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronLeft, FiChevronRight, FiCamera, FiX } from "react-icons/fi";
@@ -43,12 +44,15 @@ function PostcardFilmStrip() {
     };
     if (selectedImage) {
       document.body.style.overflow = "hidden";
+      document.body.classList.add("lightbox-active");
       window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "unset";
+      document.body.classList.remove("lightbox-active");
     }
     return () => {
       document.body.style.overflow = "unset";
+      document.body.classList.remove("lightbox-active");
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedImage]);
@@ -178,7 +182,7 @@ function PostcardFilmStrip() {
 
       {/* LIGHTBOX / ENLARGED VIEW */}
       <AnimatePresence>
-        {selectedImage && (
+        {selectedImage && typeof document !== "undefined" && createPortal(
           <motion.div 
             className="film-lightbox-overlay"
             initial={{ opacity: 0 }}
@@ -246,7 +250,8 @@ function PostcardFilmStrip() {
             >
               <FiChevronRight />
             </button>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
     </div>

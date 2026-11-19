@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileCode,
@@ -967,16 +968,19 @@ function EvidenceLab() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [presentationMode, selectedImage, animModalOpen]);
 
-  // Lock and restore body scrolling when any modal or lightbox is open
+  // Lock and restore body scrolling when any modal or lightbox is open, and toggle lightbox-active class
   useEffect(() => {
     const isAnyModalOpen = Boolean(selectedImage || animModalOpen || presentationMode);
     if (isAnyModalOpen) {
       document.body.style.overflow = "hidden";
+      document.body.classList.add("lightbox-active");
     } else {
       document.body.style.overflow = "unset";
+      document.body.classList.remove("lightbox-active");
     }
     return () => {
       document.body.style.overflow = "unset";
+      document.body.classList.remove("lightbox-active");
     };
   }, [selectedImage, animModalOpen, presentationMode]);
 
@@ -3733,10 +3737,10 @@ function EvidenceLab() {
         </AnimatePresence>
 
         {/* ========================================================
-            FULLSCREEN LIGHTBOX MODAL (HIGH RESOLUTION INSPECTION)
+            FULLSCREEN LIGHTBOX MODAL (PORTAL DIRECTLY TO BODY)
             ======================================================== */}
         <AnimatePresence>
-          {selectedImage && (
+          {selectedImage && typeof document !== "undefined" && createPortal(
             <motion.div
               className="evidence-lightbox-overlay"
               initial={{ opacity: 0 }}
@@ -3754,7 +3758,7 @@ function EvidenceLab() {
                 }}
                 aria-label="Close image"
               >
-                <X size={24} strokeWidth={2.5} />
+                <X size={26} strokeWidth={3} />
               </button>
 
               <motion.div
@@ -3815,7 +3819,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </motion.div>
-            </motion.div>
+            </motion.div>,
+            document.body
           )}
         </AnimatePresence>
 
@@ -3823,7 +3828,7 @@ function EvidenceLab() {
             CINEMATIC SHORELINE DYNAMICS ANIMATION MODAL (GOOGLE DRIVE: 1H3Cv-Yw_3O4bzLczOT-6JY5CZeQ9yuU4)
             ======================================================== */}
         <AnimatePresence>
-          {animModalOpen && (
+          {animModalOpen && typeof document !== "undefined" && createPortal(
             <motion.div
               className="anim-modal-overlay"
               initial={{ opacity: 0 }}
@@ -3831,6 +3836,19 @@ function EvidenceLab() {
               exit={{ opacity: 0 }}
               onClick={() => setAnimModalOpen(false)}
             >
+              {/* Floating Top-Right Viewport Close Button */}
+              <button
+                type="button"
+                className="global-lightbox-close-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAnimModalOpen(false);
+                }}
+                aria-label="Close animation modal"
+              >
+                <X size={26} strokeWidth={3} />
+              </button>
+
               <motion.div
                 className="anim-modal-container"
                 initial={{ scale: 0.82, opacity: 0, y: 40 }}
@@ -3851,9 +3869,9 @@ function EvidenceLab() {
                   </div>
                   <button
                     type="button"
-                    className="video-modal-close global-lightbox-close-btn"
+                    className="video-modal-close lightbox-close-btn-fixed"
                     onClick={() => setAnimModalOpen(false)}
-                    aria-label="Close image"
+                    aria-label="Close animation modal"
                   >
                     <X size={22} strokeWidth={2.5} />
                   </button>
@@ -3884,7 +3902,8 @@ function EvidenceLab() {
                   </a>
                 </div>
               </motion.div>
-            </motion.div>
+            </motion.div>,
+            document.body
           )}
         </AnimatePresence>
 

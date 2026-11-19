@@ -1456,14 +1456,20 @@ body,
 .evidence-lightbox-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(2, 6, 23, 0.92) !important;
-  backdrop-filter: blur(18px) !important;
-  z-index: 999999 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(2, 6, 23, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  z-index: 2147483640 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 20px !important;
+  padding: 60px 24px 30px 24px !important;
   box-sizing: border-box !important;
+  overflow-y: auto !important;
 }
 
 .evidence-lightbox-modal {
@@ -1472,7 +1478,8 @@ body,
   border-radius: 20px !important;
   max-width: 1040px !important;
   width: 100% !important;
-  max-height: 88vh !important;
+  max-height: calc(100vh - 120px) !important;
+  margin: auto !important;
   overflow: hidden !important;
   position: relative !important;
   display: grid !important;
@@ -1489,23 +1496,29 @@ body,
 }
 
 /* FIXED VISIBLE CLOSE BUTTON AT TOP-RIGHT */
-.lightbox-close-btn-fixed {
+.lightbox-close-btn-fixed,
+.lightbox-close-btn {
   position: absolute !important;
   top: 14px !important;
   right: 14px !important;
-  width: 40px !important;
-  height: 40px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
   border-radius: 50% !important;
-  background: #1e293b !important;
-  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  background: #dc2626 !important;
+  background-color: #dc2626 !important;
+  border: 2.5px solid #ffffff !important;
   color: #ffffff !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  z-index: 100000 !important;
+  z-index: 2147483646 !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 15px rgba(220, 38, 38, 0.7) !important;
+  outline: none !important;
+  pointer-events: auto !important;
 }
 
 .lightbox-close-btn-fixed:hover {
@@ -1536,7 +1549,8 @@ body,
   display: flex !important;
   flex-direction: column !important;
   overflow-y: auto !important;
-  max-height: 88vh !important;
+  max-height: calc(100vh - 120px) !important;
+  margin: auto !important;
   background: #0b1120 !important;
 }
 

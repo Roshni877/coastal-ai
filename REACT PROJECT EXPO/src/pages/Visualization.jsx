@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Compass, ArrowLeft, X } from "lucide-react";
@@ -389,7 +390,7 @@ function Visualization() {
 
               {/* Lightbox Modal */}
               <AnimatePresence>
-                {selectedMlImage && (
+                {selectedMlImage && typeof document !== "undefined" && createPortal(
                   <motion.div
                     className="ml-lightbox-overlay"
                     initial={{ opacity: 0 }}
@@ -406,7 +407,7 @@ function Visualization() {
                       }}
                       aria-label="Close image"
                     >
-                      <X size={24} strokeWidth={2.5} />
+                      <X size={26} strokeWidth={3} />
                     </button>
 
                     <motion.div
@@ -431,7 +432,8 @@ function Visualization() {
                       />
                       <h4>{selectedMlImage.title}</h4>
                     </motion.div>
-                  </motion.div>
+                  </motion.div>,
+                  document.body
                 )}
               </AnimatePresence>
             </motion.div>
