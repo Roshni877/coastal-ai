@@ -103,7 +103,7 @@ function Home() {
             >
               <div className="btn-text-wrapper">
                 <span className="btn-text-normal">Watch Project Demo</span>
-                <span className="btn-text-hover">Watch Demo</span>
+                <span className="btn-text-hover">Watch Team-21 Demo</span>
               </div>
               <div className="btn-icon-wrapper">
                 <FiPlay className="btn-icon-normal" />
@@ -136,9 +136,9 @@ function Home() {
               <div className="video-modal-header">
                 <div>
                   <span className="video-modal-tag">PROJECT // TEAM-21 DEMONSTRATION</span>
-                  <h3 className="video-modal-title">COASTAL EROSION DETECTION USING ML & REMOTE SENSING</h3>
+                  <h3 className="video-modal-title">COASTAL EROSION DETECTION USING ML &amp; REMOTE SENSING</h3>
                 </div>
-                <button className="video-modal-close" onClick={() => setVideoOpen(false)}>
+                <button className="video-modal-close" onClick={() => setVideoOpen(false)} aria-label="Close video">
                   <FiX size={22} />
                 </button>
               </div>
@@ -147,7 +147,6 @@ function Home() {
               <div className="video-embed-wrapper">
                 <video
                   key="team-21-video-player"
-                  src="/demo_video.mp4"
                   controls
                   autoPlay
                   playsInline
@@ -160,6 +159,7 @@ function Home() {
                     backgroundColor: "#000",
                   }}
                 >
+                  <source src="/Team-21%20-%20Coastal%20Erosion%20Detection%20Using%20ML%20and%20Remote%20Sensing.mp4" type="video/mp4" />
                   <source src="/demo_video.mp4" type="video/mp4" />
                   Your browser does not support HTML5 video playback.
                 </video>
@@ -168,7 +168,7 @@ function Home() {
               {/* Footer bar */}
               <div className="video-modal-footer">
                 <span className="vessel-id">TEAM-21 // FINAL YEAR MAJOR PROJECT</span>
-                <span className="vessel-id">RESEARCH & VIDEO DEMONSTRATION</span>
+                <span className="vessel-id">RESEARCH &amp; VIDEO DEMONSTRATION</span>
               </div>
             </motion.div>
           </motion.div>

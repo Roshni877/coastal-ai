@@ -388,15 +388,15 @@ function Comparison() {
               <tr>
                 <th><button onClick={() => setSortDirection((direction) => direction === 'asc' ? 'desc' : 'asc')}>Year / Interval & Horizon <ArrowDownUp size={13} /></button></th>
                 <th className="actual-column numeric-col">Actual Erosion (km)</th>
-                <th className="predicted-column numeric-col">ML Predicted Erosion (km)</th>
+                <th className="predicted-column numeric-col">DL Predicted Erosion (km)</th>
                 <th className="numeric-col">Erosion Agreement (%)</th>
                 <th className="actual-column numeric-col">Actual Accretion (km)</th>
-                <th className="predicted-column numeric-col">ML Predicted Accretion (km)</th>
+                <th className="predicted-column numeric-col">DL Predicted Accretion (km)</th>
                 <th className="numeric-col">Accretion Agreement (%)</th>
                 <th className="numeric-col">Cumulative Land Loss</th>
                 <th className="numeric-col">Avg Shoreline Shift</th>
                 <th className="numeric-col">Hotspot Max Retreat</th>
-                <th className="numeric-col">Model Accuracy</th>
+                <th className="numeric-col">Model Confidence</th>
                 <th>Vulnerability Risk</th>
               </tr>
             </thead>
@@ -427,18 +427,50 @@ function Comparison() {
                     </button>
                   </td>
                   <td className="numeric-cell actual-value">
-                    {displayKm(record.actualErosionKm)}
-                    {record.severeHotspotKm && (
-                      <small style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.67rem' }}>
-                        ({record.severeHotspotKm.toFixed(2)} km severe)
-                      </small>
+                    {record.isForecast ? (
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', fontStyle: 'italic' }}>— (Future Unobserved)</span>
+                    ) : record.isDataGap ? (
+                      <span style={{ color: '#eab308', fontSize: '0.74rem', fontStyle: 'italic' }}>— (Data Gap)</span>
+                    ) : (
+                      <>
+                        {displayKm(record.actualErosionKm)}
+                        {record.severeHotspotKm && (
+                          <small style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.67rem' }}>
+                            ({record.severeHotspotKm.toFixed(2)} km severe)
+                          </small>
+                        )}
+                      </>
                     )}
                   </td>
-                  <td className="numeric-cell predicted-value">{displayKm(record.predictedErosionKm)}</td>
-                  <td className="numeric-cell">{displayAgreement(record.erosionAgreement)}</td>
-                  <td className="numeric-cell actual-value">{displayKm(record.actualAccretionKm)}</td>
-                  <td className="numeric-cell predicted-value">{displayKm(record.predictedAccretionKm)}</td>
-                  <td className="numeric-cell">{displayAgreement(record.accretionAgreement)}</td>
+                  <td className="numeric-cell predicted-value">
+                    {record.isDataGap ? (
+                      <span style={{ color: '#eab308', fontSize: '0.74rem', fontStyle: 'italic' }}>— (Not Calculated)</span>
+                    ) : (
+                      displayKm(record.predictedErosionKm)
+                    )}
+                  </td>
+                  <td className="numeric-cell">
+                    {record.isForecast || record.isDataGap ? '—' : displayAgreement(record.erosionAgreement)}
+                  </td>
+                  <td className="numeric-cell actual-value">
+                    {record.isForecast ? (
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', fontStyle: 'italic' }}>— (Future Unobserved)</span>
+                    ) : record.isDataGap ? (
+                      <span style={{ color: '#eab308', fontSize: '0.74rem', fontStyle: 'italic' }}>— (Data Gap)</span>
+                    ) : (
+                      displayKm(record.actualAccretionKm)
+                    )}
+                  </td>
+                  <td className="numeric-cell predicted-value">
+                    {record.isDataGap ? (
+                      <span style={{ color: '#eab308', fontSize: '0.74rem', fontStyle: 'italic' }}>— (Not Calculated)</span>
+                    ) : (
+                      displayKm(record.predictedAccretionKm)
+                    )}
+                  </td>
+                  <td className="numeric-cell">
+                    {record.isForecast || record.isDataGap ? '—' : displayAgreement(record.accretionAgreement)}
+                  </td>
                   <td className="numeric-cell loss-value">{displayLandLoss(record)}</td>
                   <td className="numeric-cell shift-value">{displayShift(record)}</td>
                   <td className="numeric-cell" style={{ color: '#d34a4a', fontWeight: 800 }}>

@@ -54,21 +54,34 @@ body {
     background-attachment: fixed;
 }
 
-/* Custom Scrollbars */
+/* ==========================================================================
+   PROPER & VISIBLE STANDARD SCROLLBAR (EASY TO SEE, GRAB & SCROLL)
+   ========================================================================== */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 14px;
+    height: 14px;
 }
 ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.01);
+    background: #0b1120;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
+    background: #475569;
+    border-radius: 8px;
+    border: 3px solid #0b1120;
+    transition: background 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-cyan);
-    box-shadow: 0 0 10px var(--accent-cyan);
+    background: #0ea5e9;
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
+}
+::-webkit-scrollbar-thumb:active {
+    background: #38bdf8;
 }
 
 /* App Container Layout */
