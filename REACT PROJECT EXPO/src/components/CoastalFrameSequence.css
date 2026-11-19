@@ -1,0 +1,324 @@
+/* ==========================================================================
+   CINEMATIC COASTAL FRAME SEQUENCE PLAYER STYLES
+   ========================================================================== */
+
+.coastal-sequence-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000;
+  z-index: 999999;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.sequence-canvas {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+}
+
+/* Buffering State */
+.sequence-buffering-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.92);
+  gap: 20px;
+  z-index: 10;
+}
+
+.buffering-spinner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid rgba(56, 189, 248, 0.2);
+  border-top-color: #38bdf8;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.buffering-text {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.buffering-text span {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+}
+
+.buffering-text small {
+  font-size: 0.8rem;
+  color: #38bdf8;
+}
+
+/* HUD Top Bar */
+.sequence-hud-top {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.hud-telemetry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.hud-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+}
+
+.hud-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: hudPulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes hudPulse {
+  from { opacity: 0.4; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+.hud-coords {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+}
+
+.hud-direct-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.hud-direct-btn:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #34d399;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+/* Bottom Progress Bar */
+.sequence-progress-bar-wrap {
+  position: absolute;
+  bottom: 24px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.sequence-progress-bar-fill {
+  height: 4px;
+  background: linear-gradient(90deg, #0284c7, #38bdf8, #10b981);
+  border-radius: 9999px;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+  transition: width 0.04s linear;
+}
+
+.sequence-frame-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Completion Modal Overlay */
+.sequence-complete-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  animation: fadeInModal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 24px;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.sequence-complete-modal {
+  background: rgba(11, 17, 32, 0.95);
+  border: 2px solid rgba(56, 189, 248, 0.5);
+  border-radius: 24px;
+  padding: 42px 48px;
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9), 0 0 50px rgba(56, 189, 248, 0.3);
+}
+
+.complete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.complete-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.complete-desc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Prominent Final Action Button: "Explore Coastal AI – Enter Homepage" */
+.btn-explore-coastal-ai {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 32px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0284c7 0%, #0d9488 50%, #059669 100%);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(13, 148, 136, 0.5), 0 0 25px rgba(2, 132, 199, 0.4);
+  margin-top: 8px;
+}
+
+.btn-explore-coastal-ai:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(13, 148, 136, 0.7), 0 0 35px rgba(56, 189, 248, 0.6);
+  border-color: #ffffff;
+}
+
+.btn-explore-coastal-ai:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-icon-spin {
+  animation: compassSpin 6s linear infinite;
+}
+
+@keyframes compassSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.btn-icon-arrow {
+  transition: transform 0.2s ease;
+}
+
+.btn-explore-coastal-ai:hover .btn-icon-arrow {
+  transform: translateX(5px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .sequence-hud-top {
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sequence-complete-modal {
+    padding: 28px 20px;
+  }
+
+  .complete-title {
+    font-size: 1.4rem;
+  }
+
+  .btn-explore-coastal-ai {
+    font-size: 0.98rem;
+    padding: 14px 20px;
+    gap: 10px;
+  }
+}

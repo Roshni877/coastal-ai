@@ -23,6 +23,7 @@ temp_data/
 *.pth
 *.tif
 *.tiff
+Frames/
 
 # System files
 *.mp4

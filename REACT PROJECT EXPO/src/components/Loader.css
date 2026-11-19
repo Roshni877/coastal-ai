@@ -352,3 +352,57 @@
     font-size: 0.65rem;
   }
 }
+
+/* ========================================================
+   DIRECT TO HOMEPAGE BUTTON ON GLOBE SCREEN
+   ======================================================== */
+.direct-to-homepage-globe-btn {
+  position: fixed;
+  top: 28px;
+  right: 32px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1.5px solid rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.direct-to-homepage-globe-btn:hover {
+  background: rgba(14, 165, 233, 0.35);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.55);
+}
+
+.direct-to-homepage-globe-btn .direct-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.direct-to-homepage-globe-btn:hover .direct-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 600px) {
+  .direct-to-homepage-globe-btn {
+    top: 16px;
+    right: 16px;
+    padding: 8px 16px;
+    font-size: 0.74rem;
+  }
+}

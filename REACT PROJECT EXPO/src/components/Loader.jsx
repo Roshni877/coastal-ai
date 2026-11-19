@@ -4,11 +4,12 @@ import TerrainRadarCanvas from "./TerrainRadarCanvas";
 import WaterSplash from "./WaterSplash";
 import WaterDroplets from "./WaterDroplets";
 import EarthGlobe from "./EarthGlobe";
+import CoastalFrameSequence from "./CoastalFrameSequence";
 import "./Loader.css";
 
 const Loader = () => {
   const [loading, setLoading] = useState(true);
-  const [phase, setPhase] = useState("analysis"); // analysis -> droplets -> earth -> whiteout -> falling
+  const [phase, setPhase] = useState("analysis"); // analysis -> droplets -> earth -> whiteout -> sequence
   const [progress, setProgress] = useState(0);
   const [showSplash, setShowSplash] = useState(false);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
@@ -92,14 +93,19 @@ const Loader = () => {
       if (e.key === "Escape") {
         if (phase === "analysis") {
           advanceToEarth();
-        } else if (phase === "earth") {
-          handleEarthClick();
+        } else if (phase === "earth" || phase === "sequence") {
+          handleDirectHomepage();
         }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [phase]);
+
+  // Direct to homepage handler (skips animations directly to website)
+  const handleDirectHomepage = () => {
+    setLoading(false);
+  };
 
   // Clicking the highlighted area on Earth or the explore button
   const handleEarthClick = () => {
@@ -117,10 +123,7 @@ const Loader = () => {
       }
 
       setTimeout(() => {
-        setPhase("falling");
-        setTimeout(() => {
-          setLoading(false);
-        }, 800);
+        setPhase("sequence");
       }, 1200);
     }
   };
@@ -149,7 +152,7 @@ const Loader = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{
-          opacity: phase === "whiteout" || phase === "falling" ? 1 : 0,
+          opacity: phase === "whiteout" ? 1 : 0,
         }}
         transition={{ duration: 0.8, ease: "easeIn" }}
         style={{
@@ -307,15 +310,34 @@ const Loader = () => {
         className="earth-layer"
         initial={{ opacity: 0 }}
         animate={{
-          opacity: phase === "earth" || phase === "falling" ? 1 : 0,
+          opacity: phase === "earth" ? 1 : 0,
         }}
         transition={{ duration: 2, ease: "easeOut" }}
-        style={{ position: "absolute", inset: 0, zIndex: 10 }}
+        style={{ position: "absolute", inset: 0, zIndex: 10, pointerEvents: phase === "earth" ? "auto" : "none" }}
       >
         <EarthGlobe onExplore={handleEarthClick} phase={phase} />
       </motion.div>
 
-      {/* 5. Click to Explore Button */}
+      {/* 5. Direct to Homepage Button on Globe Screen */}
+      <AnimatePresence>
+        {phase === "earth" && (
+          <motion.button
+            type="button"
+            className="direct-to-homepage-globe-btn"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            onClick={handleDirectHomepage}
+            title="Direct to Coastal AI Homepage"
+          >
+            <span>Direct to Homepage</span>
+            <span className="direct-arrow">→</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* 6. Click to Explore Button */}
       <AnimatePresence>
         {phase === "earth" && (
           <motion.div
@@ -340,6 +362,14 @@ const Loader = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* 7. Extracted Coastal Optical Frame Sequence (Plays smoothly after clicking Earth) */}
+      {phase === "sequence" && (
+        <CoastalFrameSequence
+          onEnterHomepage={handleDirectHomepage}
+          onDirectHomepage={handleDirectHomepage}
+        />
+      )}
     </div>
   );
 };

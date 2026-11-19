@@ -916,6 +916,36 @@ function EvidenceLab() {
   const [vivaGuideOpen, setVivaGuideOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  // Synchronize modal state with document.body to suppress navbar and lock scroll
+  useEffect(() => {
+    const isModalOpen = Boolean(selectedImage || animModalOpen || presentationMode);
+    document.body.classList.toggle("lightbox-active", isModalOpen);
+    document.body.classList.toggle("lightbox-open", isModalOpen);
+    document.body.classList.toggle("modal-open", isModalOpen);
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (selectedImage) setSelectedImage(null);
+        if (animModalOpen) setAnimModalOpen(false);
+        if (presentationMode) setPresentationMode(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.classList.remove("lightbox-active");
+      document.body.classList.remove("lightbox-open");
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedImage, animModalOpen, presentationMode]);
+
   // Section B: Band Combinations State
   const [selectedComposite, setSelectedComposite] = useState("natural");
   const [sliderPosition, setSliderPosition] = useState(50);
