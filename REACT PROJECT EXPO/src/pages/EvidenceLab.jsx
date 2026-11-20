@@ -1036,16 +1036,44 @@ function EvidenceLab() {
             </button>
 
             <button
+              type="button"
               className="btn-unique-anim-trigger"
-              onClick={() => setAnimModalOpen(true)}
+              onClick={() => {
+                setAnimModalOpen(true);
+                navigateToSection("coastline-animation");
+              }}
               title="Play empirical multi-temporal satellite shoreline animation"
             >
               <div className="anim-pulse-ring">
                 <div className="anim-pulse-core" />
               </div>
               <span className="btn-text-glow">▶ Shoreline Dynamics Animation (2020–2024)</span>
-              <span className="btn-chip-tag">DRIVE PROOF</span>
             </button>
+
+            <a
+              href="https://drive.google.com/file/d/1H3Cv-Yw_3O4bzLczOT-6JY5CZeQ9yuU4/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-unique-anim-trigger drive-proof-hero-btn"
+              title="Open verified Google Drive satellite proof source (1H3Cv-Yw_3O4bzLczOT-6JY5CZeQ9yuU4)"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(16, 185, 129, 0.18)",
+                border: "1.5px solid rgba(16, 185, 129, 0.55)",
+                color: "#34d399",
+                textDecoration: "none",
+                padding: "10px 18px",
+                borderRadius: "30px",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                cursor: "pointer"
+              }}
+            >
+              <ExternalLink size={15} />
+              <span>DRIVE PROOF (1H3Cv...)</span>
+            </a>
           </div>
 
           {/* Study Area & Project Provenance Metadata Strip */}

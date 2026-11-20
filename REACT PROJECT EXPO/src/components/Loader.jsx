@@ -8,7 +8,12 @@ import CoastalFrameSequence from "./CoastalFrameSequence";
 import "./Loader.css";
 
 const Loader = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const isRoot = window.location.pathname === "/" || window.location.pathname === "";
+    const hasSeen = window.sessionStorage.getItem("coastal_intro_seen") === "true";
+    return isRoot && !hasSeen;
+  });
   const [phase, setPhase] = useState("analysis"); // analysis -> droplets -> earth -> whiteout -> sequence
   const [progress, setProgress] = useState(0);
   const [showSplash, setShowSplash] = useState(false);
@@ -19,6 +24,15 @@ const Loader = () => {
     c3: "21.95838",
   });
   const audioRef = useRef(null);
+
+  // If already seen in this session or navigating to subpages, dismiss immediately
+  useEffect(() => {
+    const isRoot = typeof window !== "undefined" && (window.location.pathname === "/" || window.location.pathname === "");
+    const hasSeen = typeof window !== "undefined" && window.sessionStorage.getItem("coastal_intro_seen") === "true";
+    if (!isRoot || hasSeen) {
+      setLoading(false);
+    }
+  }, []);
 
   // Subtle ocean wave audio sound
   useEffect(() => {
@@ -104,6 +118,9 @@ const Loader = () => {
 
   // Direct to homepage handler (skips animations directly to website)
   const handleDirectHomepage = () => {
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("coastal_intro_seen", "true");
+    }
     setLoading(false);
   };
 

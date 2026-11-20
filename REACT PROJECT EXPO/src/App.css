@@ -9018,9 +9018,10 @@ body:has(.video-modal-overlay) .nav-pill-container {
 .film-lightbox-content,
 .lightbox-content.pro-lightbox,
 .anim-modal-container {
-  max-height: calc(100vh - 100px) !important;
+  max-height: calc(100vh - 80px) !important;
   margin: auto !important;
   position: relative !important;
+  overflow-y: auto !important;
 }
 
 @media (max-width: 640px) {
