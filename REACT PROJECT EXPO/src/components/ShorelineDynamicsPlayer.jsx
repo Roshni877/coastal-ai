@@ -94,6 +94,18 @@ export default function ShorelineDynamicsPlayer({
   const [viewMode, setViewMode] = useState("stepper"); // 'stepper' or 'gif'
   const timerRef = useRef(null);
 
+  // Preload all frames on mount
+  useEffect(() => {
+    SHORELINE_YEARS.forEach((ep) => {
+      const img1 = new Image();
+      img1.src = ep.image;
+      const img2 = new Image();
+      img2.src = ep.fallbackImage;
+    });
+    const gif = new Image();
+    gif.src = "/shoreline_animation.gif";
+  }, []);
+
   const activeEpoch = SHORELINE_YEARS[currentIndex];
 
   // Auto-play timer
@@ -176,6 +188,7 @@ export default function ShorelineDynamicsPlayer({
               src="/shoreline_animation.gif"
               alt="Multi-temporal Shoreline Dynamics Animation (Continuous Loop)"
               className="sdp-main-img"
+              loading="eager"
             />
             <div className="sdp-gif-watermark">
               <span className="sdp-pulse-dot" />
@@ -184,16 +197,17 @@ export default function ShorelineDynamicsPlayer({
           </div>
         ) : (
           <div className="sdp-image-frame stepper-mode">
-            <AnimatePresence mode="wait">
+            <AnimatePresence initial={false}>
               <motion.img
                 key={activeEpoch.year}
                 src={activeEpoch.image}
                 alt={activeEpoch.label}
                 className="sdp-main-img"
-                initial={{ opacity: 0.65, scale: 0.99 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0.7 }}
-                transition={{ duration: 0.22 }}
+                loading="eager"
+                initial={{ opacity: 0.85 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0.85 }}
+                transition={{ duration: 0.15 }}
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = activeEpoch.fallbackImage;

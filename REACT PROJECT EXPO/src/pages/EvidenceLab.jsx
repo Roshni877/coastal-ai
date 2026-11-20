@@ -866,7 +866,7 @@ function EvidenceLab() {
 
   const goToChapter = (id) => {
     setActiveCategory(id);
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    navigateToSection(id);
   };
 
   const filteredChapters = RESEARCH_CHAPTERS.filter((ch) => {
@@ -882,31 +882,35 @@ function EvidenceLab() {
     return true;
   });
 
+  const CHAPTER_TO_DOM_ID = {
+    "sentinel-bands": "section-bands",
+    "sentinel-1-sar": "section-sar-standalone",
+    "sentinel-2-optical": "section-optical-standalone",
+    "band-composites": "section-composites",
+    "dataset-processing": "section-dataset",
+    "gee-pipeline": "section-ndwi",
+    "colab-training": "section-colab-training-standalone",
+    "graphs-metrics": "section-performance",
+    "coastline-animation": "section-anim-standalone",
+    "historical-comparison": "section-historical",
+    "malpe-analysis": "section-malpe-standalone",
+    "other-beaches": "section-beaches-standalone",
+    "ml-models": "section-architecture",
+    "methodology": "section-methodology-standalone",
+    "validation-accuracy": "section-geospatial",
+    "transect-kinematics": "section-transects",
+    "future-predictions": "section-future",
+    "results-gallery": "section-library"
+  };
+
   const navigateToSection = (target) => {
-    const sectionToChapter = {
-      "section-bands": "sentinel-bands",
-      "section-sar-standalone": "sentinel-1-sar",
-      "section-optical-standalone": "sentinel-2-optical",
-      "section-composites": "band-composites",
-      "section-dataset": "dataset-processing",
-      "section-ndwi": "gee-pipeline",
-      "section-colab-training-standalone": "colab-training",
-      "section-performance": "graphs-metrics",
-      "section-anim": "coastline-animation",
-      "section-anim-standalone": "coastline-animation",
-      "section-historical": "historical-comparison",
-      "section-malpe-standalone": "malpe-analysis",
-      "section-beaches-standalone": "other-beaches",
-      "section-architecture": "ml-models",
-      "section-methodology-standalone": "methodology",
-      "section-geospatial": "validation-accuracy",
-      "section-transects": "transect-kinematics",
-      "section-future": "future-predictions",
-      "section-library": "results-gallery"
-    };
-    const chapterId = sectionToChapter[target] || target;
-    setActiveCategory(chapterId);
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const domId = CHAPTER_TO_DOM_ID[target] || target;
+    const el = document.getElementById(domId);
+    if (el) {
+      const yOffset = -80;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
   };
 
   const scrollTo = navigateToSection;
@@ -1071,9 +1075,7 @@ function EvidenceLab() {
 
         {/* RESEARCH DIRECTORY HUB */}
         
-        {!activeCategory && (
-          <>
-            {/* RESEARCH DIRECTORY HUB */}
+        {/* RESEARCH DIRECTORY HUB */}
 <section className="category-hub-container">
           {/* Ambient Cybernetic Radar Mesh Background */}
           <div className="hub-mesh-background" />
@@ -1270,72 +1272,14 @@ function EvidenceLab() {
             )}
           </AnimatePresence>
         </section>
-          </>
-        )}
-
-        <div className="chapter-view-container">
-          {activeCategory && currentChapter && (
-            /* CHAPTER DETAIL TOP NAVIGATION BAR */
-            <div className="chapter-nav-top-bar">
-              <button
-                className="btn-back-to-hub"
-                onClick={() => {
-                  setActiveCategory(null);
-                  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-                }}
-              >
-                <ChevronLeft size={18} />
-                <span>← Back to Research Lab Hub</span>
-              </button>
-
-              <div className="chapter-breadcrumbs-wrap">
-                <span
-                  className="crumb-link"
-                  onClick={() => {
-                    setActiveCategory(null);
-                    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-                  }}
-                >
-                  Research Hub
-                </span>
-                <span className="crumb-separator">/</span>
-                <span className="crumb-current">
-                  {parseInt(currentChapter.num, 10)}. {currentChapter.title}
-                </span>
-              </div>
-
-              <div className="chapter-step-buttons">
-                <button
-                  className="btn-chapter-step"
-                  disabled={currentChapterIndex <= 0}
-                  onClick={() =>
-                    goToChapter(RESEARCH_CHAPTERS[currentChapterIndex - 1].id)
-                  }
-                  title="Previous section"
-                >
-                  <ChevronLeft size={16} />
-                  <span>Previous</span>
-                </button>
-                <button
-                  className="btn-chapter-step"
-                  disabled={currentChapterIndex >= RESEARCH_CHAPTERS.length - 1}
-                  onClick={() =>
-                    goToChapter(RESEARCH_CHAPTERS[currentChapterIndex + 1].id)
-                  }
-                  title="Next section"
-                >
-                  <span>Next</span>
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
-          )}
+          <div className="chapter-view-container">
+          
 
           {/* ========================================================
               ALL 18 RESEARCH SECTIONS (OPEN & SCROLLABLE)
               ======================================================== */}
 
-            {(!activeCategory || activeCategory === "sentinel-bands") && (
+            
 <section id="section-bands" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -1480,9 +1424,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "sentinel-1-sar") && (
+            
 <section id="section-sar-standalone" className="lab-section">
           <div className="lab-section-header">
             <div className="header-left">
@@ -1562,9 +1505,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "sentinel-2-optical") && (
+            
 <section id="section-optical-standalone" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -1644,9 +1586,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "band-composites") && (
+            
 <section id="section-composites" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -1794,9 +1735,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "dataset-processing") && (
+            
 <section id="section-dataset" className="lab-section dataset-hero-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2101,9 +2041,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "gee-pipeline") && (
+            
 <section id="section-ndwi" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2258,9 +2197,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "colab-training") && (
+            
 <section id="section-colab-training-standalone" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2382,9 +2320,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "graphs-metrics") && (
+            
 <section id="section-performance" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -2523,9 +2460,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "coastline-animation") && (
+            
 <section id="section-anim-standalone" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2580,9 +2516,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "historical-comparison") && (
+            
 <section id="section-historical" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -2794,9 +2729,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "malpe-analysis") && (
+            
 <section id="section-malpe-standalone" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2880,9 +2814,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "other-beaches") && (
+            
 <section id="section-beaches-standalone" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -2965,9 +2898,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "ml-models") && (
+            
 <section id="section-architecture" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -3061,9 +2993,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "methodology") && (
+            
 <section id="section-methodology-standalone" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -3123,9 +3054,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "validation-accuracy") && (
+            
 <section id="section-geospatial" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -3218,9 +3148,8 @@ function EvidenceLab() {
                   </div>
                 </div>
               </section>
-            )}
 
-            {(!activeCategory || activeCategory === "transect-kinematics") && (
+            
 <section id="section-transects" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -3349,9 +3278,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "future-predictions") && (
+            
 <section id="section-future" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -3497,9 +3425,8 @@ function EvidenceLab() {
                 </div>
               </div>
             </section>
-            )}
 
-            {(!activeCategory || activeCategory === "results-gallery") && (
+            
 <section id="section-library" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -3608,49 +3535,9 @@ function EvidenceLab() {
                 </div>
               )}
             </section>
-            )}
 
 
-          {activeCategory && currentChapter && (
-            /* CHAPTER DETAIL BOTTOM NAVIGATION BAR */
-            <div className="chapter-bottom-nav-bar">
-              <button
-                className="btn-back-to-hub"
-                onClick={() => {
-                  setActiveCategory(null);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                <ChevronLeft size={18} />
-                <span>← Return to Research Lab Hub</span>
-              </button>
-
-              <div className="chapter-step-buttons">
-                <button
-                  className="btn-chapter-step"
-                  disabled={currentChapterIndex <= 0}
-                  onClick={() =>
-                    goToChapter(RESEARCH_CHAPTERS[currentChapterIndex - 1].id)
-                  }
-                  title="Previous section"
-                >
-                  <ChevronLeft size={16} />
-                  <span>Previous Section</span>
-                </button>
-                <button
-                  className="btn-chapter-step"
-                  disabled={currentChapterIndex >= RESEARCH_CHAPTERS.length - 1}
-                  onClick={() =>
-                    goToChapter(RESEARCH_CHAPTERS[currentChapterIndex + 1].id)
-                  }
-                  title="Next section"
-                >
-                  <span>Next Section</span>
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
-          )}
+          
         </div>
 
 
@@ -3933,6 +3820,7 @@ function EvidenceLab() {
           <button className={`dock-pill-btn ${activeCategory === "dataset-processing" ? "active" : ""}`} onClick={() => navigateToSection("dataset-processing")}>5. Dataset</button>
           <button className={`dock-pill-btn ${activeCategory === "ml-models" ? "active" : ""}`} onClick={() => navigateToSection("ml-models")}>13. AI Model</button>
           <button className={`dock-pill-btn ${activeCategory === "graphs-metrics" ? "active" : ""}`} onClick={() => navigateToSection("graphs-metrics")}>8. Metrics</button>
+          <button className={`dock-pill-btn ${activeCategory === "coastline-animation" ? "active" : ""}`} onClick={() => navigateToSection("coastline-animation")}>9. Animation</button>
           <button className={`dock-pill-btn ${activeCategory === "historical-comparison" ? "active" : ""}`} onClick={() => navigateToSection("historical-comparison")}>10. 2020–2024</button>
           <button className={`dock-pill-btn ${activeCategory === "validation-accuracy" ? "active" : ""}`} onClick={() => navigateToSection("validation-accuracy")}>15. QGIS</button>
           <button className={`dock-pill-btn ${activeCategory === "transect-kinematics" ? "active" : ""}`} onClick={() => navigateToSection("transect-kinematics")}>16. EPR</button>
