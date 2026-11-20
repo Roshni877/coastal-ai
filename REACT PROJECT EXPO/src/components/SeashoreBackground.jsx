@@ -90,6 +90,7 @@ function FishSwarm() {
 }
 
 const SeashoreBackground = () => {
+  const [imgError, setImgError] = useState(false);
   const [isDark, setIsDark] = useState(
     typeof document !== "undefined" &&
     document.documentElement.getAttribute("data-theme") === "dark"
@@ -140,23 +141,41 @@ const SeashoreBackground = () => {
           overflow: "hidden",
         }}
       >
-        <img
-          src="https://i.pinimg.com/originals/d3/d6/06/d3d6061eb47bcbb455807d6a15365273.gif"
-          alt="Immersive Ocean Waves"
-          className="premium-bg-gif"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: 0.75,
-            filter: isDark
-              ? "brightness(0.85) contrast(1.15)"
-              : "brightness(0.92) contrast(1.1)",
-          }}
-        />
+        {!imgError ? (
+          <img
+            src="https://i.pinimg.com/originals/d3/d6/06/d3d6061eb47bcbb455807d6a15365273.gif"
+            alt="Immersive Ocean Waves"
+            className="premium-bg-gif"
+            onError={() => setImgError(true)}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.75,
+              filter: isDark
+                ? "brightness(0.85) contrast(1.15)"
+                : "brightness(0.92) contrast(1.1)",
+            }}
+          />
+        ) : (
+          <div
+            className="fallback-ocean-waves"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: isDark
+                ? "radial-gradient(ellipse at 50% 60%, #0369a1 0%, #082f49 45%, #020617 80%)"
+                : "radial-gradient(ellipse at 50% 60%, #0284c7 0%, #0369a1 40%, #0f172a 80%)",
+              opacity: 0.85,
+            }}
+          />
+        )}
         <div
           className="wave-overlay"
           style={{

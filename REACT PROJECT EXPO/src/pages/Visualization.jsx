@@ -1,16 +1,18 @@
 import { createPortal } from "react-dom";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Compass, ArrowLeft, X } from "lucide-react";
+import { Compass, ArrowLeft, X, Radio } from "lucide-react";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
 import PremiumGallery from "../components/PremiumGallery";
 import SeashoreBackground from "../components/SeashoreBackground";
+import ShorelineDynamicsPlayer from "../components/ShorelineDynamicsPlayer";
 
 function Visualization() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
   const [selectedMlImage, setSelectedMlImage] = useState(null);
+  const [animModalOpen, setAnimModalOpen] = useState(false);
   const [isDark, setIsDark] = useState(
     typeof document !== "undefined" &&
       document.documentElement.getAttribute("data-theme") === "dark"
@@ -28,6 +30,16 @@ function Visualization() {
     });
     return () => observer.disconnect();
   }, []);
+
+  // Suppress navbar when any lightbox or modal is open
+  useEffect(() => {
+    if (selectedMlImage || animModalOpen) {
+      document.body.classList.add("modal-open-suppress-nav");
+    } else {
+      document.body.classList.remove("modal-open-suppress-nav");
+    }
+    return () => document.body.classList.remove("modal-open-suppress-nav");
+  }, [selectedMlImage, animModalOpen]);
 
   // Trigger smooth full-screen opening animation
   const handleOpenArchive = () => {
@@ -280,6 +292,14 @@ function Visualization() {
                   </p>
                 </div>
 
+                {/* 🌊 Multi-Temporal Shoreline Dynamics Animation Player */}
+                <div style={{ marginBottom: "30px" }}>
+                  <ShorelineDynamicsPlayer 
+                    onExpandFullscreen={() => setAnimModalOpen(true)}
+                    showTitle={true}
+                  />
+                </div>
+
                 {/* Mean Shoreline Position Per Year (Preserved exactly as it is) */}
                 <div className="analytics-grid">
                   <div className="glass-card analytics-card">
@@ -431,6 +451,61 @@ function Visualization() {
                         className="ml-lightbox-image"
                       />
                       <h4>{selectedMlImage.title}</h4>
+                    </motion.div>
+                  </motion.div>,
+                  document.body
+                )}
+              </AnimatePresence>
+
+              {/* Fullscreen Shoreline Dynamics Animation Modal */}
+              <AnimatePresence>
+                {animModalOpen && typeof document !== "undefined" && createPortal(
+                  <motion.div
+                    className="anim-modal-overlay"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setAnimModalOpen(false)}
+                  >
+                    <button
+                      type="button"
+                      className="global-lightbox-close-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAnimModalOpen(false);
+                      }}
+                      aria-label="Close animation modal"
+                    >
+                      <X size={26} strokeWidth={3} />
+                    </button>
+
+                    <motion.div
+                      className="anim-modal-container"
+                      initial={{ scale: 0.94, opacity: 0, y: 20 }}
+                      animate={{ scale: 1, opacity: 1, y: 0 }}
+                      exit={{ scale: 0.94, opacity: 0, y: 20 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="anim-modal-header">
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <span className="live-indicator"><span className="dot" /> LIVE TIME-LAPSE</span>
+                          <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#f8fafc", fontWeight: 800 }}>
+                            Multi-Temporal Shoreline Dynamics Animation (2020 &rarr; 2024)
+                          </h3>
+                        </div>
+                        <button
+                          type="button"
+                          className="video-modal-close lightbox-close-btn-fixed"
+                          onClick={() => setAnimModalOpen(false)}
+                          aria-label="Close animation modal"
+                        >
+                          <X size={22} strokeWidth={2.5} />
+                        </button>
+                      </div>
+
+                      <div className="anim-modal-body" style={{ padding: "16px" }}>
+                        <ShorelineDynamicsPlayer isModal={true} showTitle={false} />
+                      </div>
                     </motion.div>
                   </motion.div>,
                   document.body

@@ -39,6 +39,7 @@ import {
   Sun
 } from "lucide-react";
 import PageReveal from "../components/PageReveal";
+import ShorelineDynamicsPlayer from "../components/ShorelineDynamicsPlayer";
 import "../styles/EvidenceLabRedesign.css";
 
 // Google Colab Base URL
@@ -2560,7 +2561,13 @@ function EvidenceLab() {
                 </div>
               </div>
 
-
+              {/* Embedded Interactive Shoreline Dynamics Animation Player */}
+              <div style={{ margin: "24px 0" }}>
+                <ShorelineDynamicsPlayer 
+                  onExpandFullscreen={() => setAnimModalOpen(true)}
+                  showTitle={false}
+                />
+              </div>
 
               <div className="research-notebook-strip">
                 <div className="sticky-note-card pink">
@@ -2736,10 +2743,10 @@ function EvidenceLab() {
                     </div>
                   </div>
 
-                  <div className="anim-img-frame clickable" onClick={() => setAnimModalOpen(true)}>
-                    <img
-                      src="/shoreline_animation.gif"
-                      alt="Multi-temporal Shoreline Dynamics Animation (2020-2024)"
+                  <div style={{ marginTop: '14px' }}>
+                    <ShorelineDynamicsPlayer 
+                      onExpandFullscreen={() => setAnimModalOpen(true)}
+                      showTitle={false}
                     />
                   </div>
 
@@ -3876,11 +3883,8 @@ function EvidenceLab() {
                   </button>
                 </div>
 
-                <div className="anim-modal-body">
-                  <img
-                    src="/shoreline_animation.gif"
-                    alt="Multi-temporal Shoreline Dynamics Animation"
-                  />
+                <div className="anim-modal-body" style={{ padding: '16px' }}>
+                  <ShorelineDynamicsPlayer isModal={true} showTitle={false} />
                 </div>
 
                 <div className="anim-modal-footer">
