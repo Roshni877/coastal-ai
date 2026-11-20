@@ -1,21 +1,18 @@
-import { createPortal } from "react-dom";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Compass, ArrowLeft, X, Radio } from "lucide-react";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
 import PremiumGallery from "../components/PremiumGallery";
-import SeashoreBackground from "../components/SeashoreBackground";
 import ShorelineDynamicsPlayer from "../components/ShorelineDynamicsPlayer";
 
 function Visualization() {
   const [isUnlocked, setIsUnlocked] = useState(false);
-  const [isOpening, setIsOpening] = useState(false);
   const [selectedMlImage, setSelectedMlImage] = useState(null);
   const [animModalOpen, setAnimModalOpen] = useState(false);
   const [isDark, setIsDark] = useState(
     typeof document !== "undefined" &&
-      document.documentElement.getAttribute("data-theme") === "dark"
+    document.documentElement.getAttribute("data-theme") === "dark"
   );
 
   useEffect(() => {
@@ -41,26 +38,16 @@ function Visualization() {
     return () => document.body.classList.remove("modal-open-suppress-nav");
   }, [selectedMlImage, animModalOpen]);
 
-  // Trigger smooth full-screen opening animation
+  // Trigger instant, smooth full-screen opening
   const handleOpenArchive = () => {
-    setIsOpening(true);
-    setTimeout(() => {
-      setIsUnlocked(true);
-      setIsOpening(false);
-      window.scrollTo({ top: 0, behavior: "instant" });
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 100);
-    }, 650);
+    setIsUnlocked(true);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   };
 
   // Return/close back to the initial circular button view
   const handleCloseArchive = () => {
     setIsUnlocked(false);
-    window.scrollTo({ top: 0, behavior: "instant" });
-    setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 100);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   };
 
   // Allow closing via Escape key
@@ -91,9 +78,6 @@ function Visualization() {
               transition={{ duration: 0.5 }}
               className="archive-circular-entry"
             >
-              {/* Restored Immersive Seashore Background (Ocean Waves + 3D Beach Canvas) */}
-              <SeashoreBackground />
-
               {/* Header Title Section */}
               <div className="archive-header-block">
                 <span
@@ -410,7 +394,7 @@ function Visualization() {
 
               {/* Lightbox Modal */}
               <AnimatePresence>
-                {selectedMlImage && typeof document !== "undefined" && createPortal(
+                {selectedMlImage && (
                   <motion.div
                     className="ml-lightbox-overlay"
                     initial={{ opacity: 0 }}
@@ -418,18 +402,6 @@ function Visualization() {
                     exit={{ opacity: 0 }}
                     onClick={() => setSelectedMlImage(null)}
                   >
-                    <button
-                      type="button"
-                      className="global-lightbox-close-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedMlImage(null);
-                      }}
-                      aria-label="Close image"
-                    >
-                      <X size={26} strokeWidth={3} />
-                    </button>
-
                     <motion.div
                       className="ml-lightbox-content"
                       initial={{ scale: 0.96, opacity: 0 }}
@@ -441,9 +413,9 @@ function Visualization() {
                         type="button"
                         className="ml-lightbox-close"
                         onClick={() => setSelectedMlImage(null)}
-                        aria-label="Close image"
+                        aria-label="Close model image"
                       >
-                        <X size={22} strokeWidth={2.5} />
+                        ×
                       </button>
                       <img
                         src={selectedMlImage.src}
@@ -452,8 +424,7 @@ function Visualization() {
                       />
                       <h4>{selectedMlImage.title}</h4>
                     </motion.div>
-                  </motion.div>,
-                  document.body
+                  </motion.div>
                 )}
               </AnimatePresence>
 
@@ -512,19 +483,6 @@ function Visualization() {
                 )}
               </AnimatePresence>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Full-Screen Expanding Circular Portal Animation */}
-        <AnimatePresence>
-          {isOpening && (
-            <motion.div
-              className="archive-expanding-portal"
-              initial={{ scale: 0.1, opacity: 0.85 }}
-              animate={{ scale: 45, opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            />
           )}
         </AnimatePresence>
       </motion.main>

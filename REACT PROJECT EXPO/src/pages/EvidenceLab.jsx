@@ -866,7 +866,7 @@ function EvidenceLab() {
 
   const goToChapter = (id) => {
     setActiveCategory(id);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   };
 
   const filteredChapters = RESEARCH_CHAPTERS.filter((ch) => {
@@ -906,7 +906,7 @@ function EvidenceLab() {
     };
     const chapterId = sectionToChapter[target] || target;
     setActiveCategory(chapterId);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   };
 
   const scrollTo = navigateToSection;
@@ -1281,7 +1281,7 @@ function EvidenceLab() {
                 className="btn-back-to-hub"
                 onClick={() => {
                   setActiveCategory(null);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
                 }}
               >
                 <ChevronLeft size={18} />
@@ -1293,7 +1293,7 @@ function EvidenceLab() {
                   className="crumb-link"
                   onClick={() => {
                     setActiveCategory(null);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
                   }}
                 >
                   Research Hub
@@ -3919,7 +3919,7 @@ function EvidenceLab() {
             className="dock-pill-btn dock-top-btn"
             onClick={() => {
               setActiveCategory(null);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.scrollTo({ top: 0, left: 0, behavior: "instant" });
             }}
             title={activeCategory ? "Return to Research Directory" : "Scroll to Top"}
           >
