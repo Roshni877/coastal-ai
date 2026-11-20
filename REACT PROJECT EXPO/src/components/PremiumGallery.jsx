@@ -162,7 +162,7 @@ const images = [
 
 function PremiumGallery() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isGatewayOpen, setIsGatewayOpen] = useState(false);
+  const [isGatewayOpen, setIsGatewayOpen] = useState(true);
 
   const doorTransition = { duration: 1.5, ease: [0.76, 0, 0.24, 1] };
   const closeLightbox = () => setSelectedImage(null);

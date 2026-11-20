@@ -1039,10 +1039,9 @@ function EvidenceLab() {
               type="button"
               className="btn-unique-anim-trigger"
               onClick={() => {
-                setAnimModalOpen(true);
                 navigateToSection("coastline-animation");
               }}
-              title="Play empirical multi-temporal satellite shoreline animation"
+              title="View empirical multi-temporal satellite shoreline animation"
             >
               <div className="anim-pulse-ring">
                 <div className="anim-pulse-core" />

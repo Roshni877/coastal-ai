@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Radio, Compass, BarChart3, Image as ImageIcon } from "lucide-react";
+import { Compass, ArrowLeft, X, Radio, BarChart3, Image as ImageIcon } from "lucide-react";
 import PageReveal from "../components/PageReveal";
 import TiltCard from "../components/TiltCard";
 import PremiumGallery from "../components/PremiumGallery";
 import ShorelineDynamicsPlayer from "../components/ShorelineDynamicsPlayer";
 
 function Visualization() {
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [selectedMlImage, setSelectedMlImage] = useState(null);
   const [animModalOpen, setAnimModalOpen] = useState(false);
   const [isDark, setIsDark] = useState(
@@ -38,17 +39,34 @@ function Visualization() {
     return () => document.body.classList.remove("modal-open-suppress-nav");
   }, [selectedMlImage, animModalOpen]);
 
-  // Close modals on Escape key
+  // Trigger instant, smooth full-screen opening
+  const handleOpenArchive = () => {
+    setIsUnlocked(true);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  };
+
+  // Return/close back to the initial circular button view
+  const handleCloseArchive = () => {
+    setIsUnlocked(false);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  };
+
+  // Allow closing via Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
-        if (animModalOpen) setAnimModalOpen(false);
-        if (selectedMlImage) setSelectedMlImage(null);
+        if (animModalOpen) {
+          setAnimModalOpen(false);
+        } else if (selectedMlImage) {
+          setSelectedMlImage(null);
+        } else if (isUnlocked) {
+          handleCloseArchive();
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [animModalOpen, selectedMlImage]);
+  }, [isUnlocked, animModalOpen, selectedMlImage]);
 
   return (
     <PageReveal>
@@ -58,222 +76,351 @@ function Visualization() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="fullscreen-archive-view" style={{ width: "100%", maxWidth: "1280px", margin: "0 auto", padding: "20px 20px 80px 20px" }}>
-          
-          {/* Header Title Section */}
-          <section
-            className="section-header"
-            style={{
-              marginTop: "20px",
-              paddingTop: "10px",
-              marginBottom: "35px",
-              textAlign: "center"
-            }}
-          >
-            <span
-              className="tech-tag"
-              style={{
-                color: "#f59e0b",
-                fontWeight: 800,
-                letterSpacing: "3px",
-                textShadow: "0 2px 10px rgba(0, 0, 0, 0.9), 0 0 15px rgba(245, 158, 11, 0.5)",
-                marginBottom: "12px",
-                display: "inline-block",
-              }}
-            >
-              SHORELINE // MONITORING &amp; PREDICTION SYSTEM
-            </span>
+        <AnimatePresence mode="wait">
+          {!isUnlocked ? (
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.6 }}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "8px",
-                marginTop: "6px",
-              }}
+              key="circular-entry"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.4 }}
+              className="archive-circular-entry"
             >
-              <h1
-                style={{
-                  fontSize: "clamp(2.8rem, 6.5vw, 4.5rem)",
-                  fontWeight: 900,
-                  color: "var(--text-main)",
-                  fontFamily: "Arial, sans-serif",
-                  letterSpacing: "1px",
-                  textAlign: "center",
-                  lineHeight: 1.1,
-                  margin: 0,
-                  background: "linear-gradient(45deg, var(--teal), var(--amber))",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  filter: "drop-shadow(0 0 12px rgba(0,212,255,0.35))",
-                }}
-              >
-                VISUAL ARCHIVE &amp; MODEL INTERPRETATION
-              </h1>
-              <p
-                style={{
-                  fontSize: "1.05rem",
-                  color: "var(--text-muted)",
-                  maxWidth: "720px",
-                  textAlign: "center",
-                  margin: "8px auto 0 auto",
-                  lineHeight: 1.6,
-                }}
-              >
-                Multi-temporal satellite dynamics, DeepLabV3+ segmentation validation benchmarks, 
-                and high-precision coastal erosion analytics across Karnataka's 97.2 km monitored corridor.
-              </p>
-            </motion.div>
-          </section>
-
-          {/* 🌊 MULTI-TEMPORAL SHORELINE DYNAMICS ANIMATION SECTION */}
-          <section className="analytics-section" style={{ marginBottom: "50px" }}>
-            <div className="analytics-header" style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "center", marginBottom: "6px" }}>
-                <span className="live-indicator"><span className="dot" /> EMPIRICAL SATELLITE RASTER DYNAMICS</span>
+              {/* Header Title Section */}
+              <div className="archive-header-block">
+                <span
+                  className="tech-tag"
+                  style={{
+                    color: "#f59e0b",
+                    fontWeight: 800,
+                    letterSpacing: "4px",
+                    textShadow:
+                      "0 2px 10px rgba(0, 0, 0, 0.9), 0 0 15px rgba(245, 158, 11, 0.6)",
+                    marginBottom: "12px",
+                    display: "inline-block",
+                  }}
+                >
+                  UNCOVER THE DATA
+                </span>
+                <h1
+                  className="hero-title-large"
+                  style={{
+                    fontSize: "clamp(3.5rem, 8.5vw, 7.5rem)",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    lineHeight: 0.88,
+                    letterSpacing: "-2px",
+                    textTransform: "uppercase",
+                    margin: 0,
+                    color: "#ffffff",
+                    textShadow: isDark
+                      ? "0 4px 28px rgba(0, 0, 0, 0.98), 0 0 40px rgba(14, 165, 233, 0.6)"
+                      : "0 4px 25px rgba(0, 0, 0, 0.95), 0 0 35px rgba(14, 165, 233, 0.5)",
+                    transition: "all 0.4s ease",
+                  }}
+                >
+                  VISUAL
+                </h1>
+                <h1
+                  className="hero-title-large outline-text"
+                  style={{
+                    fontSize: "clamp(3.5rem, 8.5vw, 7.5rem)",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    lineHeight: 0.88,
+                    letterSpacing: "1px",
+                    textTransform: "uppercase",
+                    margin: 0,
+                    color: isDark ? "#7dd3fc" : "#38bdf8",
+                    background: isDark
+                      ? "linear-gradient(180deg, #a5f3fc 0%, #38bdf8 50%, #0ea5e9 100%)"
+                      : "linear-gradient(180deg, #67e8f9 0%, #38bdf8 45%, #0284c7 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    WebkitTextStroke: isDark
+                      ? "2px rgba(255, 255, 255, 0.95)"
+                      : "2px #ffffff",
+                    filter: isDark
+                      ? "drop-shadow(0 4px 25px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.9))"
+                      : "drop-shadow(0 4px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 35px rgba(56, 189, 248, 0.85))",
+                    transition: "all 0.4s ease",
+                  }}
+                >
+                  ARCHIVE
+                </h1>
               </div>
-              <h2
-                className="section-subtitle"
+
+              {/* Clean, Modern Circular Interactive Button */}
+              <div className="circular-orb-container">
+                <motion.button
+                  className="archive-circular-button"
+                  onClick={handleOpenArchive}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.94 }}
+                  aria-label="Open Visual Archive"
+                >
+                  {/* Outer Pulsing Glow Aura */}
+                  <div className="orb-pulse-aura" />
+
+                  {/* Rotating Dashed Orbital Ring */}
+                  <div className="orb-orbital-ring" />
+
+                  {/* Translucent Glassmorphic Core */}
+                  <div className="orb-glass-core">
+                    <div className="orb-icon-wrapper">
+                      <Compass size={32} />
+                    </div>
+                    <span className="orb-label">OPEN</span>
+                    <span className="orb-sublabel">ARCHIVE</span>
+                  </div>
+                </motion.button>
+
+                <p className="archive-orb-hint">
+                  Click to launch full-screen visual archive
+                </p>
+              </div>
+            </motion.div>
+          ) : (
+            /* Complete Visual Archive Interface in Full-Screen View */
+            <motion.div
+              key="fullscreen-archive"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="fullscreen-archive-view"
+              style={{ width: "100%", maxWidth: "1280px", margin: "0 auto", padding: "20px 20px 80px 20px" }}
+            >
+              {/* Top Controls / Smooth Return Button */}
+              <div className="archive-top-controls" style={{ display: "flex", justifyContent: "flex-start", marginBottom: "20px" }}>
+                <motion.button
+                  className="archive-back-btn"
+                  onClick={handleCloseArchive}
+                  whileHover={{ scale: 1.05, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label="Back to overview"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    background: "rgba(15, 23, 42, 0.85)",
+                    border: "1px solid rgba(56, 189, 248, 0.35)",
+                    color: "#38bdf8",
+                    padding: "10px 20px",
+                    borderRadius: "30px",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    backdropFilter: "blur(10px)"
+                  }}
+                >
+                  <ArrowLeft size={18} />
+                  <span>BACK TO OVERVIEW</span>
+                  <span className="esc-tag" style={{ opacity: 0.6, fontSize: "0.75rem", marginLeft: "4px" }}>[ESC]</span>
+                </motion.button>
+              </div>
+
+              {/* Shoreline Monitoring Header Section */}
+              <section
+                className="section-header"
                 style={{
-                  color: "var(--amber)",
-                  textShadow: "0 0 30px rgba(255, 214, 10, 0.35)",
+                  marginTop: "10px",
+                  paddingTop: "10px",
+                  marginBottom: "30px",
                   textAlign: "center"
                 }}
               >
-                MULTI-TEMPORAL SHORELINE DYNAMICS (2020 &rarr; 2024)
-              </h2>
-              <p className="section-desc" style={{ textAlign: "center", maxWidth: "700px", margin: "0 auto" }}>
-                Sequential satellite shoreline vectors extracted along 97.2 km of Udupi coastline via 9-channel DeepLabV3+. 
-                Toggle between the Interactive Player and the Continuous Loop GIF below.
-              </p>
-            </div>
-
-            {/* Shoreline Dynamics Animation Player Component */}
-            <div style={{ marginBottom: "35px" }}>
-              <ShorelineDynamicsPlayer
-                onExpandFullscreen={() => setAnimModalOpen(true)}
-                showTitle={true}
-              />
-            </div>
-
-            {/* Mean Shoreline Position Per Year (Preserved exactly as it is) */}
-            <div className="analytics-grid" style={{ marginTop: "30px" }}>
-              <div className="glass-card analytics-card">
-                <h2 className="analysis-title-large">
-                  MEAN SHORELINE POSITION PER YEAR
-                </h2>
-                <div className="graph-placeholder">
-                  <img
-                    src="/shoreline/mean_position.png"
-                    alt="Mean shoreline position per year"
-                    className="shoreline-graph-image"
-                  />
-                  <p>
-                    Yearly mean shoreline position analysis across the 1,944 baseline transects (2020–2024).
+                <span
+                  className="tech-tag"
+                  style={{
+                    color: "#f59e0b",
+                    fontWeight: 800,
+                    letterSpacing: "3px",
+                    textShadow: "0 2px 10px rgba(0, 0, 0, 0.9), 0 0 15px rgba(245, 158, 11, 0.5)",
+                    marginBottom: "12px",
+                    display: "inline-block",
+                  }}
+                >
+                  SHORELINE // MONITORING &amp; PREDICTION SYSTEM
+                </span>
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginTop: "6px",
+                  }}
+                >
+                  <h1
+                    style={{
+                      fontSize: "clamp(2.4rem, 5.5vw, 3.8rem)",
+                      fontWeight: 900,
+                      letterSpacing: "-1px",
+                      margin: 0,
+                      textTransform: "uppercase",
+                      color: isDark ? "#ffffff" : "#0f172a",
+                      textShadow: isDark
+                        ? "0 4px 20px rgba(0,0,0,0.8)"
+                        : "none",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    VISUAL ARCHIVE &amp; MODEL INTERPRETATION
+                  </h1>
+                  <h2
+                    style={{
+                      fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)",
+                      fontWeight: 700,
+                      color: "#38bdf8",
+                      margin: "4px 0 0 0",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    MULTI-TEMPORAL SHORELINE DYNAMICS (2020 &rarr; 2024)
+                  </h2>
+                  <p
+                    style={{
+                      maxWidth: "780px",
+                      margin: "12px auto 0 auto",
+                      color: isDark ? "#94a3b8" : "#475569",
+                      fontSize: "clamp(0.95rem, 1.6vw, 1.05rem)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Satellite-derived coastal change vectors extracted via DeepLabV3+ with fused
+                    Sentinel-2 MSI and Sentinel-1 SAR imagery across 97.2 km of Udupi coastline.
                   </p>
-                </div>
+                </motion.div>
+              </section>
+
+              {/* Inline Interactive Shoreline Dynamics Player */}
+              <div style={{ marginBottom: "50px" }}>
+                <ShorelineDynamicsPlayer
+                  onExpandFullscreen={() => setAnimModalOpen(true)}
+                  showTitle={false}
+                />
               </div>
-            </div>
-          </section>
 
-          {/* 🤖 ML MODEL PERFORMANCE RESEARCH */}
-          <section className="ml-performance-section" style={{ marginBottom: "60px" }}>
-            <div className="section-header" style={{ textAlign: "center", marginBottom: "30px" }}>
-              <span className="tech-tag">RESEARCH // QUANTITATIVE VALIDATION</span>
-              <h2 className="hero-title-large" style={{ fontSize: "clamp(2.2rem, 5vw, 3.2rem)", margin: "8px 0" }}>
-                MODEL PERFORMANCE METRICS
-              </h2>
-              <p style={{ color: "var(--text-muted)", maxWidth: "650px", margin: "0 auto" }}>
-                Click either card to inspect high-resolution confusion matrix and precision-recall telemetry.
-              </p>
-            </div>
+              {/* MODEL INTERPRETATION & KEY METRICS */}
+              <section className="section-header" style={{ marginBottom: "25px" }}>
+                <span className="tech-tag" style={{ display: "block", marginBottom: "8px", color: "#38bdf8", fontWeight: 800 }}>
+                  DEEP LEARNING ARCHITECTURE
+                </span>
+                <h2 style={{ margin: 0, fontSize: "clamp(1.5rem, 3.2vw, 2.3rem)", fontWeight: 900, color: "var(--text-main)" }}>
+                  MODEL INTERPRETATION &amp; PERFORMANCE
+                </h2>
+              </section>
 
-            <div className="ml-performance-grid">
-              <TiltCard>
-                <div className="glass-card performance-card">
-                  <div className="ml-image-container">
-                    <button
-                      type="button"
-                      className="ml-image-btn"
-                      onClick={() =>
-                        setSelectedMlImage({
-                          src: "/env_ml_confusion_matrix_deeplab.png?v=3",
-                          alt: "Confusion Matrix - DeepLabV3+ Final Model",
-                          title: "DEEPLABV3+ CONFUSION MATRIX",
-                        })
-                      }
-                    >
-                      <img
-                        src="/env_ml_confusion_matrix_deeplab.png?v=3"
-                        alt="Confusion Matrix - DeepLabV3+ Final Model"
-                        className="ml-image"
-                      />
-                    </button>
-                    <div className="ml-card-info">
-                      <span className="tech-meta">VISUALIZATION 01</span>
-                      <h4>CONFUSION MATRIX</h4>
-                      <p>
-                        DEEPLABV3+ MODEL SEGMENTATION PERFORMANCE ACROSS
-                        LAND AND WATER SHORELINE CLASSES.
-                      </p>
+              <div className="grid-2-col" style={{ marginBottom: "60px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+                <TiltCard>
+                  <div
+                    className="feature-card"
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                      setSelectedMlImage({
+                        src: "/model_prediction.png",
+                        alt: "DeepLabV3+ Model Prediction Sample",
+                        title: "DeepLabV3+ Model Prediction Sample (Inference)",
+                      })
+                    }
+                  >
+                    <div className="card-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                      <div className="icon-wrapper" style={{ background: "rgba(2, 132, 199, 0.15)", padding: "10px", borderRadius: "12px" }}>
+                        <Radio size={24} color="#0284c7" />
+                      </div>
+                      <span className="card-status active" style={{ fontSize: "0.75rem", fontWeight: 800, padding: "4px 10px", borderRadius: "20px", background: "rgba(14, 165, 233, 0.15)", color: "#38bdf8", border: "1px solid rgba(56, 189, 248, 0.3)" }}>
+                        INFERENCE ENGINE
+                      </span>
+                    </div>
+                    <div className="card-content">
+                      <div className="card-image-box" style={{ borderRadius: "12px", overflow: "hidden", marginBottom: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                        <img
+                          src="/model_prediction.png"
+                          alt="DeepLabV3+ Model Prediction Sample"
+                          className="preview-img"
+                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                        />
+                      </div>
+                      <div className="card-text">
+                        <h4 style={{ margin: "0 0 8px 0", fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)" }}>
+                          MODEL PREDICTION SAMPLE
+                        </h4>
+                        <p style={{ margin: 0, fontSize: "0.88rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                          DEEPLABV3+ TEST INFERENCE SHOWCASING ACCURATE SHORELINE DELINEATION OVER COMPLEX COASTAL PROFILES.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </TiltCard>
+                </TiltCard>
 
-              <TiltCard>
-                <div className="glass-card performance-card">
-                  <div className="ml-image-container">
-                    <button
-                      type="button"
-                      className="ml-image-btn"
-                      onClick={() =>
-                        setSelectedMlImage({
-                          src: "/env_ml_report_deeplab.png?v=3",
-                          alt: "DeepLabV3+ Validation Performance Metrics",
-                          title: "PERFORMANCE METRICS",
-                        })
-                      }
-                    >
-                      <img
-                        src="/env_ml_report_deeplab.png?v=3"
-                        alt="DeepLabV3+ Validation Performance Metrics"
-                        className="ml-image"
-                      />
-                    </button>
-                    <div className="ml-card-info">
-                      <span className="tech-meta">VISUALIZATION 02</span>
-                      <h4>PERFORMANCE METRICS</h4>
-                      <p>
-                        DEEPLABV3+ ACCURACY METRICS REPORTING AN OUTSTANDING
-                        85.48% VALIDATION ACCURACY BENCHMARK.
-                      </p>
+                <TiltCard>
+                  <div
+                    className="feature-card"
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                      setSelectedMlImage({
+                        src: "/accuracy_metrics.png",
+                        alt: "DeepLabV3+ Performance Metrics & Confusion Matrix",
+                        title: "DeepLabV3+ Performance Metrics & Confusion Matrix",
+                      })
+                    }
+                  >
+                    <div className="card-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                      <div className="icon-wrapper" style={{ background: "rgba(2, 132, 199, 0.15)", padding: "10px", borderRadius: "12px" }}>
+                        <BarChart3 size={24} color="#0284c7" />
+                      </div>
+                      <span className="card-status active" style={{ fontSize: "0.75rem", fontWeight: 800, padding: "4px 10px", borderRadius: "20px", background: "rgba(16, 185, 129, 0.15)", color: "#34d399", border: "1px solid rgba(52, 211, 153, 0.3)" }}>
+                        BENCHMARK 85.48%
+                      </span>
+                    </div>
+                    <div className="card-content">
+                      <div className="card-image-box" style={{ borderRadius: "12px", overflow: "hidden", marginBottom: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                        <img
+                          src="/accuracy_metrics.png"
+                          alt="DeepLabV3+ Performance Metrics"
+                          className="preview-img"
+                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                        />
+                      </div>
+                      <div className="card-text">
+                        <h4 style={{ margin: "0 0 8px 0", fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)" }}>
+                          PERFORMANCE METRICS
+                        </h4>
+                        <p style={{ margin: 0, fontSize: "0.88rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                          DEEPLABV3+ ACCURACY METRICS REPORTING AN OUTSTANDING 85.48% VALIDATION ACCURACY BENCHMARK.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </TiltCard>
-            </div>
-          </section>
+                </TiltCard>
+              </div>
 
-          {/* 📷 COASTAL GALLERY */}
-          <div className="huge-gallery-wrapper">
-            <h2
-              className="gallery-title-large"
-              style={{ opacity: 1, color: "var(--text-main)", textAlign: "center", marginBottom: "30px" }}
-            >
-              COASTAL SATELLITE GALLERY
-            </h2>
-            <PremiumGallery />
-          </div>
-
-        </div>
+              {/* 📷 COASTAL GALLERY */}
+              <div className="huge-gallery-wrapper" style={{ marginTop: "30px" }}>
+                <h2
+                  className="gallery-title-large"
+                  style={{
+                    fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                    fontWeight: 900,
+                    marginBottom: "24px",
+                    color: "var(--text-main)",
+                    textAlign: "center"
+                  }}
+                >
+                  COASTAL GALLERY
+                </h2>
+                <PremiumGallery />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ========================================================
-            LIGHTBOX MODAL FOR ML IMAGES (VIA CREATEPORTAL)
+            ML MODEL IMAGE LIGHTBOX MODAL (VIA CREATEPORTAL)
             ======================================================== */}
         <AnimatePresence>
           {selectedMlImage && typeof document !== "undefined" && createPortal(
@@ -287,8 +434,11 @@ function Visualization() {
               <button
                 type="button"
                 className="global-lightbox-close-btn"
-                onClick={() => setSelectedMlImage(null)}
-                aria-label="Close model image"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedMlImage(null);
+                }}
+                aria-label="Close model lightbox"
               >
                 <X size={26} strokeWidth={3} />
               </button>
