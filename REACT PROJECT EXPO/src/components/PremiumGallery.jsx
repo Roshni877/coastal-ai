@@ -236,8 +236,7 @@ function PremiumGallery() {
             }}>
               CLICK TO UNLOCK VAULT
             </span>
-          </motion.div>,
-          document.body
+          </motion.div>
         )}
       </AnimatePresence>
 

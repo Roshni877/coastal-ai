@@ -91,7 +91,7 @@ export default function ShorelineDynamicsPlayer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [speedMs, setSpeedMs] = useState(1250); // 1.25s per frame
-  const [viewMode, setViewMode] = useState("stepper"); // 'stepper' or 'gif'
+  const [viewMode, setViewMode] = useState("gif"); // 'gif' by default for instant smooth animation
   const timerRef = useRef(null);
 
   // Preload all frames on mount
@@ -230,101 +230,113 @@ export default function ShorelineDynamicsPlayer({
         )}
       </div>
 
-      {/* Interactive Controls Bar (Available in stepper mode) */}
-      {viewMode === "stepper" && (
-        <div className="sdp-controls-bar">
-          {/* Play/Pause & Step Buttons */}
-          <div className="sdp-playback-btns">
-            <button
-              type="button"
-              className="sdp-ctrl-btn"
-              onClick={() => {
-                setCurrentIndex((p) => (p === 0 ? SHORELINE_YEARS.length - 1 : p - 1));
+      {/* Interactive Controls Bar */}
+      <div className="sdp-controls-bar">
+        {/* Play/Pause & Step Buttons */}
+        <div className="sdp-playback-btns">
+          <button
+            type="button"
+            className="sdp-ctrl-btn"
+            onClick={() => {
+              setViewMode("stepper");
+              setCurrentIndex((p) => (p === 0 ? SHORELINE_YEARS.length - 1 : p - 1));
+              setIsPlaying(false);
+            }}
+            title="Previous Year"
+          >
+            <SkipBack size={16} />
+          </button>
+
+          <button
+            type="button"
+            className={`sdp-ctrl-btn sdp-play-btn ${isPlaying ? "playing" : ""}`}
+            onClick={() => {
+              if (viewMode === "gif") {
+                setViewMode("stepper");
                 setIsPlaying(false);
-              }}
-              title="Previous Year"
-            >
-              <SkipBack size={16} />
-            </button>
+              } else {
+                setIsPlaying(!isPlaying);
+              }
+            }}
+            title={isPlaying ? "Pause Animation" : "Play Animation"}
+          >
+            {isPlaying ? <Pause size={17} /> : <Play size={17} />}
+            <span>{isPlaying ? "Pause" : "Play"}</span>
+          </button>
 
-            <button
-              type="button"
-              className={`sdp-ctrl-btn sdp-play-btn ${isPlaying ? "playing" : ""}`}
-              onClick={() => setIsPlaying(!isPlaying)}
-              title={isPlaying ? "Pause Animation" : "Play Animation"}
-            >
-              {isPlaying ? <Pause size={17} /> : <Play size={17} />}
-              <span>{isPlaying ? "Pause" : "Play"}</span>
-            </button>
-
-            <button
-              type="button"
-              className="sdp-ctrl-btn"
-              onClick={() => {
-                setCurrentIndex((p) => (p + 1) % SHORELINE_YEARS.length);
-                setIsPlaying(false);
-              }}
-              title="Next Year"
-            >
-              <SkipForward size={16} />
-            </button>
-          </div>
-
-          {/* Year Node Buttons */}
-          <div className="sdp-year-nodes-row">
-            {SHORELINE_YEARS.map((epoch, idx) => (
-              <button
-                key={epoch.year}
-                type="button"
-                className={`sdp-node-btn ${currentIndex === idx ? "active" : ""}`}
-                onClick={() => {
-                  setCurrentIndex(idx);
-                  setIsPlaying(false);
-                }}
-                style={currentIndex === idx ? { borderColor: epoch.badgeColor, color: epoch.badgeColor } : {}}
-              >
-                <span className="node-yr">{epoch.year}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Timeline Scrubber */}
-          <div className="sdp-scrubber-box">
-            <span className="sdp-scrub-lbl">2020</span>
-            <input
-              type="range"
-              min={0}
-              max={SHORELINE_YEARS.length - 1}
-              value={currentIndex}
-              onChange={(e) => {
-                setCurrentIndex(parseInt(e.target.value, 10));
-                setIsPlaying(false);
-              }}
-              className="sdp-scrub-slider"
-            />
-            <span className="sdp-scrub-lbl">2024</span>
-          </div>
-
-          {/* Speed Selector */}
-          <div className="sdp-speed-selector">
-            <span className="sdp-speed-txt">Speed:</span>
-            {[
-              { label: "0.75×", ms: 1750 },
-              { label: "1.0×", ms: 1250 },
-              { label: "1.5×", ms: 750 }
-            ].map((spd) => (
-              <button
-                key={spd.label}
-                type="button"
-                className={`sdp-spd-btn ${speedMs === spd.ms ? "active" : ""}`}
-                onClick={() => setSpeedMs(spd.ms)}
-              >
-                {spd.label}
-              </button>
-            ))}
-          </div>
+          <button
+            type="button"
+            className="sdp-ctrl-btn"
+            onClick={() => {
+              setViewMode("stepper");
+              setCurrentIndex((p) => (p + 1) % SHORELINE_YEARS.length);
+              setIsPlaying(false);
+            }}
+            title="Next Year"
+          >
+            <SkipForward size={16} />
+          </button>
         </div>
-      )}
+
+        {/* Year Node Buttons */}
+        <div className="sdp-year-nodes-row">
+          {SHORELINE_YEARS.map((epoch, idx) => (
+            <button
+              key={epoch.year}
+              type="button"
+              className={`sdp-node-btn ${viewMode === "stepper" && currentIndex === idx ? "active" : ""}`}
+              onClick={() => {
+                setViewMode("stepper");
+                setCurrentIndex(idx);
+                setIsPlaying(false);
+              }}
+              style={viewMode === "stepper" && currentIndex === idx ? { borderColor: epoch.badgeColor, color: epoch.badgeColor } : {}}
+            >
+              <span className="node-yr">{epoch.year}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Timeline Scrubber */}
+        <div className="sdp-scrubber-box">
+          <span className="sdp-scrub-lbl">2020</span>
+          <input
+            type="range"
+            min={0}
+            max={SHORELINE_YEARS.length - 1}
+            value={currentIndex}
+            onChange={(e) => {
+              setViewMode("stepper");
+              setCurrentIndex(parseInt(e.target.value, 10));
+              setIsPlaying(false);
+            }}
+            className="sdp-scrub-slider"
+          />
+          <span className="sdp-scrub-lbl">2024</span>
+        </div>
+
+        {/* Speed Selector */}
+        <div className="sdp-speed-selector">
+          <span className="sdp-speed-txt">Speed:</span>
+          {[
+            { label: "0.75×", ms: 1750 },
+            { label: "1.0×", ms: 1250 },
+            { label: "1.5×", ms: 750 }
+          ].map((spd) => (
+            <button
+              key={spd.label}
+              type="button"
+              className={`sdp-spd-btn ${speedMs === spd.ms ? "active" : ""}`}
+              onClick={() => {
+                setSpeedMs(spd.ms);
+                if (viewMode === "gif") setViewMode("stepper");
+              }}
+            >
+              {spd.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Real-time Telemetry Metrics HUD */}
       <div className="sdp-telemetry-hud">
