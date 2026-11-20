@@ -9,6 +9,7 @@ import ShorelineDynamicsPlayer from "../components/ShorelineDynamicsPlayer";
 
 function Visualization() {
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const [selectedMlImage, setSelectedMlImage] = useState(null);
   const [animModalOpen, setAnimModalOpen] = useState(false);
   const [isDark, setIsDark] = useState(
@@ -39,10 +40,14 @@ function Visualization() {
     return () => document.body.classList.remove("modal-open-suppress-nav");
   }, [selectedMlImage, animModalOpen]);
 
-  // Trigger instant, smooth full-screen opening
+  // Trigger smooth full-screen opening animation in fashion
   const handleOpenArchive = () => {
-    setIsUnlocked(true);
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    setIsOpening(true);
+    setTimeout(() => {
+      setIsUnlocked(true);
+      setIsOpening(false);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }, 700);
   };
 
   // Return/close back to the initial circular button view
@@ -518,6 +523,18 @@ function Visualization() {
               </motion.div>
             </motion.div>,
             document.body
+          )}
+        </AnimatePresence>
+        {/* Full-Screen Expanding Circular Portal Fashion Animation */}
+        <AnimatePresence>
+          {isOpening && (
+            <motion.div
+              className="archive-expanding-portal"
+              initial={{ scale: 0.1, opacity: 0.85 }}
+              animate={{ scale: 45, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            />
           )}
         </AnimatePresence>
       </motion.main>
