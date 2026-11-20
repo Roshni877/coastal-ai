@@ -327,7 +327,7 @@ function Visualization() {
                     style={{ cursor: "pointer" }}
                     onClick={() =>
                       setSelectedMlImage({
-                        src: "/model_prediction.png",
+                        src: "/env_ml_confusion_matrix_deeplab.png",
                         alt: "DeepLabV3+ Model Prediction Sample",
                         title: "DeepLabV3+ Model Prediction Sample (Inference)",
                       })
@@ -342,12 +342,17 @@ function Visualization() {
                       </span>
                     </div>
                     <div className="card-content">
-                      <div className="card-image-box" style={{ borderRadius: "12px", overflow: "hidden", marginBottom: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                      <div className="card-image-box" style={{ borderRadius: "12px", overflow: "hidden", marginBottom: "14px", border: "1px solid rgba(255, 255, 255, 0.1)", background: "rgba(15, 23, 42, 0.6)" }}>
                         <img
-                          src="/model_prediction.png"
+                          src="/env_ml_confusion_matrix_deeplab.png"
                           alt="DeepLabV3+ Model Prediction Sample"
                           className="preview-img"
-                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                          style={{ width: "100%", height: "200px", objectFit: "contain", background: "#0b1329" }}
+                          onError={(e) => {
+                            if (!e.target.src.includes("model_prediction.png")) {
+                              e.target.src = "/model_prediction.png";
+                            }
+                          }}
                         />
                       </div>
                       <div className="card-text">
@@ -368,7 +373,7 @@ function Visualization() {
                     style={{ cursor: "pointer" }}
                     onClick={() =>
                       setSelectedMlImage({
-                        src: "/accuracy_metrics.png",
+                        src: "/env_ml_report_deeplab.png",
                         alt: "DeepLabV3+ Performance Metrics & Confusion Matrix",
                         title: "DeepLabV3+ Performance Metrics & Confusion Matrix",
                       })
@@ -383,12 +388,17 @@ function Visualization() {
                       </span>
                     </div>
                     <div className="card-content">
-                      <div className="card-image-box" style={{ borderRadius: "12px", overflow: "hidden", marginBottom: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                      <div className="card-image-box" style={{ borderRadius: "12px", overflow: "hidden", marginBottom: "14px", border: "1px solid rgba(255, 255, 255, 0.1)", background: "rgba(15, 23, 42, 0.6)" }}>
                         <img
-                          src="/accuracy_metrics.png"
+                          src="/env_ml_report_deeplab.png"
                           alt="DeepLabV3+ Performance Metrics"
                           className="preview-img"
-                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                          style={{ width: "100%", height: "200px", objectFit: "contain", background: "#0b1329" }}
+                          onError={(e) => {
+                            if (!e.target.src.includes("accuracy_metrics.png")) {
+                              e.target.src = "/accuracy_metrics.png";
+                            }
+                          }}
                         />
                       </div>
                       <div className="card-text">
