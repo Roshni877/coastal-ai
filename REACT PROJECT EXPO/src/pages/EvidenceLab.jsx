@@ -1273,9 +1273,9 @@ function EvidenceLab() {
           </>
         )}
 
-        {activeCategory && currentChapter && (
-          <div className="chapter-view-container">
-            {/* CHAPTER DETAIL TOP NAVIGATION BAR */}
+        <div className="chapter-view-container">
+          {activeCategory && currentChapter && (
+            /* CHAPTER DETAIL TOP NAVIGATION BAR */
             <div className="chapter-nav-top-bar">
               <button
                 className="btn-back-to-hub"
@@ -1329,12 +1329,13 @@ function EvidenceLab() {
                 </button>
               </div>
             </div>
+          )}
 
-            {/* ========================================================
-                ISOLATED SECTION CONTENT: ONLY THE SELECTED SECTION RENDERS
-                ======================================================== */}
+          {/* ========================================================
+              ALL 18 RESEARCH SECTIONS (OPEN & SCROLLABLE)
+              ======================================================== */}
 
-            {activeCategory === "sentinel-bands" && (
+            {(!activeCategory || activeCategory === "sentinel-bands") && (
 <section id="section-bands" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -1481,7 +1482,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "sentinel-1-sar" && (
+            {(!activeCategory || activeCategory === "sentinel-1-sar") && (
 <section id="section-sar-standalone" className="lab-section">
           <div className="lab-section-header">
             <div className="header-left">
@@ -1563,7 +1564,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "sentinel-2-optical" && (
+            {(!activeCategory || activeCategory === "sentinel-2-optical") && (
 <section id="section-optical-standalone" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -1645,7 +1646,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "band-composites" && (
+            {(!activeCategory || activeCategory === "band-composites") && (
 <section id="section-composites" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -1795,7 +1796,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "dataset-processing" && (
+            {(!activeCategory || activeCategory === "dataset-processing") && (
 <section id="section-dataset" className="lab-section dataset-hero-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2102,7 +2103,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "gee-pipeline" && (
+            {(!activeCategory || activeCategory === "gee-pipeline") && (
 <section id="section-ndwi" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2259,7 +2260,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "colab-training" && (
+            {(!activeCategory || activeCategory === "colab-training") && (
 <section id="section-colab-training-standalone" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2383,7 +2384,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "graphs-metrics" && (
+            {(!activeCategory || activeCategory === "graphs-metrics") && (
 <section id="section-performance" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -2524,7 +2525,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "coastline-animation" && (
+            {(!activeCategory || activeCategory === "coastline-animation") && (
 <section id="section-anim-standalone" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2581,7 +2582,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "historical-comparison" && (
+            {(!activeCategory || activeCategory === "historical-comparison") && (
 <section id="section-historical" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -2795,7 +2796,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "malpe-analysis" && (
+            {(!activeCategory || activeCategory === "malpe-analysis") && (
 <section id="section-malpe-standalone" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -2881,7 +2882,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "other-beaches" && (
+            {(!activeCategory || activeCategory === "other-beaches") && (
 <section id="section-beaches-standalone" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -2966,7 +2967,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "ml-models" && (
+            {(!activeCategory || activeCategory === "ml-models") && (
 <section id="section-architecture" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -3062,7 +3063,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "methodology" && (
+            {(!activeCategory || activeCategory === "methodology") && (
 <section id="section-methodology-standalone" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -3124,7 +3125,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "validation-accuracy" && (
+            {(!activeCategory || activeCategory === "validation-accuracy") && (
 <section id="section-geospatial" className="lab-section">
                 <div className="lab-section-header">
                   <div className="header-left">
@@ -3219,7 +3220,7 @@ function EvidenceLab() {
               </section>
             )}
 
-            {activeCategory === "transect-kinematics" && (
+            {(!activeCategory || activeCategory === "transect-kinematics") && (
 <section id="section-transects" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -3350,7 +3351,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "future-predictions" && (
+            {(!activeCategory || activeCategory === "future-predictions") && (
 <section id="section-future" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -3498,7 +3499,7 @@ function EvidenceLab() {
             </section>
             )}
 
-            {activeCategory === "results-gallery" && (
+            {(!activeCategory || activeCategory === "results-gallery") && (
 <section id="section-library" className="lab-section">
               <div className="lab-section-header">
                 <div className="header-left">
@@ -3610,7 +3611,8 @@ function EvidenceLab() {
             )}
 
 
-            {/* CHAPTER DETAIL BOTTOM NAVIGATION BAR */}
+          {activeCategory && currentChapter && (
+            /* CHAPTER DETAIL BOTTOM NAVIGATION BAR */
             <div className="chapter-bottom-nav-bar">
               <button
                 className="btn-back-to-hub"
@@ -3648,8 +3650,8 @@ function EvidenceLab() {
                 </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
 
 

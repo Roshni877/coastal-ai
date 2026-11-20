@@ -7,7 +7,7 @@ import PremiumGallery from "../components/PremiumGallery";
 import ShorelineDynamicsPlayer from "../components/ShorelineDynamicsPlayer";
 
 function Visualization() {
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(true);
   const [selectedMlImage, setSelectedMlImage] = useState(null);
   const [animModalOpen, setAnimModalOpen] = useState(false);
   const [isDark, setIsDark] = useState(
@@ -278,7 +278,7 @@ function Visualization() {
 
                 {/* 🌊 Multi-Temporal Shoreline Dynamics Animation Player */}
                 <div style={{ marginBottom: "30px" }}>
-                  <ShorelineDynamicsPlayer 
+                  <ShorelineDynamicsPlayer
                     onExpandFullscreen={() => setAnimModalOpen(true)}
                     showTitle={true}
                   />
